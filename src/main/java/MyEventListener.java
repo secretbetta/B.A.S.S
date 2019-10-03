@@ -134,6 +134,8 @@ public class MyEventListener extends ListenerAdapter {
 		String path = "suggestions.txt";
 		BufferedWriter writer = Files.newBufferedWriter(Paths.get(path), StandardCharsets.UTF_8);
 		writer.append(suggestion);
+		// TODO don't use flush or close, find another way to save into file
+		writer.flush();
 	}
 	
     /**
@@ -209,8 +211,6 @@ public class MyEventListener extends ListenerAdapter {
 		 * Suggestions command, allows users to add suggestions
 		 */
 		if (content.startsWith("~~suggestion")) {
-			// TODO User inputs: "~~suggestion <their command suggestion>"
-			// Put command suggestion and description in a file.
 			try {
 				if (content.length() > 13) {
 					suggestions(content.substring(13));
