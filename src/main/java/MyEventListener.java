@@ -131,8 +131,8 @@ public class MyEventListener extends ListenerAdapter {
 	 * @throws IOException
 	 */
 	public static void suggestions(String suggestion) throws IOException {
-		BufferedWriter writer = Files.newBufferedWriter(Paths.get("suggestions.txt"),
-				StandardCharsets.UTF_8);
+		String path = "suggestions.txt";
+		BufferedWriter writer = Files.newBufferedWriter(Paths.get(path), StandardCharsets.UTF_8);
 		writer.append(suggestion);
 	}
 	
@@ -212,7 +212,12 @@ public class MyEventListener extends ListenerAdapter {
 			// TODO User inputs: "~~suggestion <their command suggestion>"
 			// Put command suggestion and description in a file.
 			try {
-				suggestions(content.substring(13));
+				if (content.length() > 13) {
+					suggestions(content.substring(13));
+				} else {
+					channel.sendMessage("Add a command suggestion by using the command"
+							+ "\n~~suggestion <suggestion>").queue();
+				}
 			} catch (IOException e) {
 				System.err.println("Cannot write into file");
 			}
