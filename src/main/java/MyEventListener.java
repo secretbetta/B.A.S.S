@@ -1,15 +1,10 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Member;
@@ -68,14 +63,15 @@ public class MyEventListener extends ListenerAdapter {
 	public static void help(MessageChannel channel) {
 		String[][] cmds = {
 				{"~~help", "All possible commands"},
-				{"~~leaderboard <Player 1> <Player 2>", "Shows leaderboard. Player flags are optional to print scores between two people"},
+				{"~~leaderboard <Player 1> <Player 2>", 
+					"Shows leaderboard. Player flags are optional to print scores between two people"},
 				{"~~id", "Gets unique user ID"},
 				{"~~hello", "world"},
-				{"~~test", "Gets bot's ping"},
+				{"~~test", "Test command, differs from time to time"},
 				{"~~admin", "Tests admin privileges"},
 				{"~~mquote", "Sends random movie quote"},
 				{"~~suggestion [Command]", "Command suggestion for Andrew to make"},
-				{""},
+				{"~~ping", "Pong!"},
 				{"-debug", "For admins only: Put at end of command for runtime"}
 		};
 		
@@ -229,6 +225,13 @@ public class MyEventListener extends ListenerAdapter {
 		}
 		
 		/**
+		 * Spongebob command
+		 */
+		if (content.startsWith("~~spongebob")) {
+			// TODO make it so i can set anyone to be trolled
+		}
+		
+		/**
 		 * Suggestions command, allows users to add suggestions
 		 */
 		if (content.startsWith("~~suggestion")) {
@@ -267,6 +270,7 @@ public class MyEventListener extends ListenerAdapter {
 				// TODO TicTacToe game. How to make it so the game 
 				// runs on a different thread so other cmds can run 
 				// while the game is running
+//				channel.sendMessage("Mentioned: " + mentioned.toString()).queue();
 			} else {
 				channel.sendMessage("To play tictactoe use this command syntax"
 						+ "\n~~tictactoe <@player>").queue();
@@ -290,6 +294,7 @@ public class MyEventListener extends ListenerAdapter {
 		if (objMember.getId().equals("268480279746838529") 
 				|| objMember.getId().equals("400805008276193290")) {
 			channel.sendMessage(spongebobUpper(content)).queue();
+			// TODO Find a way to "catch" images
 		}
 	}
 }
