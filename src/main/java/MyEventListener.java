@@ -6,10 +6,15 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -118,7 +123,8 @@ public class MyEventListener extends ListenerAdapter {
 		String newContent = "";
 		
 		for (int i = 0; i < content.length(); i++) {
-			newContent += (int)(Math.random()*2) == 0 ? Character.toLowerCase(content.charAt(i)) : Character.toUpperCase(content.charAt(i));
+			newContent += (int)(Math.random()*2) == 0 ? 
+					Character.toLowerCase(content.charAt(i)) : Character.toUpperCase(content.charAt(i));
 		}
 		
 		return newContent;
@@ -207,6 +213,17 @@ public class MyEventListener extends ListenerAdapter {
 			channel.sendMessage(mquotes.getRandomQuote()).queue();
 		}
 		
+		if (content.startsWith("~~ping")) {
+			channel.sendMessage("Pong! + " + event.getJDA().getGatewayPing());
+		}
+		
+		/**
+		 * Plays rock paper scissors with opponent
+		 */
+		if (content.startsWith("~~rps")) {
+			// TODO Rock Paper Scissors
+		}
+		
 		/**
 		 * Suggestions command, allows users to add suggestions
 		 */
@@ -227,7 +244,29 @@ public class MyEventListener extends ListenerAdapter {
 		 * Test message, gets bot's ping
 		 */
 		if (content.startsWith("~~test")) {
-			channel.sendMessage("This is a test message. Ping! Pong: " + event.getJDA().getGatewayPing()).queue();
+			channel.sendMessage("This is a test message. Ping! Pong: "
+					+ event.getJDA().getGatewayPing()).queue();
+		}
+		
+		if (event.isFromType(ChannelType.PRIVATE)) {
+			System.out.println("Private channel");
+		}
+		
+		/**
+		 * Plays tic tac toe with opponent
+		 */
+		if (content.startsWith("~~tictactoe")) {
+			List<User> mentioned = message.getMentionedUsers();
+			System.out.println(mentioned);
+			if (mentioned.size() > 0) {
+				TicTacToe game = new TicTacToe();
+				// TODO TicTacToe game. How to make it so the game 
+				// runs on a different thread so other cmds can run 
+				// while the game is running
+			} else {
+				channel.sendMessage("To play tictactoe use this command syntax"
+						+ "\n~~tictactoe <@player>").queue();
+			}
 		}
 		
 		/**
@@ -244,7 +283,8 @@ public class MyEventListener extends ListenerAdapter {
 		/**
 		 * Trolls calculasians and jayheart
 		 */
-		if (objMember.getId().equals("268480279746838529") || objMember.getId().equals("400805008276193290")) {
+		if (objMember.getId().equals("268480279746838529") 
+				|| objMember.getId().equals("400805008276193290")) {
 			channel.sendMessage(spongebobUpper(content)).queue();
 		}
 	}

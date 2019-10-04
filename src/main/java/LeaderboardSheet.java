@@ -61,8 +61,7 @@ public class LeaderboardSheet {
      * @throws IOException If the credentials.json file cannot be found.
      */
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
-        InputStream in = SheetsQuickstart.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
-//        InputStream in = LeaderboardSheet.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+        InputStream in = LeaderboardSheet.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
@@ -90,7 +89,7 @@ public class LeaderboardSheet {
      */
     public String getLeaderboard() throws IOException {
     	String range = "Main Leaderboard!A2:B20";
-    	String content = "";
+    	String content = "```";
     	
         ValueRange response = this.service.spreadsheets().values()
                 .get(this.spreadsheetId, range)
@@ -100,15 +99,17 @@ public class LeaderboardSheet {
         if (values == null || values.isEmpty()) {
             content += "No data found.";
         } else {
-        	content += "Name Colors, Total Wins\n";
+        	// Makes Leaderboard
+        	content += String.format("Player    : Total Wins\n");
             for (List<Object> row : values) {
                 try {
-                    content += row.get(0) + ", " + row.get(1) + "\n";
+                	content += String.format("%-10s: %3s\n", row.get(0), row.get(1));
                 } catch (IndexOutOfBoundsException e) {
                     System.err.println("Index does not exist\n");
                 }
             }
         }
+        content += "```";
 		return content;
     }
     
@@ -122,17 +123,17 @@ public class LeaderboardSheet {
      */
     public String getPlayer(String name1, String name2) throws IOException {
     	String range = name1 + "!A1:M50";
-    	String content = "";
+    	String content = "```";
     	
     	ValueRange response = this.service.spreadsheets().values()
                 .get(this.spreadsheetId, range)
                 .execute();
         
         List<List<Object>> values = response.getValues();
-        
         if (values == null || values.isEmpty()) {
             content += "No data found.";
         } else {
+        	// Finds player 2
         	List<Object> names = values.get(0);
         	int column = 0;
         	for (int i = 1; i < names.size(); i+=2) {
@@ -141,11 +142,12 @@ public class LeaderboardSheet {
         		}
         	}
         	
+        	// Prints scores
         	if (column != 0) {
-	        	content += Character.toUpperCase(name1.charAt(0)) + name1.substring(1) + " Vs. " + Character.toUpperCase(name2.charAt(0)) + name2.substring(1) + "\n";
+	        	content += Character.toUpperCase(name1.charAt(0)) + name1.substring(1) + " Vs. " + Character.toUpperCase(name2.charAt(0)) + name2.substring(1) + "\n\n";
 	            for (List<Object> row : values) {
 	                try {
-	                    content += row.get(column) + ", " + row.get(column+1) + "\n";
+	                	content += String.format("%-20s: %-3s,%3s\n", row.get(0), row.get(column), row.get(column+1));
 	                } catch (IndexOutOfBoundsException e) {
 	                    System.err.println("Index does not exist\n");
 	                    System.err.println("Columns: " + column);
@@ -157,8 +159,7 @@ public class LeaderboardSheet {
         		return "Player 2 not found";
         	}
         }
-        
-    	return content;
+    	return content + "```";
     }
     
     /**
@@ -166,6 +167,9 @@ public class LeaderboardSheet {
      * @return
      */
     public boolean addPlayer() {
+    	// TODO AddPlayer to leaderboard
+    	// 1. Add to MainLeaderboard new row
+    	// 2. Add new sheet to spreadsheet (copy from a template)
     	return false;
     }
 }
