@@ -1,4 +1,5 @@
 import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -67,13 +68,14 @@ public class MyEventListener extends ListenerAdapter {
 	public static void help(MessageChannel channel) {
 		String[][] cmds = {
 				{"~~help", "All possible commands"},
-				{"~~leaderboard.show <Player 1> <Player 2>", "Shows leaderboard. Player flags are optional to print scores between two people"},
+				{"~~leaderboard <Player 1> <Player 2>", "Shows leaderboard. Player flags are optional to print scores between two people"},
 				{"~~id", "Gets unique user ID"},
 				{"~~hello", "world"},
 				{"~~test", "Gets bot's ping"},
 				{"~~admin", "Tests admin privileges"},
 				{"~~mquote", "Sends random movie quote"},
 				{"~~suggestion [Command]", "Command suggestion for Andrew to make"},
+				{""},
 				{"-debug", "For admins only: Put at end of command for runtime"}
 		};
 		
@@ -100,13 +102,13 @@ public class MyEventListener extends ListenerAdapter {
 	 * @see #getLeaderboard()
 	 */
 	public static String leaderboardShow(String content) throws GeneralSecurityException, IOException {
-    	if (content.length() > 18) {
+    	if (content.length() > 14) {
     		String[] names = content.split(" ");
     		if (names.length >= 3) {
     			return getPlayerVS(names[1], names[2]);
     		} else {
     			return "Invalid command input.\n"
-    					+ "Format: ~~leaderboard.show <Player1> <Player2>";
+    					+ "Format: ~~leaderboard <Player1> <Player2>";
     		}
     	} else {
     		return getLeaderboard();
@@ -138,10 +140,9 @@ public class MyEventListener extends ListenerAdapter {
 	 */
 	public static void suggestions(String suggestion) throws IOException {
 		String path = "suggestions.txt";
-		BufferedWriter writer = Files.newBufferedWriter(Paths.get(path), StandardCharsets.UTF_8);
-		writer.append(suggestion);
-		// TODO don't use flush or close, find another way to save into file
-		writer.flush();
+		BufferedWriter writer = new BufferedWriter(new FileWriter(path, true));
+		writer.append(String.format(" * %s\n", suggestion));
+		writer.close();
 	}
 	
     /**
@@ -172,7 +173,7 @@ public class MyEventListener extends ListenerAdapter {
 		/**
 		 * Manipulating Google Sheets
 		 */
-		if (content.startsWith("~~leaderboard.show")) {
+		if (content.startsWith("~~leaderboard")) {
 			try {
 				channel.sendMessage(leaderboardShow(content)).queue();
 			} catch (IOException e) {
@@ -213,8 +214,11 @@ public class MyEventListener extends ListenerAdapter {
 			channel.sendMessage(mquotes.getRandomQuote()).queue();
 		}
 		
+		/**
+		 * Gets bot ping
+		 */
 		if (content.startsWith("~~ping")) {
-			channel.sendMessage("Pong! + " + event.getJDA().getGatewayPing());
+			channel.sendMessage("Pong! + " + event.getJDA().getGatewayPing()).queue();
 		}
 		
 		/**
@@ -241,7 +245,7 @@ public class MyEventListener extends ListenerAdapter {
 		}
 		
 		/**
-		 * Test message, gets bot's ping
+		 * Test message, changes
 		 */
 		if (content.startsWith("~~test")) {
 			channel.sendMessage("This is a test message. Ping! Pong: "
@@ -259,7 +263,7 @@ public class MyEventListener extends ListenerAdapter {
 			List<User> mentioned = message.getMentionedUsers();
 			System.out.println(mentioned);
 			if (mentioned.size() > 0) {
-				TicTacToe game = new TicTacToe();
+//				TicTacToe game = new TicTacToe();
 				// TODO TicTacToe game. How to make it so the game 
 				// runs on a different thread so other cmds can run 
 				// while the game is running
