@@ -1,5 +1,5 @@
 # B.A.S.S
-Personal Discord Bot
+Personal Discord Bot for Anti Secret Squad
 
 Command Line Args:
 javac Main.java
