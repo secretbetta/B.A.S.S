@@ -123,7 +123,7 @@ public class LeaderboardSheet {
      */
     public String getPlayer(String name1, String name2) throws IOException {
     	String range = name1 + "!A1:M50";
-    	String content = "```";
+    	String content = "```css\n";
     	
     	ValueRange response = this.service.spreadsheets().values()
                 .get(this.spreadsheetId, range)
@@ -144,15 +144,22 @@ public class LeaderboardSheet {
         	
         	// Prints scores
         	if (column != 0) {
-	        	content += Character.toUpperCase(name1.charAt(0)) + name1.substring(1) + " Vs. " + Character.toUpperCase(name2.charAt(0)) + name2.substring(1) + "\n\n";
+	        	content += "[" + Character.toUpperCase(name1.charAt(0)) 
+	        			+ name1.substring(1) 
+	        			+ " Vs. " + Character.toUpperCase(name2.charAt(0)) 
+	        			+ name2.substring(1) + "]\n\n";
 	            for (List<Object> row : values) {
 	                try {
-	                	content += String.format("%-20s: %-3s,%3s\n", row.get(0), row.get(column), row.get(column+1));
+	                	content += String.format("%-25s: %-3s,%3s\n", 
+	                			row.get(0), row.get(column), row.get(column+1));
+	                	if (row.get(column).equals("Wins")) {
+	                		content += "\n--------------------------------------------";
+	                	}
 	                } catch (IndexOutOfBoundsException e) {
 	                    System.err.println("Index does not exist\n");
-	                    System.err.println("Columns: " + column);
-	                    System.err.println("Size: " + row.size());
-	                    System.err.println(row);
+//	                    System.err.println("Columns: " + column);
+//	                    System.err.println("Size: " + row.size());
+//	                    System.err.println(row);
 	                }
 	            }
         	} else {

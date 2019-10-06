@@ -295,6 +295,7 @@ public class MyEventListener extends ListenerAdapter {
 				|| objMember.getId().equals("400805008276193290")) {
 			channel.sendMessage(spongebobUpper(content)).queue();
 			// TODO Find a way to "catch" images
+//			channel.sendFile(file, options);
 		}
 	}
 }
