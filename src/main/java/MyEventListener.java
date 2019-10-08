@@ -98,7 +98,7 @@ public class MyEventListener extends ListenerAdapter {
 	 * @see #getLeaderboard()
 	 */
 	public static String leaderboardShow(String content) throws GeneralSecurityException, IOException {
-    	if (content.length() > 14) {
+    	if (content.split(" ").length >= 2 && !content.split(" ")[1].equals("-debug")) {
     		String[] names = content.split(" ");
     		if (names.length >= 3) {
     			return getPlayerVS(names[1], names[2]);
@@ -167,21 +167,6 @@ public class MyEventListener extends ListenerAdapter {
 		}
 		
 		/**
-		 * Manipulating Google Sheets
-		 */
-		if (content.startsWith("~~leaderboard")) {
-			try {
-				channel.sendMessage(leaderboardShow(content)).queue();
-			} catch (IOException e) {
-				System.err.println("Player 1 cannot be found");
-				channel.sendMessage("Player 1 not found").queue();
-			} catch (GeneralSecurityException e) {
-				e.printStackTrace();
-				System.err.println("Wtf happened? O.o");
-			}
-		}
-		
-		/**
 		 * Outputs list of possible commands
 		 */
 		if (content.startsWith("~~help")) {
@@ -201,6 +186,21 @@ public class MyEventListener extends ListenerAdapter {
 		if (content.startsWith("~~id")) {
 			System.out.println(objMember.getId());
 			channel.sendMessage("Your id is: " + objMember.getId()).queue();
+		}
+		
+		/**
+		 * Shows Leaderboard
+		 */
+		if (content.startsWith("~~leaderboard")) {
+			try {
+				channel.sendMessage(leaderboardShow(content)).queue();
+			} catch (IOException e) {
+				System.err.println("Player 1 cannot be found");
+				channel.sendMessage("Player 1 not found").queue();
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+				System.err.println("Wtf happened? O.o");
+			}
 		}
 		
 		/**

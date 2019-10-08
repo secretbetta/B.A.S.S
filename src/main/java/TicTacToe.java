@@ -30,6 +30,17 @@ public class TicTacToe {
 		return false;
 	}
 	
+	public int winner() {
+		for (int x = 0; x < board.length; x++) {
+			for (int y = 0; y < board[x].length; y++) {
+				if (board[x][y] == board[x][y]) {
+					
+				}
+			}
+		}
+		return 1;
+	}
+	
 	/**
 	 * To String of tic tac toe board
 	 */

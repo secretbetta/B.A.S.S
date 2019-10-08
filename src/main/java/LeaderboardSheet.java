@@ -123,7 +123,7 @@ public class LeaderboardSheet {
      */
     public String getPlayer(String name1, String name2) throws IOException {
     	String range = name1 + "!A1:M50";
-    	String content = "```css\n";
+    	String content = "```css\n"; // CSS Markdown format
     	
     	ValueRange response = this.service.spreadsheets().values()
                 .get(this.spreadsheetId, range)
@@ -157,9 +157,6 @@ public class LeaderboardSheet {
 	                	}
 	                } catch (IndexOutOfBoundsException e) {
 	                    System.err.println("Index does not exist\n");
-//	                    System.err.println("Columns: " + column);
-//	                    System.err.println("Size: " + row.size());
-//	                    System.err.println(row);
 	                }
 	            }
         	} else {
