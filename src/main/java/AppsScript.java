@@ -10,10 +10,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.script.Script;
 import com.google.api.services.script.model.Content;
-import com.google.api.services.script.model.CreateProjectRequest;
 import com.google.api.services.script.model.File;
-import com.google.api.services.script.model.Project;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +70,7 @@ public class AppsScript {
         Script.Projects projects = service.projects();
 
         // Creates a new script project.
-        Project createOp = projects.create(new CreateProjectRequest().setTitle("My Script")).execute();
+//        Project createOp = projects.create(new CreateProjectRequest().setTitle("My Script")).execute();
 
         // Uploads two files to the project.
         File file1 = new File()
