@@ -253,6 +253,16 @@ public class MyEventListener extends ListenerAdapter {
 		if (content.startsWith("~~test")) {
 			channel.sendMessage("This is a test message. Ping! Pong: "
 					+ event.getJDA().getGatewayPing()).queue();
+			try {
+				LeaderboardSheet sheets = new LeaderboardSheet();
+				sheets.addPlayer();
+			} catch (GeneralSecurityException e) {
+				channel.sendMessage("Security Error!!!\nStacktrace:\n`" + e + "`").queue();
+				e.printStackTrace();
+			} catch (IOException e) {
+				channel.sendMessage("IOException Error!!!\nStacktrace:\n`" + e + "`").queue();
+				e.printStackTrace();
+			}
 		}
 		
 		if (event.isFromType(ChannelType.PRIVATE)) {
@@ -290,9 +300,9 @@ public class MyEventListener extends ListenerAdapter {
 		
 		/**
 		 * Trolls calculasians and jayheart
+		 * Jayheart: 400805008276193290
 		 */
-		if (objMember.getId().equals("268480279746838529") 
-				|| objMember.getId().equals("400805008276193290")) {
+		if (objMember.getId().equals("268480279746838529")) {
 			channel.sendMessage(spongebobUpper(content)).queue();
 			// TODO Find a way to "catch" images
 //			channel.sendFile(file, options);

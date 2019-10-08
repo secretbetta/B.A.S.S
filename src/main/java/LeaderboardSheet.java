@@ -12,12 +12,15 @@ import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
+import com.google.api.services.sheets.v4.model.CopySheetToAnotherSpreadsheetRequest;
+import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 /**
@@ -166,14 +169,42 @@ public class LeaderboardSheet {
     	return content + "```";
     }
     
+    public static Sheets createSheetsService() throws IOException, GeneralSecurityException {
+        HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+
+        // Change placeholder below to generate authentication credentials. See
+        // https://developers.google.com/sheets/quickstart/java#step_3_set_up_the_sample
+        //
+        // Authorize using one of the following scopes:
+        //   "https://www.googleapis.com/auth/drive"
+        //   "https://www.googleapis.com/auth/drive.file"
+        //   "https://www.googleapis.com/auth/spreadsheets"
+//        GoogleCredential credential = getCredentials(HTTP_TRANSPORT);
+
+        return new Sheets.Builder(httpTransport, jsonFactory, getCredentials(GoogleNetHttpTransport.newTrustedTransport()))
+        		.setApplicationName("Google-SheetsSample/0.1")
+        		.build();
+    }
+    
     /**
      * Adds new player to a new sheet in leaderboard
      * @return
+     * @throws IOException 
+     * @throws GeneralSecurityException 
      */
-    public boolean addPlayer() {
+    public boolean addPlayer() throws IOException, GeneralSecurityException {
     	// TODO AddPlayer to leaderboard
     	// 1. Add to MainLeaderboard new row
     	// 2. Add new sheet to spreadsheet (copy from a template)
-    	return false;
+    	CopySheetToAnotherSpreadsheetRequest requestBody = new CopySheetToAnotherSpreadsheetRequest();
+        requestBody.setDestinationSpreadsheetId(this.spreadsheetId);
+
+        Sheets sheetsService = createSheetsService();
+        Sheets.Spreadsheets.SheetsOperations.CopyTo request =
+            sheetsService.spreadsheets().sheets().copyTo(this.spreadsheetId, 7876048, requestBody);
+        SheetProperties response = request.execute();
+        System.out.println(response);
+    	return true;
     }
 }
