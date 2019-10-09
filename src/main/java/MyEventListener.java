@@ -222,6 +222,7 @@ public class MyEventListener extends ListenerAdapter {
 		 */
 		if (content.startsWith("~~rps")) {
 			// TODO Rock Paper Scissors
+			event.isFromType(ChannelType.PRIVATE);
 		}
 		
 		/**
