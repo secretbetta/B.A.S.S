@@ -1,6 +1,7 @@
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 
 /**
@@ -16,12 +17,13 @@ public class Main {
 				System.err.println("No token given");
 				System.exit(1);
 			}
-			System.out.println(args[0]);
 			System.out.println("Running B.A.S.S Bot");
 			JDA api = new JDABuilder(AccountType.BOT)
 					.setToken(args[0])
 					.setActivity(Activity.playing("try ~~help"))
 					.build();
+			api.getPresence().setStatus(OnlineStatus.ONLINE);
+//			api.getPresence().setGame(Game);
 			api.addEventListener(new MyEventListener());
 		} catch (Exception e) {
 			e.printStackTrace();
