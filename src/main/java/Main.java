@@ -3,13 +3,15 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
  * Discord Bot Loader
  * @author Andrew
  *
  */
-public class Main {
+public class Main extends ListenerAdapter {
 	
 	public static void main(String[] args) throws Exception {
 		try {
@@ -25,8 +27,16 @@ public class Main {
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
 //			api.getPresence().setGame(Game);
 			api.addEventListener(new MyEventListener());
+			api.addEventListener(new Main());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Event Handler
+	 */
+	public void onMessageReceived(MessageReceivedEvent event) {
+		
 	}
 }

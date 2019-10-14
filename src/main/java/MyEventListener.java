@@ -289,6 +289,18 @@ public class MyEventListener extends ListenerAdapter {
 		}
 		
 		/**
+		 * Partial Credit to Hieu
+		 * Weather getter
+		 * TODO weather getter for city that users input.
+		 */
+		if (content.startsWith("~~weather")) {
+			if (objMember.getId().equals("400805008276193290")) {
+				
+			}
+//			String city = content.split(" ")[1];
+		}
+		
+		/**
 		 * Debugger
 		 */
 		if (content.endsWith("-debug") && objMember.hasPermission(Permission.ADMINISTRATOR)) {

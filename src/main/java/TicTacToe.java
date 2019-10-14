@@ -4,7 +4,7 @@
  *
  */
 public class TicTacToe {
-	
+	/* Game board */
 	private char[][] board;
 	
 	/**
@@ -23,22 +23,70 @@ public class TicTacToe {
 	 * @return
 	 */
 	public boolean move(int x, int y, char player) {
-		if (board[x][y] == 0) {
-			board[x][y] = player;
+		if (this.board[x][y] == '\0') {
+			this.board[x][y] = player;
 			return true;
 		}
 		return false;
 	}
 	
-	public int winner() {
-		for (int x = 0; x < board.length; x++) {
-			for (int y = 0; y < board[x].length; y++) {
-				if (board[x][y] == board[x][y]) {
-					
+	/**
+	 * Creates a new board
+	 */
+	public void newGame() {
+		this.board = new char[3][3];
+	}
+	
+	/**
+	 * Checks for winner, draw, or game is still on going
+	 * @return "x" or "o" for winner, none for on going game, draw for a tie
+	 */
+	public String winner() {
+		for (int x = 0; x < 8; x++) {
+			String line = null;
+			switch (x) {
+				case 0: 
+					line = "" + this.board[0][0] + this.board[0][1] + this.board[0][2];
+					break;
+				case 1:
+					line = "" + this.board[1][0] + this.board[1][1] + this.board[1][2];
+					break;
+				case 2:
+					line = "" + this.board[2][0] + this.board[2][1] + this.board[2][2];
+					break;
+				case 3:
+					line = "" + this.board[0][0] + this.board[1][0] + this.board[2][0];
+					break;
+				case 4:
+					line = "" + this.board[0][1] + this.board[1][1] + this.board[2][1];
+					break;
+				case 5:
+					line = "" + this.board[0][2] + this.board[1][2] + this.board[2][2];
+					break;
+				case 6:
+					line = "" + this.board[0][0] + this.board[1][1] + this.board[2][2];
+					break;
+				case 7:
+					line = "" + this.board[0][2] + this.board[1][1] + this.board[2][0];
+					break;
+			}
+			
+			if (line.equals("xxx")) {
+				return "x";
+			} else if (line.equals("ooo")) {
+				return "o";
+			}
+		}
+		
+		for (int r = 0; r < 3; r++) {
+			for (int c = 0; c < 3; c++) {
+				if (this.board[r][c] == '\0') {
+					return "none";
 				}
 			}
 		}
-		return 1;
+		
+		return "draw";
 	}
 	
 	/**
@@ -54,9 +102,4 @@ public class TicTacToe {
 		}
 		return content;
 	}
-
-	public static void main(String[] args) {
-		
-	}
-
 }

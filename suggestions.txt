@@ -1,0 +1,3 @@
+ * weather getter
+ * troll <@400805008276193290>
+ * webcrawler for various things
