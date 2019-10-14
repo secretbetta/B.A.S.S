@@ -44,11 +44,12 @@ public class TicTacToeEvent extends ListenerAdapter {
 	 */
 	public String winCheck() {
 		if (this.tttGame.winner().length() == 1) {
-			this.reset();
-			return (String.format("Winner is %s!",
+			String line = String.format("Winner is %s!",
 					this.tttGame.winner().equals("x") ? 
-						this.player1.getEffectiveName() : 
-						this.player2.getEffectiveName()));
+							this.player1.getEffectiveName() : 
+							this.player2.getEffectiveName());
+			this.reset();
+			return line;
 		} else if (this.tttGame.winner().equals("draw")) {
 			this.reset();
 			return "It's a tie!";

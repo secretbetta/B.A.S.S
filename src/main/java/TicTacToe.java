@@ -91,13 +91,13 @@ public class TicTacToe {
 	 * To String of tic tac toe board
 	 */
 	public String toString() {
-		String content = "";
+		String content = "```\n";
 		for (int x = 0; x < 3; x++) {
 			for (int y = 0; y < 3; y++) {
-				content += String.format("[%c]", board[x*3 + y]);
+				content += String.format("[%c]", (board[x*3 + y] != '\0') ? board[x*3+y] : ' ');
 			}
 			content += "\n";
 		}
-		return content;
+		return content + "```";
 	}
 }
