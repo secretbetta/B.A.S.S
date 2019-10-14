@@ -47,16 +47,16 @@ public class TicTacToeEvent extends ListenerAdapter {
 			this.reset();
 			return (String.format("Winner is %s!",
 					this.tttGame.winner().equals("x") ? 
-						this.player1.getNickname() : 
-						this.player2.getNickname()));
+						this.player1.getEffectiveName() : 
+						this.player2.getEffectiveName()));
 		} else if (this.tttGame.winner().equals("draw")) {
 			this.reset();
 			return "It's a tie!";
 		} else {
 			return (String.format("%s's turn. Type ~~move <num> ", 
 					(this.player == 0 ? 
-						this.player1.getNickname() : 
-						this.player2.getNickname())));
+						this.player1.getEffectiveName() : 
+						this.player2.getEffectiveName())));
 		}
 	}
 	
@@ -91,7 +91,7 @@ public class TicTacToeEvent extends ListenerAdapter {
 					event.getAuthor().getAsMention(), players.get(0))).queue();
 			channel.sendMessage(tttGame.toString()).queue();
 			channel.sendMessage(String.format("%s's turn. Type ~~move <num> ", 
-					event.getMember().getNickname())).queue();
+					event.getMember().getEffectiveName())).queue();
 			
 			this.player1 = objMember;
 			this.player2 = players.get(0);
@@ -104,9 +104,10 @@ public class TicTacToeEvent extends ListenerAdapter {
 		/**
 		 * Move input
 		 */
-		if (content.startsWith("~~move") && this.gameStart && (this.player == 0 ? 
-				this.player1.getId() : 
-				this.player2.getId()).equals(objMember.getId())) {
+		if (content.startsWith("~~move") && this.gameStart && 
+				(this.player == 0 ? 
+				this.player1.getId() : this.player2.getId())
+				.equals(objMember.getId())) {
 			try {
 				if (content.split(" ").length > 1 && 
 						Integer.parseInt(content.split(" ")[1], 10)-1 < 9 &&
@@ -126,22 +127,30 @@ public class TicTacToeEvent extends ListenerAdapter {
 					channel.sendMessage(winCheck()).queue();
 				} else {
 					channel.sendMessage("Invalid input. Enter a number from 1-9 inclusive").queue();
+					channel.sendMessage(tttGame.toString()).queue();
 				}
 			} catch (NumberFormatException e) {
 				channel.sendMessage("Invalid input. Enter a number from 1-9 inclusive").queue();
+				channel.sendMessage(tttGame.toString()).queue();
 			}
 		} else if (content.startsWith("~~move") && this.gameStart && !(this.player == 0 ? 
 				this.player1.getId() : 
 				this.player2.getId()).equals(objMember.getId())) {
 			channel.sendMessage("It's not your turn!").queue();
+		} else if (content.startsWith("~~move") && !this.gameStart) {
+			channel.sendMessage("No game playing!").queue();
 		}
 		
 		/**
 		 * Quit cmd
 		 */
-		if (content.equals("~~quit") && this.gameStart) {
-			channel.sendMessage(String.format("Player %s has forfeited.", objMember.getNickname())).queue();
+		if (content.equals("~~quit") && this.gameStart && 
+				(this.player1.getId().equals(objMember.getId()) || 
+				this.player2.getId().equals(objMember.getId()))) {
+			channel.sendMessage(String.format("Player %s has forfeited.", objMember.getEffectiveName())).queue();
 			reset();
+		} else if (content.equals("~~quit") && !this.gameStart) {
+			channel.sendMessage("No game playing!").queue();
 		}
 	}
 }
