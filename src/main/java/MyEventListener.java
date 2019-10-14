@@ -271,24 +271,6 @@ public class MyEventListener extends ListenerAdapter {
 		}
 		
 		/**
-		 * Plays tic tac toe with opponent
-		 */
-		if (content.startsWith("~~tictactoe")) {
-			List<User> mentioned = message.getMentionedUsers();
-			System.out.println(mentioned);
-			if (mentioned.size() > 0) {
-//				TicTacToe game = new TicTacToe();
-				// TODO TicTacToe game. How to make it so the game 
-				// runs on a different thread so other cmds can run 
-				// while the game is running
-//				channel.sendMessage("Mentioned: " + mentioned.toString()).queue();
-			} else {
-				channel.sendMessage("To play tictactoe use this command syntax"
-						+ "\n~~tictactoe <@player>").queue();
-			}
-		}
-		
-		/**
 		 * Partial Credit to Hieu
 		 * Weather getter
 		 * TODO weather getter for city that users input.

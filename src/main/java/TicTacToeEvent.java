@@ -6,6 +6,11 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+/**
+ * TicTacToe event listener
+ * @author Andrew
+ *
+ */
 public class TicTacToeEvent extends ListenerAdapter {
 	public TicTacToe tttGame;
 	public int player;
@@ -13,18 +18,46 @@ public class TicTacToeEvent extends ListenerAdapter {
 	public Member player2;
 	public boolean gameStart;
 	
+	/**
+	 * Initializes event
+	 */
 	public TicTacToeEvent() {
 		this.tttGame = new TicTacToe();
 		player = 0;
 		this.gameStart = false;
 	}
 	
+	/**
+	 * Resets the game
+	 */
 	public void reset() {
 		this.tttGame.newGame();
 		this.player = 0;
 		this.gameStart = false;
 		this.player1 = null;
 		this.player2 = null;
+	}
+	
+	/**
+	 * Checks winner, else returns player's turn
+	 * @return turn of player if no winner
+	 */
+	public String winCheck() {
+		if (this.tttGame.winner().length() == 1) {
+			this.reset();
+			return (String.format("Winner is %s!",
+					this.tttGame.winner().equals("x") ? 
+						this.player1.getNickname() : 
+						this.player2.getNickname()));
+		} else if (this.tttGame.winner().equals("draw")) {
+			this.reset();
+			return "It's a tie!";
+		} else {
+			return (String.format("%s's turn. Type ~~move <num> ", 
+					(this.player == 0 ? 
+						this.player1.getNickname() : 
+						this.player2.getNickname())));
+		}
 	}
 	
 	/**
@@ -70,6 +103,7 @@ public class TicTacToeEvent extends ListenerAdapter {
 		
 		/**
 		 * Move input
+		 * TODO Move these into methods
 		 */
 		if (content.startsWith("~~move") && this.gameStart && (this.player == 0 ? 
 				this.player1.getId() : 
@@ -87,18 +121,22 @@ public class TicTacToeEvent extends ListenerAdapter {
 						channel.sendMessage("Cannot place in this square! Try again.").queue();
 					}
 					
-					if (this.tttGame.winner().length() == 1) {
-						channel.sendMessage(String.format("Winner is %s!",
-								this.tttGame.winner().equals("x") ? 
-									this.player1.getNickname() : 
-									this.player2.getNickname())).queue();
-						reset();
-					} else {
-						channel.sendMessage(String.format("%s's turn. Type ~~move <num> ", 
-								(this.player == 0 ? 
-									this.player1.getNickname() : 
-									this.player2.getNickname()))).queue();
-					}
+					/**
+					 * Win check and resets game
+					 */
+					channel.sendMessage(winCheck()).queue();
+//					if (this.tttGame.winner().length() == 1) {
+//						channel.sendMessage(String.format("Winner is %s!",
+//								this.tttGame.winner().equals("x") ? 
+//									this.player1.getNickname() : 
+//									this.player2.getNickname())).queue();
+//						reset();
+//					} else {
+//						channel.sendMessage(String.format("%s's turn. Type ~~move <num> ", 
+//								(this.player == 0 ? 
+//									this.player1.getNickname() : 
+//									this.player2.getNickname()))).queue();
+//					}
 				} else {
 					channel.sendMessage("Invalid input. Enter a number from 1-9 inclusive").queue();
 				}
@@ -111,6 +149,4 @@ public class TicTacToeEvent extends ListenerAdapter {
 			channel.sendMessage("It's not your turn!").queue();
 		}
 	}
-	
-	
 }
