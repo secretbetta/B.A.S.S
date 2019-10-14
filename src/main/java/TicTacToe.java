@@ -5,13 +5,13 @@
  */
 public class TicTacToe {
 	/* Game board */
-	private char[][] board;
+	private char[] board;
 	
 	/**
 	 * Initializes TicTacToe board
 	 */
 	public TicTacToe() {
-		board = new char[3][3];
+		board = new char[9];
 	}
 	
 	/**
@@ -22,9 +22,9 @@ public class TicTacToe {
 	 * @param player x, o
 	 * @return
 	 */
-	public boolean move(int x, int y, char player) {
-		if (this.board[x][y] == '\0') {
-			this.board[x][y] = player;
+	public boolean move(int move, char player) {
+		if (this.board[move] == '\0') {
+			this.board[move] = player;
 			return true;
 		}
 		return false;
@@ -34,7 +34,7 @@ public class TicTacToe {
 	 * Creates a new board
 	 */
 	public void newGame() {
-		this.board = new char[3][3];
+		this.board = new char[9];
 	}
 	
 	/**
@@ -46,28 +46,28 @@ public class TicTacToe {
 			String line = null;
 			switch (x) {
 				case 0: 
-					line = "" + this.board[0][0] + this.board[0][1] + this.board[0][2];
+					line = "" + this.board[0] + this.board[1] + this.board[2];
 					break;
 				case 1:
-					line = "" + this.board[1][0] + this.board[1][1] + this.board[1][2];
+					line = "" + this.board[3] + this.board[4] + this.board[5];
 					break;
 				case 2:
-					line = "" + this.board[2][0] + this.board[2][1] + this.board[2][2];
+					line = "" + this.board[6] + this.board[7] + this.board[8];
 					break;
 				case 3:
-					line = "" + this.board[0][0] + this.board[1][0] + this.board[2][0];
+					line = "" + this.board[0] + this.board[3] + this.board[6];
 					break;
 				case 4:
-					line = "" + this.board[0][1] + this.board[1][1] + this.board[2][1];
+					line = "" + this.board[1] + this.board[4] + this.board[7];
 					break;
 				case 5:
-					line = "" + this.board[0][2] + this.board[1][2] + this.board[2][2];
+					line = "" + this.board[2] + this.board[5] + this.board[8];
 					break;
 				case 6:
-					line = "" + this.board[0][0] + this.board[1][1] + this.board[2][2];
+					line = "" + this.board[0] + this.board[4] + this.board[8];
 					break;
 				case 7:
-					line = "" + this.board[0][2] + this.board[1][1] + this.board[2][0];
+					line = "" + this.board[2] + this.board[4] + this.board[6];
 					break;
 			}
 			
@@ -78,11 +78,9 @@ public class TicTacToe {
 			}
 		}
 		
-		for (int r = 0; r < 3; r++) {
-			for (int c = 0; c < 3; c++) {
-				if (this.board[r][c] == '\0') {
-					return "none";
-				}
+		for (int r = 0; r < 9; r++) {
+			if (this.board[r] == '\0') {
+				return "none";
 			}
 		}
 		
@@ -94,9 +92,9 @@ public class TicTacToe {
 	 */
 	public String toString() {
 		String content = "";
-		for (int x = 0; x < board.length; x++) {
-			for (int y = 0; y < board.length; y++) {
-				content += String.format("[%c]", board[x][y]);
+		for (int x = 0; x < 3; x++) {
+			for (int y = 0; y < 3; y++) {
+				content += String.format("[%c]", board[x*3 + y]);
 			}
 			content += "\n";
 		}
