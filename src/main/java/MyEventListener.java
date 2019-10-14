@@ -72,7 +72,11 @@ public class MyEventListener extends ListenerAdapter {
 				{"~~mquote", "Sends random movie quote"},
 				{"~~suggestion [Command]", "Command suggestion for Andrew to make"},
 				{"~~ping", "Pong!"},
-				{"-debug", "For admins only: Put at end of command for runtime"}
+				{"~~ttt <@Opponent>", "Tic Tac Toe against mentioned opponent"},
+				{"TTT Sub commands", "----------------------------"},
+				{"~~move <1-9>", "Where to place your move, 1-9 from top left to bottom right"},
+				{"Admin commands", "----------------------------"},
+				{"-debug", "Put at end of command for runtime"}
 		};
 		
 		String content = "**Command List**\n```";
@@ -249,7 +253,7 @@ public class MyEventListener extends ListenerAdapter {
 		}
 		
 		/**
-		 * Test message, changes
+		 * Test message, changes for testing purposes :p
 		 */
 		if (content.startsWith("~~test")) {
 			channel.sendMessage("This is a test message. Ping! Pong: "
@@ -299,8 +303,6 @@ public class MyEventListener extends ListenerAdapter {
 		 */
 		if (objMember.getId().equals("268480279746838529")) {
 			channel.sendMessage(spongebobUpper(content)).queue();
-			// TODO Find a way to "catch" images
-//			channel.sendFile(file, options);
 		}
 	}
 }

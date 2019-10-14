@@ -103,7 +103,6 @@ public class TicTacToeEvent extends ListenerAdapter {
 		
 		/**
 		 * Move input
-		 * TODO Move these into methods
 		 */
 		if (content.startsWith("~~move") && this.gameStart && (this.player == 0 ? 
 				this.player1.getId() : 
@@ -125,18 +124,6 @@ public class TicTacToeEvent extends ListenerAdapter {
 					 * Win check and resets game
 					 */
 					channel.sendMessage(winCheck()).queue();
-//					if (this.tttGame.winner().length() == 1) {
-//						channel.sendMessage(String.format("Winner is %s!",
-//								this.tttGame.winner().equals("x") ? 
-//									this.player1.getNickname() : 
-//									this.player2.getNickname())).queue();
-//						reset();
-//					} else {
-//						channel.sendMessage(String.format("%s's turn. Type ~~move <num> ", 
-//								(this.player == 0 ? 
-//									this.player1.getNickname() : 
-//									this.player2.getNickname()))).queue();
-//					}
 				} else {
 					channel.sendMessage("Invalid input. Enter a number from 1-9 inclusive").queue();
 				}
