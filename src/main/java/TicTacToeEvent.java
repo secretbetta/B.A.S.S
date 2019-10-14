@@ -135,5 +135,13 @@ public class TicTacToeEvent extends ListenerAdapter {
 				this.player2.getId()).equals(objMember.getId())) {
 			channel.sendMessage("It's not your turn!").queue();
 		}
+		
+		/**
+		 * Quit cmd
+		 */
+		if (content.equals("~~quit") && this.gameStart) {
+			channel.sendMessage(String.format("Player %s has forfeited.", objMember.getNickname())).queue();
+			reset();
+		}
 	}
 }

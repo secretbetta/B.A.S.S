@@ -75,6 +75,7 @@ public class MyEventListener extends ListenerAdapter {
 				{"~~ttt <@Opponent>", "Tic Tac Toe against mentioned opponent"},
 				{"TTT Sub commands", "----------------------------"},
 				{"~~move <1-9>", "Where to place your move, 1-9 from top left to bottom right"},
+				{"~~quit", "Quit Tic Tac Toe. Automatic loss"},
 				{"Admin commands", "----------------------------"},
 				{"-debug", "Put at end of command for runtime"}
 		};
