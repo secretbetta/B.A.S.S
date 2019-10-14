@@ -17,10 +17,14 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  *
  */
 public class Main extends ListenerAdapter {
-	public static TicTacToe tttGame;
+	public TicTacToe tttGame;
+	public int player;
+	public boolean gameStart;
 	
 	public Main() {
-		tttGame = new TicTacToe();
+//		this.tttGame = new TicTacToe();
+		this.player = 0;
+		this.gameStart = true;
 	}
 	
 	public static void main(String[] args) throws Exception {
