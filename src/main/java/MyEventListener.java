@@ -76,7 +76,6 @@ public class MyEventListener extends ListenerAdapter {
 				{"~~id", "Gets unique user ID"},
 				{"~~hello", "world"},
 				{"~~test", "Test command, differs from time to time"},
-				{"~~admin", "Tests admin privileges"},
 				{"~~mquote", "Sends random movie quote"},
 				{"~~suggestion [Command]", "Command suggestion for Andrew to make"},
 				{"~~ping", "Pong!"},
@@ -85,6 +84,8 @@ public class MyEventListener extends ListenerAdapter {
 				{"~~move <1-9>", "Where to place your move, 1-9 from top left to bottom right"},
 				{"~~quit", "Quit Tic Tac Toe. Automatic loss"},
 				{"Admin commands", "----------------------------"},
+				{"~~admin", "Tests admin privileges"},
+				{"~~spongebob <@user>...", "Adds one or more users to spongebob troll function"},
 				{"-debug", "Put at end of command for runtime"}
 		};
 		
