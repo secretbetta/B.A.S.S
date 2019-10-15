@@ -1,17 +1,23 @@
+import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -244,9 +250,14 @@ public class MyEventListener extends ListenerAdapter {
 		 */
 		if (content.startsWith("~~spongebob") && objMember.hasPermission(Permission.ADMINISTRATOR)) {
 			List<Member> members = message.getMentionedMembers();
-			for (Member id : members) {
-				this.trollIds.add(id.getId());
-				channel.sendMessage(String.format("%s has been added", id.getEffectiveName())).queue();
+			for (Member member : members) {
+				if (!this.trollIds.contains(member.getId())) {
+					this.trollIds.add(member.getId());
+					channel.sendMessage(String.format("%s has been added", member.getEffectiveName())).queue();
+				} else {
+					this.trollIds.remove(member.getId());
+					channel.sendMessage(String.format("%s has been removed", member.getEffectiveName())).queue();
+				}
 			}
 		}
 		
@@ -270,23 +281,51 @@ public class MyEventListener extends ListenerAdapter {
 		 * Test message, changes for testing purposes :p
 		 */
 		if (content.startsWith("~~test")) {
-			channel.sendMessage("This is a test message. Ping! Pong: "
-				+ event.getJDA().getGatewayPing()).queue();
-			try {
-				LeaderboardSheet sheets = new LeaderboardSheet();
-				sheets.addPlayer();
-			} catch (GeneralSecurityException e) {
-				channel.sendMessage("Security Error!!!\nStacktrace:\n`" + e + "`").queue();
-				e.printStackTrace();
-			} catch (IOException e) {
-				channel.sendMessage("IOException Error!!!\nStacktrace:\n`" + e + "`").queue();
-				e.printStackTrace();
-			}
+			channel.sendMessage("This is a test embedded message").queue();
+			EmbedBuilder eb = new EmbedBuilder();
+			eb.setTitle("Test Embed");
+			eb.setColor(Color.blue);
+			eb.setDescription("This is just a test format");
+			eb.addField("Field test", "Testing field", false);
+			eb.addBlankField(true);
+			eb.setAuthor("Test png", null, "https://img.pngio.com/ceshi-test-testing-icon-with-png-and-vector-format-for-free-testing-png-512_512.png");
+			eb.setFooter("Footer", "https://github.com/zekroTJA/DiscordBot/blob/master/.websrc/zekroBot_Logo_-_round_small.png");
+			eb.setImage("https://github.com/zekroTJA/DiscordBot/blob/master/.websrc/logo%20-%20title.png");
+			eb.setThumbnail("https://github.com/zekroTJA/DiscordBot/blob/master/.websrc/logo%20-%20title.png");
+			channel.sendMessage(eb.build()).queue();
+//			try {
+//				LeaderboardSheet sheets = new LeaderboardSheet();
+//				sheets.addPlayer();
+//			} catch (GeneralSecurityException e) {
+//				channel.sendMessage("Security Error!!!\nStacktrace:\n`" + e + "`").queue();
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				channel.sendMessage("IOException Error!!!\nStacktrace:\n`" + e + "`").queue();
+//				e.printStackTrace();
+//			}
 		}
 		
 		if (event.isFromType(ChannelType.PRIVATE)) {
 			System.out.println("Private channel");
 		}
+		
+//		if (content.startsWith("~~user")) {
+//			List<Member> members = message.getMentionedMembers();
+//			EmbedBuilder eb = new EmbedBuilder();
+//			eb.setTitle("User Info");
+//			eb.setColor(Color.blue);
+////			eb.setDescription(String.format("User information"));
+////			List<Activity> activities = members.get(0).getActivities();
+//			eb.setAuthor(String.format("%s", members.get(0).getEffectiveName()), members.get(0).getUser().getAvatarUrl());
+//			eb.addField("Nickname", members.get(0).getNickname() == null ? members.get(0).getNickname() : "None", false);
+//			eb.addField("ID", members.get(0).getId(), true);
+////			eb.addField("Roles", String.join(" ", (Iterable<? extends CharSequence>) members.get(0).getRoles()), true);
+//			OffsetDateTime time = members.get(0).getTimeJoined();
+//			eb.addField("Date Joined",
+//					String.format("%2d:%2d %s %d, %d", time.getHour(), time.getMinute(), time.getMonth().toString(), time.getDayOfMonth(), time.getYear())
+//					, false);
+//			channel.sendMessage(eb.build()).queue();
+//		}
 		
 		/**
 		 * Partial Credit to Hieu
