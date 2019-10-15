@@ -101,8 +101,8 @@ public class MyEventListener extends ListenerAdapter {
 	 * @see #getLeaderboard()
 	 */
 	public static String leaderboardShow(String content) throws GeneralSecurityException, IOException {
-    	if (content.split(" ").length >= 2 && !content.split(" ")[1].equals("-debug")) {
-    		String[] names = content.split(" ");
+    	if (content.split("\\s+").length >= 2 && !content.split("\\s+")[1].equals("-debug")) {
+    		String[] names = content.split("\\s+");
     		if (names.length >= 3) {
     			return getPlayerVS(names[1], names[2]);
     		} else {
@@ -256,7 +256,7 @@ public class MyEventListener extends ListenerAdapter {
 		 */
 		if (content.startsWith("~~test")) {
 			channel.sendMessage("This is a test message. Ping! Pong: "
-					+ event.getJDA().getGatewayPing()).queue();
+				+ event.getJDA().getGatewayPing()).queue();
 			try {
 				LeaderboardSheet sheets = new LeaderboardSheet();
 				sheets.addPlayer();
@@ -282,7 +282,7 @@ public class MyEventListener extends ListenerAdapter {
 			if (objMember.getId().equals("400805008276193290")) {
 				
 			}
-//			String city = content.split(" ")[1];
+//			String city = content.split("\\s+")[1];
 		}
 		
 		/**

@@ -88,6 +88,7 @@ public class TicTacToeEvent extends ListenerAdapter {
 						+ "but you can't play against yourself...").queue();
 				return;
 			}
+			channel.sendMessage("Game will end in 5 minutes").queue();
 			channel.sendMessage(String.format("Player 1: %s\nPlayer 2: %s", 
 					event.getAuthor().getAsMention(), players.get(0))).queue();
 			channel.sendMessage(tttGame.toString()).queue();
@@ -152,6 +153,25 @@ public class TicTacToeEvent extends ListenerAdapter {
 			reset();
 		} else if (content.equals("~~quit") && !this.gameStart) {
 			channel.sendMessage("No game playing!").queue();
+		}
+		
+		/**
+		 * 5 minutes per game
+		 */
+		if (this.gameStart) {
+			new java.util.Timer().schedule(
+				new java.util.TimerTask() {
+					@Override
+					public void run() {
+						channel.sendMessage(String.format("Game Over. %s took too long to play.", 
+								player == 0 ? 
+								player1.getEffectiveName() : 
+								player2.getEffectiveName())).queue();
+						reset();
+					}
+				},
+				1000 * 5 * 60
+			);
 		}
 	}
 }
