@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Member;
@@ -20,6 +23,13 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class MyEventListener extends ListenerAdapter {
 	
 	final static MovieQuoter mquotes = new MovieQuoter("marvelquotes.txt");
+	
+	List<String> trollIds = new ArrayList<>();
+	
+	public MyEventListener() {
+		trollIds.add("268480279746838529"); // Sun's id
+//		trollIds.add("400805008276193290"); // Justine's id
+	}
 	
 	/**
 	 * Gets Leaderboard from Main Leaderboard Sheet
@@ -231,8 +241,12 @@ public class MyEventListener extends ListenerAdapter {
 		/**
 		 * Spongebob command
 		 */
-		if (content.startsWith("~~spongebob")) {
-			// TODO make it so i can set anyone to be trolled
+		if (content.startsWith("~~spongebob") && objMember.hasPermission(Permission.ADMINISTRATOR)) {
+			List<Member> members = message.getMentionedMembers();
+			for (Member id : members) {
+				this.trollIds.add(id.getId());
+				channel.sendMessage(String.format("%s has been added", id.getEffectiveName())).queue();
+			}
 		}
 		
 		/**
@@ -297,10 +311,9 @@ public class MyEventListener extends ListenerAdapter {
 		/** Automated Functions **/
 		
 		/**
-		 * Trolls calculasians and jayheart
-		 * Jayheart: 400805008276193290
+		 * Trolls people
 		 */
-		if (objMember.getId().equals("268480279746838529")) {
+		if (this.trollIds.contains(objMember.getId())) {
 			channel.sendMessage(spongebobUpper(content)).queue();
 		}
 	}
