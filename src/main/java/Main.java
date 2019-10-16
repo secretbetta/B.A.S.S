@@ -17,15 +17,12 @@ public class Main {
 				System.exit(1);
 			}
 			
-			System.out.println("Initiated Tic Tac Toe");
-			
 			System.out.println("Running B.A.S.S Bot");
 			JDA api = new JDABuilder(AccountType.BOT)
 					.setToken(args[0])
 					.setActivity(Activity.playing("try ~~help"))
 					.build();
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
-//			api.getPresence().setGame(Game);
 			api.addEventListener(new MyEventListener());
 			api.addEventListener(new TicTacToeEvent());
 		} catch (Exception e) {

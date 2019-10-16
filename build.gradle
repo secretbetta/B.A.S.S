@@ -23,4 +23,5 @@ dependencies {
     compile 'com.google.apis:google-api-services-sheets:v4-rev516-1.23.0'
     compile 'com.google.apis:google-api-services-script:v1-rev175-1.23.0'
     compile 'net.dv8tion:JDA:4.0.0_39'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 }
