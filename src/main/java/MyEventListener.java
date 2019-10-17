@@ -2,23 +2,23 @@ import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
@@ -208,6 +208,19 @@ public class MyEventListener extends ListenerAdapter {
 			channel.sendMessage("Your id is: " + objMember.getId()).queue();
 		}
 		
+		if (content.equals("~~img")) {
+			EmbedBuilder eb = new EmbedBuilder();
+			eb.setTitle("Image");
+			try {
+				eb.setImage(WebCrawler.cleanImgs(WebCrawler.getImgs(new URL("https://www.reddit.com/"))).get(0));
+			} catch (MalformedURLException e) {
+				System.err.println("No image found");
+			} catch (IndexOutOfBoundsException e) {
+				System.err.println("Index out of bounds");
+			}
+			channel.sendMessage(eb.build()).queue();
+		}
+		
 		/**
 		 * Shows Leaderboard
 		 */
@@ -235,6 +248,13 @@ public class MyEventListener extends ListenerAdapter {
 		 */
 		if (content.startsWith("~~ping")) {
 			channel.sendMessage("Pong! + " + event.getJDA().getGatewayPing()).queue();
+		}
+		
+		/**
+		 * Gets puppies from reddit.com/r/puppies
+		 */
+		if (content.equals("~~puppies")) {
+			// TODO use webcrawler class for this
 		}
 		
 		/**
@@ -268,6 +288,7 @@ public class MyEventListener extends ListenerAdapter {
 			try {
 				if (content.length() > 13) {
 					suggestions(content.substring(13));
+					channel.sendMessage(String.format("Suggestion \"%s\" was added", content.substring(13))).queue();
 				} else {
 					channel.sendMessage("Add a command suggestion by using the command"
 							+ "\n~~suggestion <suggestion>").queue();
@@ -305,27 +326,14 @@ public class MyEventListener extends ListenerAdapter {
 //			}
 		}
 		
-		if (event.isFromType(ChannelType.PRIVATE)) {
-			System.out.println("Private channel");
+		if (content.startsWith("~~pm")) {
+			List<Member> members = message.getMentionedMembers();
+			User user = members.get(0).getUser();
+			user.openPrivateChannel().queue((ch) ->
+			{
+				channel.sendMessage("test").queue();
+			});
 		}
-		
-//		if (content.startsWith("~~user")) {
-//			List<Member> members = message.getMentionedMembers();
-//			EmbedBuilder eb = new EmbedBuilder();
-//			eb.setTitle("User Info");
-//			eb.setColor(Color.blue);
-////			eb.setDescription(String.format("User information"));
-////			List<Activity> activities = members.get(0).getActivities();
-//			eb.setAuthor(String.format("%s", members.get(0).getEffectiveName()), members.get(0).getUser().getAvatarUrl());
-//			eb.addField("Nickname", members.get(0).getNickname() == null ? members.get(0).getNickname() : "None", false);
-//			eb.addField("ID", members.get(0).getId(), true);
-////			eb.addField("Roles", String.join(" ", (Iterable<? extends CharSequence>) members.get(0).getRoles()), true);
-//			OffsetDateTime time = members.get(0).getTimeJoined();
-//			eb.addField("Date Joined",
-//					String.format("%2d:%2d %s %d, %d", time.getHour(), time.getMinute(), time.getMonth().toString(), time.getDayOfMonth(), time.getYear())
-//					, false);
-//			channel.sendMessage(eb.build()).queue();
-//		}
 		
 		/**
 		 * Partial Credit to Hieu
