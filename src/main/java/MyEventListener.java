@@ -211,7 +211,9 @@ public class MyEventListener extends ListenerAdapter {
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("Image");
 			try {
-				eb.setImage(WebCrawler.cleanImgs(WebCrawler.getImgs(new URL("https://www.reddit.com/"))).get(0));
+				List<String> imgs = WebCrawler.cleanImgs(WebCrawler.getImgs(new URL("https://www.reddit.com/")));
+				eb.setImage(imgs.get(0));
+				System.err.println(imgs.size());
 			} catch (MalformedURLException e) {
 				System.err.println("No image found");
 			} catch (IndexOutOfBoundsException e) {
