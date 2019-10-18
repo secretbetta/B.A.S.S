@@ -136,8 +136,6 @@ public class WebCrawler {
 				imgs.add(matcher.group());
 			}
 		}
-		System.out.println(imgs);
-		System.out.println();
 		return imgs;
 	}
 	
@@ -160,6 +158,6 @@ public class WebCrawler {
 	}
 	
 	public static void main(String[] args) throws MalformedURLException {
-		System.out.println(cleanImgs(getImgs(new URL("https://www.reddit.com/r/puppies/hot/"))));
+		System.out.println(cleanImgs(getImgs(new URL("https://www.reddit.com/r/puppies/new/"))));
 	}
 }

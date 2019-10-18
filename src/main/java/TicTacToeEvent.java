@@ -12,11 +12,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  *
  */
 public class TicTacToeEvent extends ListenerAdapter {
-	public TicTacToe tttGame;
-	public int player;
-	public Member player1;
-	public Member player2;
-	public boolean gameStart;
+	private TicTacToe tttGame;
+	private int player;
+	private Member player1;
+	private Member player2;
+	private boolean gameStart;
 	
 	/**
 	 * Initializes event

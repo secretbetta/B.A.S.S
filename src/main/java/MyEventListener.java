@@ -18,7 +18,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
@@ -30,7 +29,7 @@ public class MyEventListener extends ListenerAdapter {
 	
 	final static MovieQuoter mquotes = new MovieQuoter("marvelquotes.txt");
 	
-	List<String> trollIds = new ArrayList<>();
+	private List<String> trollIds = new ArrayList<>();
 	
 	public MyEventListener() {
 		trollIds.add("268480279746838529"); // Sun's id
