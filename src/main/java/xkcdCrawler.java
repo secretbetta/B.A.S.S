@@ -11,32 +11,77 @@ public class xkcdCrawler {
 	private String title;
 	private String desc;
 	
-	public xkcdCrawler() {
+	private String html;
+	
+	private List<String> links;
+	
+	public xkcdCrawler(URL url) {
 		this.img = null;
 		this.title = null;
 		this.desc = null;
+		this.html = WebCrawler.fetchHTML(url);
+		
+		links = new ArrayList<String>();
 	}
 	
-	public static List<String> getImgs(URL url) {
-		String regex = "(?is)(<img src=\")(.*?)\" title";
+	public List<String> getPost() {
+		String regex = "(?is)(<img src=\")(.*?)\" title=\"(.*?)\" alt=\"(.*?)\"";
 		Pattern pattern = Pattern.compile(regex);
-		String html = WebCrawler.fetchHTML(url);
 		
-		ArrayList<String> imgs = new ArrayList<String>();
-		int limit = 0;
-		if (html != null) {
-			Matcher matcher = pattern.matcher(html);
-			
-			while (matcher.find() && limit != 20) {
-				limit++;
-				imgs.add(matcher.group());
+		if (this.html != null) {
+			Matcher matcher = pattern.matcher(this.html);
+			while (matcher.find()) {
+				this.links.add(matcher.group());
 			}
 		}
+		return this.links;
+	}
+	
+	public List<String> cleanImgs() {
+		String regex = "(?is)(src=)\"(.*?)\"";
+		Pattern pattern = Pattern.compile(regex);
+		
+		List<String> imgs = new ArrayList<>();
+		
+		
+		Matcher matcher;
+		for (String link : this.links) {
+			matcher = pattern.matcher(link);
+			while (matcher.find()) {
+				imgs.add(matcher.group(2));
+			}
+		}
+		
 		return imgs;
 	}
 	
-	public static List<String> cleanImgs(List<String> links) {
-		String regex = "(?is)(src=)\"(.*?)\"";
+	public String getXKCDimg() throws MalformedURLException {
+		List<String> imgs = cleanImgs();
+		this.img = "https:" + imgs.get(2);
+		return this.img;
+	}
+	
+	public String getXKCDtitle() {
+		String regex = "(?is)(alt=)\"(.*?)\"";
+		Pattern pattern = Pattern.compile(regex);
+		
+		List<String> imgs = new ArrayList<>();
+		
+		
+		Matcher matcher;
+		for (String link : this.links) {
+			matcher = pattern.matcher(link);
+			while (matcher.find()) {
+				imgs.add(matcher.group(2));
+			}
+		}
+		
+		this.desc = imgs.get(1);
+		return this.desc;
+	}
+	
+	public String getXKCDdesc() {
+		String regex = "(?is)(title=)\"(.*?)\"";
 		Pattern pattern = Pattern.compile(regex);
 		
 		List<String> imgs = new ArrayList<>();
@@ -50,22 +95,16 @@ public class xkcdCrawler {
 			}
 		}
 		
-		return imgs;
-	}
-	
-	public String getXKCDimg() throws MalformedURLException {
-		List<String> imgs = cleanImgs(getImgs(new URL("https://c.xkcd.com/random/comic/")));
-		this.img = "https:" + imgs.get(1);
-		return this.img;
-	}
-	
-	public String getXKCDtitle() {
-		// TODO title
+		this.title = imgs.get(0).replace("&#39;", "'");
 		return this.title;
 	}
 	
-	public String getXKCDdesc() {
-		// TODO desc
-		return this.desc;
+	public static void main(String[] args) throws MalformedURLException {
+		xkcdCrawler xkcd = new xkcdCrawler(new URL("https://c.xkcd.com/random/comic/"));
+		xkcd.getPost();
+		
+		System.out.println(xkcd.getXKCDimg());
+		System.out.println(xkcd.getXKCDtitle());
+		System.out.println(xkcd.getXKCDdesc());
 	}
 }

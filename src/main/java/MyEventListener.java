@@ -353,11 +353,14 @@ public class MyEventListener extends ListenerAdapter {
 		 */
 		if (content.equals("~~xkcd")) {
 			try {
-				xkcdCrawler xkcd = new xkcdCrawler();
+				xkcdCrawler xkcd = new xkcdCrawler(new URL("https://c.xkcd.com/random/comic/"));
+				xkcd.getPost();
 				EmbedBuilder eb = new EmbedBuilder();
-				eb.setTitle("XKCD");
+				eb.setTitle(xkcd.getXKCDtitle());
 				eb.setColor(Color.blue);
 				eb.setImage(xkcd.getXKCDimg());
+				eb.setDescription(xkcd.getXKCDdesc());
+				channel.sendMessage(eb.build()).queue();
 			} catch (MalformedURLException e) {
 				System.err.println("URL Exception");
 			}
