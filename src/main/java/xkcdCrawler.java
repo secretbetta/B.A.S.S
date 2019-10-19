@@ -60,12 +60,12 @@ public class xkcdCrawler {
 	}
 	
 	public String getXKCDtitle() {
-		
+		// TODO title
 		return this.title;
 	}
 	
 	public String getXKCDdesc() {
-		
+		// TODO desc
 		return this.desc;
 	}
 }
