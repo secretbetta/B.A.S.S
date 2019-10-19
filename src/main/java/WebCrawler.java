@@ -156,8 +156,4 @@ public class WebCrawler {
 		
 		return imgs;
 	}
-	
-	public static void main(String[] args) throws MalformedURLException {
-		System.out.println(cleanImgs(getImgs(new URL("https://www.reddit.com/r/puppies/new/"))));
-	}
 }

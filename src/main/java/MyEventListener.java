@@ -349,6 +349,21 @@ public class MyEventListener extends ListenerAdapter {
 		}
 		
 		/**
+		 * Gets random xkcd comic
+		 */
+		if (content.equals("~~xkcd")) {
+			try {
+				xkcdCrawler xkcd = new xkcdCrawler();
+				EmbedBuilder eb = new EmbedBuilder();
+				eb.setTitle("XKCD");
+				eb.setColor(Color.blue);
+				eb.setImage(xkcd.getXKCDimg());
+			} catch (MalformedURLException e) {
+				System.err.println("URL Exception");
+			}
+		}
+		
+		/**
 		 * Debugger
 		 */
 		if (content.endsWith("-debug") && objMember.hasPermission(Permission.ADMINISTRATOR)) {
