@@ -344,10 +344,11 @@ public class MyEventListener extends ListenerAdapter {
 			try {
 				xkcdCrawler xkcd = new xkcdCrawler();
 				EmbedBuilder eb = new EmbedBuilder();
-				eb.setTitle(xkcd.getXKCDtitle());
+				eb.setTitle(String.format("%s", xkcd.getXKCDtitle()));
 				eb.setColor(Color.blue);
 				eb.setImage(xkcd.getXKCDimg());
 				eb.setDescription(xkcd.getXKCDdesc());
+				eb.addField("", String.format("[Permanent link to comic](%s)", xkcd.getXKCDpermLink()), true);
 				channel.sendMessage(eb.build()).queue();
 			} catch (MalformedURLException e) {
 				System.err.println("URL Exception");

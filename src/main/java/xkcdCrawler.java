@@ -15,6 +15,7 @@ public class xkcdCrawler {
 	private String img;
 	private String title;
 	private String desc;
+	private String permlink;
 	
 	private String html;
 	
@@ -28,6 +29,7 @@ public class xkcdCrawler {
 		this.img = null;
 		this.title = null;
 		this.desc = null;
+		this.permlink = null;
 		this.html = WebCrawler.fetchHTML(new URL("https://c.xkcd.com/random/comic/"));
 		
 		links = new ArrayList<String>();
@@ -131,7 +133,6 @@ public class xkcdCrawler {
 		
 		List<String> imgs = new ArrayList<>();
 		
-		
 		Matcher matcher;
 		for (String link : links) {
 			matcher = pattern.matcher(link);
@@ -140,7 +141,22 @@ public class xkcdCrawler {
 			}
 		}
 		
-		this.title = imgs.get(0).replace("&#39;", "'");
+		this.title = imgs.get(0).replace("&#39;", "'").replace("&quot;", "\"");
 		return this.title;
+	}
+	
+	/**
+	 * Gets permanents link to comic
+	 * @return Permanent link
+	 */
+	public String getXKCDpermLink() {
+		String regex = "(?is)(Permanent link to this comic: )(.*?)(<br />)";
+		Pattern pattern = Pattern.compile(regex);
+		
+		Matcher matcher;
+		matcher = pattern.matcher(this.html);
+		matcher.find();
+		this.permlink = matcher.group(2);
+		return this.permlink;
 	}
 }
