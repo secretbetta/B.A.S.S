@@ -5,6 +5,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * XKCD comic crawler
+ * @author Andrew
+ *
+ */
 public class xkcdCrawler {
 	
 	private String img;
@@ -15,6 +20,25 @@ public class xkcdCrawler {
 	
 	private List<String> links;
 	
+	/**
+	 * Gets random XKCD post and crawls it
+	 * @throws MalformedURLException
+	 */
+	public xkcdCrawler() throws MalformedURLException {
+		this.img = null;
+		this.title = null;
+		this.desc = null;
+		this.html = WebCrawler.fetchHTML(new URL("https://c.xkcd.com/random/comic/"));
+		
+		links = new ArrayList<String>();
+		
+		this.getPost();
+	}
+	
+	/**
+	 * Crawls XKCD post
+	 * @param url URL of post
+	 */
 	public xkcdCrawler(URL url) {
 		this.img = null;
 		this.title = null;
@@ -24,6 +48,10 @@ public class xkcdCrawler {
 		links = new ArrayList<String>();
 	}
 	
+	/**
+	 * Compiles post
+	 * @return List of urls
+	 */
 	public List<String> getPost() {
 		String regex = "(?is)(<img src=\")(.*?)\" title=\"(.*?)\" alt=\"(.*?)\"";
 		Pattern pattern = Pattern.compile(regex);
@@ -37,6 +65,10 @@ public class xkcdCrawler {
 		return this.links;
 	}
 	
+	/**
+	 * Cleans image links
+	 * @return List of image urls
+	 */
 	public List<String> cleanImgs() {
 		String regex = "(?is)(src=)\"(.*?)\"";
 		Pattern pattern = Pattern.compile(regex);
@@ -55,12 +87,21 @@ public class xkcdCrawler {
 		return imgs;
 	}
 	
+	/**
+	 * Gets XKCD img url
+	 * @return image URL in string
+	 * @throws MalformedURLException
+	 */
 	public String getXKCDimg() throws MalformedURLException {
 		List<String> imgs = cleanImgs();
 		this.img = "https:" + imgs.get(2);
 		return this.img;
 	}
 	
+	/**
+	 * Gets XKCD post tite
+	 * @return post title
+	 */
 	public String getXKCDtitle() {
 		String regex = "(?is)(alt=)\"(.*?)\"";
 		Pattern pattern = Pattern.compile(regex);
@@ -80,6 +121,10 @@ public class xkcdCrawler {
 		return this.desc;
 	}
 	
+	/**
+	 * Gets XKCD post description
+	 * @return post description
+	 */
 	public String getXKCDdesc() {
 		String regex = "(?is)(title=)\"(.*?)\"";
 		Pattern pattern = Pattern.compile(regex);
@@ -97,14 +142,5 @@ public class xkcdCrawler {
 		
 		this.title = imgs.get(0).replace("&#39;", "'");
 		return this.title;
-	}
-	
-	public static void main(String[] args) throws MalformedURLException {
-		xkcdCrawler xkcd = new xkcdCrawler(new URL("https://c.xkcd.com/random/comic/"));
-		xkcd.getPost();
-		
-		System.out.println(xkcd.getXKCDimg());
-		System.out.println(xkcd.getXKCDtitle());
-		System.out.println(xkcd.getXKCDdesc());
 	}
 }

@@ -85,6 +85,7 @@ public class MyEventListener extends ListenerAdapter {
 				{"~~suggestion [Command]", "Command suggestion for Andrew to make"},
 				{"~~ping", "Pong!"},
 				{"~~ttt <@Opponent>", "Tic Tac Toe against mentioned opponent"},
+				{"~~xkcd",  "Gets a random comic from XKCD"},
 				{"TTT Sub commands", "----------------------------"},
 				{"~~move <1-9>", "Where to place your move, 1-9 from top left to bottom right"},
 				{"~~quit", "Quit Tic Tac Toe. Automatic loss"},
@@ -353,8 +354,7 @@ public class MyEventListener extends ListenerAdapter {
 		 */
 		if (content.equals("~~xkcd")) {
 			try {
-				xkcdCrawler xkcd = new xkcdCrawler(new URL("https://c.xkcd.com/random/comic/"));
-				xkcd.getPost();
+				xkcdCrawler xkcd = new xkcdCrawler();
 				EmbedBuilder eb = new EmbedBuilder();
 				eb.setTitle(xkcd.getXKCDtitle());
 				eb.setColor(Color.blue);
