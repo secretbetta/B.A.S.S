@@ -55,6 +55,8 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 	 * The end game message
 	 */
 	public void winMessage() {
+		// TODO better win message
+		// TODO if it's a draw, keep playing
 		switch(this.winner(this.choice1, this.choice2)) {
 			case 1:
 				this.channelID.sendMessage(String.format("%s is the winner!",
@@ -71,6 +73,27 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 				this.restart();
 				break;
 		}
+	}
+	
+	/**
+	 * TODO put this in some sort of Timer class
+	 * Timer for game auto end
+	 * @param minutes Int minutes until game ends
+	 */
+	public void timer(int minutes) {
+		new java.util.Timer().schedule(
+			new java.util.TimerTask() {
+				@Override
+				public void run() {
+					channelID.sendMessage(String.format("Game Over. %s took too long to play.", 
+							choice1 == -1 ? 
+							player1.getAsMention() : 
+							player2.getAsMention())).queue();
+					restart();
+				}
+			},
+			1000 * minutes * 60
+		);
 	}
 	
 	/**
@@ -108,6 +131,7 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 		String content = message.getContentRaw().toLowerCase();
 		MessageChannel channel = event.getChannel();
 		
+		// TODO quit command
 		
 		if  (!author.isBot()) {
 			if (this.game && (content.equals("rock") || content.equals("paper") || content.equals("scissors"))) {
@@ -153,7 +177,12 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 				if (!this.game) {
 					List<Member> players;
 					if ((players = message.getMentionedMembers()).size() == 1) {
-						this.startGame(objMember, players, channel);
+						if (!players.get(0).getId().equals(objMember.getId())) {
+							this.startGame(objMember, players, channel);
+							this.timer(5);
+						} else {
+							channel.sendMessage("You can't play with yourself... Well you can, but you shouldn't...").queue();
+						}
 					} else {
 						if (players.size() == 0) {
 							channel.sendMessage("Use ~~rps <@mention> to play").queue();
@@ -166,8 +195,9 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 					channel.sendMessage("Game is already playing").queue();
 				}
 			}
-		} else { //If user is a bot, make AI to play RPS
-			
+		} else if (player2.isBot()) { //If user is a bot, make AI to play RPS
+			// TODO AI player
+			channel.sendMessage("TBD: AI for Rock Paper Scissors").queue();
 		}
 		
 	}
