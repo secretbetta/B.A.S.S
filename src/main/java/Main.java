@@ -25,6 +25,7 @@ public class Main {
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
 			api.addEventListener(new MyEventListener());
 			api.addEventListener(new TicTacToeEvent());
+			api.addEventListener(new TestEvent());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

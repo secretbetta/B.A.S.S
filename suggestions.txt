@@ -5,3 +5,4 @@
  * something related to puppies - sarah
  * xkcd image grabber
  * would you rather
+ * make a birthday thing on the bot

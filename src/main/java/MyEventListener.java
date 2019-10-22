@@ -300,34 +300,6 @@ public class MyEventListener extends ListenerAdapter {
 			}
 		}
 		
-		/**
-		 * Test message, changes for testing purposes :p
-		 */
-		if (content.startsWith("~~test")) {
-			channel.sendMessage("This is a test embedded message").queue();
-			EmbedBuilder eb = new EmbedBuilder();
-			eb.setTitle("Test Embed");
-			eb.setColor(Color.blue);
-			eb.setDescription("This is just a test format");
-			eb.addField("Field test", "Testing field", false);
-			eb.addBlankField(true);
-			eb.setAuthor("Test png", null, "https://img.pngio.com/ceshi-test-testing-icon-with-png-and-vector-format-for-free-testing-png-512_512.png");
-			eb.setFooter("Footer", "https://github.com/zekroTJA/DiscordBot/blob/master/.websrc/zekroBot_Logo_-_round_small.png");
-			eb.setImage("https://github.com/zekroTJA/DiscordBot/blob/master/.websrc/logo%20-%20title.png");
-			eb.setThumbnail("https://github.com/zekroTJA/DiscordBot/blob/master/.websrc/logo%20-%20title.png");
-			channel.sendMessage(eb.build()).queue();
-//			try {
-//				LeaderboardSheet sheets = new LeaderboardSheet();
-//				sheets.addPlayer();
-//			} catch (GeneralSecurityException e) {
-//				channel.sendMessage("Security Error!!!\nStacktrace:\n`" + e + "`").queue();
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				channel.sendMessage("IOException Error!!!\nStacktrace:\n`" + e + "`").queue();
-//				e.printStackTrace();
-//			}
-		}
-		
 		if (content.startsWith("~~pm")) {
 			List<Member> members = message.getMentionedMembers();
 			User user = members.get(0).getUser();

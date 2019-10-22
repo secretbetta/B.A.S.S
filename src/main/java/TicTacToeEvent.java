@@ -69,12 +69,12 @@ public class TicTacToeEvent extends ListenerAdapter {
 		Member objMember = event.getMember();
 		String content = message.getContentRaw().toLowerCase();
 		MessageChannel channel = event.getChannel();
-		List<Member> players = message.getMentionedMembers();
 		
 		/**
 		 * Game starter
 		 */
 		if (content.startsWith("~~ttt") && !this.gameStart) {
+			List<Member> players = message.getMentionedMembers();
 			if (players.size() > 1) {
 				channel.sendMessage("Too many players, only mention 1 player").queue();
 				return;
