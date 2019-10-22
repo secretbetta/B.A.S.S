@@ -50,18 +50,6 @@ public class TestEvent extends ListenerAdapter {
 //			} else {
 //			}
 		}
-		
-		/**
-		 * RPS test
-		 */
-		if (content.startsWith("~~rps")) {
-			List<Member> players = message.getMentionedMembers();
-			this.player1 = objMember.getUser();
-			this.player2 = players.get(0).getUser();
-			
-			this.player1.openPrivateChannel().complete().sendMessage(String.format("This is a test message for %s! Ignore Please", player1.getName())).queue();
-			this.player2.openPrivateChannel().complete().sendMessage(String.format("This is a test message for %s! Ignore Please", player2.getName())).queue();
-		}
 	}
 
 	public static void main(String[] args) {

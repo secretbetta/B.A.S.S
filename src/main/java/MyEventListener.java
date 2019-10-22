@@ -275,10 +275,12 @@ public class MyEventListener extends ListenerAdapter {
 			for (Member member : members) {
 				if (!this.trollIds.contains(member.getId())) {
 					this.trollIds.add(member.getId());
-					channel.sendMessage(String.format("%s has been added", member.getEffectiveName())).queue();
+					channel.sendMessage(String.format("%s has been added",
+						member.getEffectiveName())).queue();
 				} else {
 					this.trollIds.remove(member.getId());
-					channel.sendMessage(String.format("%s has been removed", member.getEffectiveName())).queue();
+					channel.sendMessage(String.format("%s has been removed",
+						member.getEffectiveName())).queue();
 				}
 			}
 		}
@@ -290,7 +292,8 @@ public class MyEventListener extends ListenerAdapter {
 			try {
 				if (content.length() > 13) {
 					suggestions(content.substring(13));
-					channel.sendMessage(String.format("Suggestion \"%s\" was added", content.substring(13))).queue();
+					channel.sendMessage(String.format("Suggestion \"%s\" was added",
+						content.substring(13))).queue();
 				} else {
 					channel.sendMessage("Add a command suggestion by using the command"
 							+ "\n~~suggestion <suggestion>").queue();

@@ -25,13 +25,6 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 	private boolean game = false;
 	
 	/**
-	 * Initializes class with newgame default
-	 */
-//	public RockPaperScissorsEvent() {
-//		this.restart();
-//	}
-	
-	/**
 	 * Sets everything to default
 	 */
 	public void restart() {
@@ -65,87 +58,93 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 		User author = event.getAuthor();
 		String content = message.getContentRaw().toLowerCase();
 		MessageChannel channel = event.getChannel();
-		
-		
 
-		if (this.game && (content.equals("rock") || content.equals("paper") || content.equals("scissors"))) {
-			if (this.choice1 == -1 || this.choice2 == -1) {
-				if (this.player1.getId().equals(author.getId())) { //Null pointer exception? Probably because everything resets everytime this class is called
-					switch (content) {
-						case "rock":
-							this.choice1 = 2;
-							break;
-						case "paper":
-							this.choice1 = 1;
-							break;
-						case "scissor":
-							this.choice1 = 0;
-							break;
+		if  (!author.isBot()) {
+			if (this.game && (content.equals("rock") || content.equals("paper") || content.equals("scissors"))) {
+				if (this.choice1 == -1 || this.choice2 == -1) {
+					if (this.player1.getId().equals(author.getId())) {
+						switch (content) {
+							case "rock":
+								this.choice1 = 2;
+								break;
+							case "paper":
+								this.choice1 = 1;
+								break;
+							case "scissors":
+								this.choice1 = 0;
+								break;
+						}
+					} else if (this.player2.getId().equals(author.getId())) {
+						switch (content) {
+							case "rock":
+								this.choice2 = 2;
+								break;
+							case "paper":
+								this.choice2 = 1;
+								break;
+							case "scissors":
+								this.choice2 = 0;
+								break;
+						}
+					}
+					
+					if (this.game && this.choice1 != -1 && this.choice2 != -1) {
+						switch(this.winner(this.choice1, this.choice2)) {
+							case 1:
+								this.channelID.sendMessage(String.format("%s is the winner!",
+									this.player1.getAsMention())).queue();
+								this.restart();
+								break;
+							case 0:
+								this.channelID.sendMessage("It's a draw!").queue();
+								this.restart();
+								break;
+							case -1:
+								this.channelID.sendMessage(String.format("%s is the winner!",
+									this.player2.getAsMention())).queue();
+								this.restart();
+								break;
+						}
 					}
 				}
-				
-				if (this.player2.getId().equals(author.getId())) {
-					switch (content) {
-						case "rock":
-							this.choice2 = 2;
-							break;
-						case "paper":
-							this.choice2 = 1;
-							break;
-						case "scissor":
-							this.choice2 = 0;
-							break;
-					}
-				}
+			} else if (this.game && !(content.equals("rock") || content.equals("paper") || content.equals("scissors")) && !event.isFromGuild()) {
+				channel.sendMessage("Invalid input. Please put \"rock\", \"paper\", or \"scissors\"").queue();
 			}
 			
-			if (this.game) {
-				switch(this.winner(this.choice1, this.choice2)) {
-					case 1:
-						this.channelID.sendMessage(String.format("%s is the winner!", this.player1.getName())).queue();
-						this.restart();
-						break;
-					case 0:
-						this.channelID.sendMessage("It's a draw!").queue();
-						this.restart();
-						break;
-					case -1:
-						this.channelID.sendMessage(String.format("%s is the winner!", this.player2.getName())).queue();
-						this.restart();
-						break;
-				}
-			}
-		}
-		
-		if (content.startsWith("~~rps")) {
-			if (!this.game) {
-				List<Member> players;
-				if ((players = message.getMentionedMembers()).size() == 1) {
-					this.player1 = objMember.getUser();
-					this.player2 = players.get(0).getUser();
-					System.err.println(this.player1.getName() + " " + this.player2.getName());
-					this.channelID = channel;
-					this.player1
-						.openPrivateChannel()
-						.complete()
-						.sendMessage(String.format("Hello %s, type \"rock\", \"paper\", or \"scissors\" to make a move.", this.player1.getName()))
-						.queue();
-					this.player2
-						.openPrivateChannel()
-						.complete()
-						.sendMessage(String.format("Hello %s, type \"rock\", \"paper\", or \"scissors\" to make a move.", this.player2.getName()))
-						.queue();
-					this.game = true;
-				} else {
-					if (players.size() == 0) {
-						channel.sendMessage("Use ~~rps <@mention> to play").queue();
+			if (content.startsWith("~~rps")) {
+				if (!this.game) {
+					List<Member> players;
+					if ((players = message.getMentionedMembers()).size() == 1) {
+						this.player1 = objMember.getUser();
+						this.player2 = players.get(0).getUser();
+						System.err.println(this.player1.getId() + " " + this.player2.getId());
+						this.channelID = channel;
+						this.player1
+							.openPrivateChannel()
+							.complete()
+							.sendMessage(String.format("Hello %s, "
+								+ "type \"rock\", \"paper\", or \"scissors\" to make a move.",
+								this.player1.getName()))
+							.queue();
+						this.player2
+							.openPrivateChannel()
+							.complete()
+							.sendMessage(String.format("Hello %s, "
+								+ "type \"rock\", \"paper\", or \"scissors\" to make a move.",
+								this.player2.getName()))
+							.queue();
+						this.game = true;
 					} else {
-						channel.sendMessage("Too many mentions, cannot start game.\n"
-							+ "Use ~~rps <@mention> to play").queue();
+						if (players.size() == 0) {
+							channel.sendMessage("Use ~~rps <@mention> to play").queue();
+						} else {
+							channel.sendMessage("Too many mentions, cannot start game.\n"
+								+ "Use ~~rps <@mention> to play").queue();
+						}
 					}
+				} else {
+					channel.sendMessage("Game is already playing").queue();
 				}
-			} else {
-				channel.sendMessage("Game is already playing").queue();
 			}
 		}
 	}
