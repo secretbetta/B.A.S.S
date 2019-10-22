@@ -12,7 +12,6 @@ import java.util.List;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -257,14 +256,6 @@ public class MyEventListener extends ListenerAdapter {
 		 */
 		if (content.equals("~~puppies")) {
 			// TODO use webcrawler class for this
-		}
-		
-		/**
-		 * Plays rock paper scissors with opponent
-		 */
-		if (content.startsWith("~~rps")) {
-			// TODO Rock Paper Scissors
-			event.isFromType(ChannelType.PRIVATE);
 		}
 		
 		/**

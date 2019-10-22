@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.util.List;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -53,8 +52,7 @@ public class TestEvent extends ListenerAdapter {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		// Test stuff here
 	}
 
 }

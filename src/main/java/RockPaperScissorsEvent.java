@@ -51,6 +51,55 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 		return 0;
 	}
 	
+	/**
+	 * The end game message
+	 */
+	public void winMessage() {
+		switch(this.winner(this.choice1, this.choice2)) {
+			case 1:
+				this.channelID.sendMessage(String.format("%s is the winner!",
+					this.player1.getAsMention())).queue();
+				this.restart();
+				break;
+			case 0:
+				this.channelID.sendMessage("It's a draw!").queue();
+				this.restart();
+				break;
+			case -1:
+				this.channelID.sendMessage(String.format("%s is the winner!",
+					this.player2.getAsMention())).queue();
+				this.restart();
+				break;
+		}
+	}
+	
+	/**
+	 * Initializes game
+	 * @param objMember Player 1
+	 * @param players Player 2
+	 * @param channel Main channel
+	 */
+	public void startGame(Member objMember, List<Member> players, MessageChannel channel) {
+		this.player1 = objMember.getUser();
+		this.player2 = players.get(0).getUser();
+		this.channelID = channel;
+		this.player1
+			.openPrivateChannel()
+			.complete()
+			.sendMessage(String.format("Hello %s, "
+				+ "type \"rock\", \"paper\", or \"scissors\" to make a move.",
+				this.player1.getName()))
+			.queue();
+		this.player2
+			.openPrivateChannel()
+			.complete()
+			.sendMessage(String.format("Hello %s, "
+				+ "type \"rock\", \"paper\", or \"scissors\" to make a move.",
+				this.player2.getName()))
+			.queue();
+		this.game = true;
+	}
+	
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		Message message = event.getMessage();
@@ -58,7 +107,8 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 		User author = event.getAuthor();
 		String content = message.getContentRaw().toLowerCase();
 		MessageChannel channel = event.getChannel();
-
+		
+		
 		if  (!author.isBot()) {
 			if (this.game && (content.equals("rock") || content.equals("paper") || content.equals("scissors"))) {
 				if (this.choice1 == -1 || this.choice2 == -1) {
@@ -88,52 +138,22 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 						}
 					}
 					
-					if (this.game && this.choice1 != -1 && this.choice2 != -1) {
-						switch(this.winner(this.choice1, this.choice2)) {
-							case 1:
-								this.channelID.sendMessage(String.format("%s is the winner!",
-									this.player1.getAsMention())).queue();
-								this.restart();
-								break;
-							case 0:
-								this.channelID.sendMessage("It's a draw!").queue();
-								this.restart();
-								break;
-							case -1:
-								this.channelID.sendMessage(String.format("%s is the winner!",
-									this.player2.getAsMention())).queue();
-								this.restart();
-								break;
-						}
+					if (this.choice1 != -1 && this.choice2 != -1) {
+						this.winMessage();
 					}
 				}
 			} else if (this.game && !(content.equals("rock") || content.equals("paper") || content.equals("scissors")) && !event.isFromGuild()) {
 				channel.sendMessage("Invalid input. Please put \"rock\", \"paper\", or \"scissors\"").queue();
 			}
 			
+			/**
+			 * ~~rps command
+			 */
 			if (content.startsWith("~~rps")) {
 				if (!this.game) {
 					List<Member> players;
 					if ((players = message.getMentionedMembers()).size() == 1) {
-						this.player1 = objMember.getUser();
-						this.player2 = players.get(0).getUser();
-						System.err.println(this.player1.getId() + " " + this.player2.getId());
-						this.channelID = channel;
-						this.player1
-							.openPrivateChannel()
-							.complete()
-							.sendMessage(String.format("Hello %s, "
-								+ "type \"rock\", \"paper\", or \"scissors\" to make a move.",
-								this.player1.getName()))
-							.queue();
-						this.player2
-							.openPrivateChannel()
-							.complete()
-							.sendMessage(String.format("Hello %s, "
-								+ "type \"rock\", \"paper\", or \"scissors\" to make a move.",
-								this.player2.getName()))
-							.queue();
-						this.game = true;
+						this.startGame(objMember, players, channel);
 					} else {
 						if (players.size() == 0) {
 							channel.sendMessage("Use ~~rps <@mention> to play").queue();
@@ -146,6 +166,9 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 					channel.sendMessage("Game is already playing").queue();
 				}
 			}
+		} else { //If user is a bot, make AI to play RPS
+			
 		}
+		
 	}
 }
