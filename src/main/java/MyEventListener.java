@@ -341,7 +341,7 @@ public class MyEventListener extends ListenerAdapter {
 		/**
 		 * Trolls people
 		 */
-		if (this.trollIds.contains(objMember.getId())) {
+		if (objMember != null && this.trollIds.contains(objMember.getId())) {
 			channel.sendMessage(spongebobUpper(content)).queue();
 		}
 	}

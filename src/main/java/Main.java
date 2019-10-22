@@ -26,6 +26,7 @@ public class Main {
 			api.addEventListener(new MyEventListener());
 			api.addEventListener(new TicTacToeEvent());
 			api.addEventListener(new TestEvent());
+			api.addEventListener(new RockPaperScissorsEvent());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
