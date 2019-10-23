@@ -98,7 +98,7 @@ public class TicTacToeEvent extends ListenerAdapter {
 			this.player1 = objMember;
 			this.player2 = players.get(0);
 			this.gameStart = true;
-		} else if (content.startsWith("~~ttt") && this.gameStart) {
+		} else if (content.split(" ")[0].equals("~~ttt") && this.gameStart) {
 			channel.sendMessage("Game has already started").queue();
 			return;
 		}
