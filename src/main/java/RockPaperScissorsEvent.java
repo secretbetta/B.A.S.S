@@ -252,7 +252,10 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 		/**
 		 * Quit command
 		 */
-		if (content.equals("~~rpsquit")) {
+		if (content.equals("~~rpsquit") 
+			&& objMember.getId().equals(this.player1.getId())
+			|| objMember.getId().equals(this.player2.getId())) {
+			
 			channel.sendMessage(String.format("%s forfeited. %s won!", 
 				objMember.getNickname(), 
 				objMember.getId().equals(this.player1.getId()) ? 
