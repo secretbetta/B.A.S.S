@@ -7,24 +7,71 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+/**
+ * Rock Paper Scissors game for discord bot
+ * @author Andrew
+ *
+ */
 public class RockPaperScissorsEvent extends ListenerAdapter {
 	
-	private User player1 = null;
-	private User player2 = null;
+	private User player1;
+	private User player2;
 	
 	/**
 	 * -1 = default
-	 * 0 = scissors
-	 * 1 = paper
-	 * 2 = rock
+	 * 0  = scissors
+	 * 1  = paper
+	 * 2  = rock
 	 */
-	private int choice1 = -1;
-	private int choice2 = -1;
+	private int choice1;
+	private int choice2;
 	
-	private MessageChannel channelID = null;
+	private MessageChannel channelID;
 	
-	private boolean game = false;
+	private boolean game;
 	
+	/**
+	 * Ends game and gets default start
+	 */
+	public RockPaperScissorsEvent() {
+		restart();
+	}
+	
+	/**
+	 * Makes choice for user(s)
+	 * @param author User that made a choice
+	 * @param content The choice
+	 */
+	public void choiceMaker(User author, String content) {
+		if (this.choice1 == -1 || this.choice2 == -1) {
+			if (this.player1.getId().equals(author.getId())) {
+				switch (content) {
+					case "rock":
+						this.choice1 = 2;
+						break;
+					case "paper":
+						this.choice1 = 1;
+						break;
+					case "scissors":
+						this.choice1 = 0;
+						break;
+				}
+			} else if (this.player2.getId().equals(author.getId())) {
+				switch (content) {
+					case "rock":
+						this.choice2 = 2;
+						break;
+					case "paper":
+						this.choice2 = 1;
+						break;
+					case "scissors":
+						this.choice2 = 0;
+						break;
+				}
+			}
+		}
+	}
+
 	/**
 	 * Sets everything to default
 	 */
@@ -67,41 +114,6 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 			return "Game is already playing";
 		}
 		return "Unknown";
-	}
-	
-	/**
-	 * Makes choice for user(s)
-	 * @param author User that made a choice
-	 * @param content The choice
-	 */
-	public void choiceMaker(User author, String content) {
-		if (this.choice1 == -1 || this.choice2 == -1) {
-			if (this.player1.getId().equals(author.getId())) {
-				switch (content) {
-					case "rock":
-						this.choice1 = 2;
-						break;
-					case "paper":
-						this.choice1 = 1;
-						break;
-					case "scissors":
-						this.choice1 = 0;
-						break;
-				}
-			} else if (this.player2.getId().equals(author.getId())) {
-				switch (content) {
-					case "rock":
-						this.choice2 = 2;
-						break;
-					case "paper":
-						this.choice2 = 1;
-						break;
-					case "scissors":
-						this.choice2 = 0;
-						break;
-				}
-			}
-		}
 	}
 	
 	/**
@@ -193,9 +205,13 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 	 * @return 0 = draw, 1 = c1, -1 = c2
 	 */
 	public int winner(int p1, int p2) {
+//		if (p1 == p2)
+//			return 0;
+		
 		if ((p1+1)%3 == p2) {
 			return 1;
-		} else if (((p1-1)%3 < 0 ? ((p1-1)%3)+3 : (p1-1)%3) == p2) { // Technically this isn't needed, could be replaced by testing if p1==p2 at the beginning
+		} else if (((p1-1)%3 < 0 ? ((p1-1)%3)+3 : (p1-1)%3) == p2) {
+			// Technically this isn't needed, could be replaced by testing if p1==p2 at the beginning
 			return -1;
 		}
 		return 0;
