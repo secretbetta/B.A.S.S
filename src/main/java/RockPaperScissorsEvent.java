@@ -113,13 +113,17 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 				+ "type \"rock\", \"paper\", or \"scissors\" to make a move.",
 				this.player1.getName()))
 			.queue();
-		this.player2
-			.openPrivateChannel()
-			.complete()
-			.sendMessage(String.format("Hello %s, "
-				+ "type \"rock\", \"paper\", or \"scissors\" to make a move.",
-				this.player2.getName()))
-			.queue();
+		if (!this.player2.isBot()) {
+			this.player2
+				.openPrivateChannel()
+				.complete()
+				.sendMessage(String.format("Hello %s, "
+					+ "type \"rock\", \"paper\", or \"scissors\" to make a move.",
+					this.player2.getName()))
+				.queue();
+		} else {
+			this.choice2 = (int)(Math.random()*3);
+		}
 		this.game = true;
 	}
 	
@@ -161,10 +165,10 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 								break;
 						}
 					}
-					
-					if (this.choice1 != -1 && this.choice2 != -1) {
-						this.winMessage();
-					}
+				}
+				
+				if (this.choice1 != -1 && this.choice2 != -1) {
+					this.winMessage();
 				}
 			} else if (this.game && !(content.equals("rock") || content.equals("paper") || content.equals("scissors")) && !event.isFromGuild()) {
 				channel.sendMessage("Invalid input. Please put \"rock\", \"paper\", or \"scissors\"").queue();
@@ -195,9 +199,6 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 					channel.sendMessage("Game is already playing").queue();
 				}
 			}
-		} else if (player2.isBot()) { //If user is a bot, make AI to play RPS
-			// TODO AI player
-			channel.sendMessage("TBD: AI for Rock Paper Scissors").queue();
 		}
 		
 	}
