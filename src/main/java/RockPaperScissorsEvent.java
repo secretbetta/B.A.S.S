@@ -13,6 +13,7 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 	private User player2 = null;
 	
 	/**
+	 * -1 = default
 	 * 0 = scissors
 	 * 1 = paper
 	 * 2 = rock
@@ -55,8 +56,12 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 	 * The end game message
 	 */
 	public void winMessage() {
-		// TODO better win message
-		// TODO if it's a draw, keep playing
+		this.channelID.sendMessage(String.format("%s's choice: %s\n"
+			+ "%s's choice: %s",
+			this.player1.getName(),
+			this.choice1 == 0 ? "scissors" : this.choice1 == 1 ? "paper" : "rock",
+			this.player2.getName(),
+			this.choice2 == 0 ? "scissors" : this.choice2 == 1 ? "paper" : "rock")).queue();
 		switch(this.winner(this.choice1, this.choice2)) {
 			case 1:
 				this.channelID.sendMessage(String.format("%s is the winner!",
@@ -85,11 +90,13 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 			new java.util.TimerTask() {
 				@Override
 				public void run() {
-					channelID.sendMessage(String.format("Game Over. %s took too long to play.", 
-							choice1 == -1 ? 
-							player1.getAsMention() : 
-							player2.getAsMention())).queue();
-					restart();
+					if (game) {
+						channelID.sendMessage(String.format("Game Over. %s took too long to play.", 
+								choice1 == -1 ? 
+								player1.getAsMention() : 
+								player2.getAsMention())).queue();
+						restart();
+					}
 				}
 			},
 			1000 * minutes * 60
@@ -195,9 +202,21 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 								+ "Use ~~rps <@mention> to play").queue();
 						}
 					}
-				} else {
+				} else if (content.split(" ")[0].equals("~~rps")) {
 					channel.sendMessage("Game is already playing").queue();
 				}
+			}
+			
+			/**
+			 * Quit command
+			 */
+			if (content.equals("~~rpsquit")) {
+				channel.sendMessage(String.format("%s forfeited. %s won!", 
+					objMember.getNickname(), 
+					objMember.getId().equals(this.player1.getId()) ? 
+						this.player2.getAsMention() : 
+						this.player1.getAsMention())).queue();
+				this.restart();
 			}
 		}
 		

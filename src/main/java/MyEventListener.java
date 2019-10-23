@@ -87,7 +87,7 @@ public class MyEventListener extends ListenerAdapter {
 				{"~~xkcd",  "Gets a random comic from XKCD"},
 				{"TTT Sub commands", "----------------------------"},
 				{"~~move <1-9>", "Where to place your move, 1-9 from top left to bottom right"},
-				{"~~quit", "Quit Tic Tac Toe. Automatic loss"},
+				{"~~tttquit", "Quit Tic Tac Toe. Automatic loss"},
 				{"Admin commands", "----------------------------"},
 				{"~~admin", "Tests admin privileges"},
 				{"~~spongebob <@user>...", "Adds one or more users to spongebob troll function"},

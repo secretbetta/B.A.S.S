@@ -146,7 +146,7 @@ public class TicTacToeEvent extends ListenerAdapter {
 		/**
 		 * Quit cmd
 		 */
-		if (content.equals("~~quit") && this.gameStart && 
+		if (content.equals("~~tttquit") && this.gameStart && 
 				(this.player1.getId().equals(objMember.getId()) || 
 				this.player2.getId().equals(objMember.getId()))) {
 			channel.sendMessage(String.format("Player %s has forfeited.", objMember.getEffectiveName())).queue();
