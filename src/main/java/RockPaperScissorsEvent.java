@@ -142,8 +142,6 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 		String content = message.getContentRaw().toLowerCase();
 		MessageChannel channel = event.getChannel();
 		
-		// TODO quit command
-		
 		if  (!author.isBot()) {
 			if (this.game && (content.equals("rock") || content.equals("paper") || content.equals("scissors"))) {
 				if (this.choice1 == -1 || this.choice2 == -1) {
@@ -219,6 +217,5 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 				this.restart();
 			}
 		}
-		
 	}
 }
