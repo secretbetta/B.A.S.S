@@ -9,8 +9,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
  * Rock Paper Scissors game for discord bot
+ * 
  * @author Andrew
- *
  */
 public class RockPaperScissorsEvent extends ListenerAdapter {
 	
@@ -19,9 +19,9 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 	
 	/**
 	 * -1 = default
-	 * 0  = scissors
-	 * 1  = paper
-	 * 2  = rock
+	 * 0 = scissors
+	 * 1 = paper
+	 * 2 = rock
 	 */
 	private int choice1;
 	private int choice2;
@@ -39,7 +39,8 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 	
 	/**
 	 * Makes choice for user(s)
-	 * @param author User that made a choice
+	 * 
+	 * @param author  User that made a choice
 	 * @param content The choice
 	 */
 	public void choiceMaker(User author, String content) {
@@ -71,7 +72,7 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 			}
 		}
 	}
-
+	
 	/**
 	 * Sets everything to default
 	 */
@@ -86,10 +87,11 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 	
 	/**
 	 * Initializes Rock Paper Scissors game. Returns input validation messages
-	 * @param message Message
+	 * 
+	 * @param message   Message
 	 * @param objMember Member of message
-	 * @param channel Channel that the game was initialized
-	 * @param content Raw text of user input
+	 * @param channel   Channel that the game was initialized
+	 * @param content   Raw text of user input
 	 * @return Input validation
 	 */
 	public String rpsInit(Message message, Member objMember, MessageChannel channel, String content) {
@@ -118,9 +120,10 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 	
 	/**
 	 * Initializes game
+	 * 
 	 * @param objMember Player 1
-	 * @param players Player 2
-	 * @param channel Main channel
+	 * @param players   Player 2
+	 * @param channel   Main channel
 	 */
 	public void startGame(Member objMember, List<Member> players, MessageChannel channel) {
 		this.player1 = objMember.getUser();
@@ -142,34 +145,32 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 					this.player2.getName()))
 				.queue();
 		} else {
-			this.choice2 = (int)(Math.random()*3);
+			this.choice2 = (int) (Math.random() * 3);
 		}
 		this.game = true;
 	}
-
+	
 	/**
-	 * TODO put this in some sort of Timer class
 	 * Timer for game auto end
+	 * 
 	 * @param minutes Int minutes until game ends
 	 */
 	public void timer(int minutes) {
 		new java.util.Timer().schedule(
 			new java.util.TimerTask() {
+				
 				@Override
 				public void run() {
 					if (game) {
-						channelID.sendMessage(String.format("Game Over. %s took too long to play.", 
-								choice1 == -1 ? 
-								player1.getAsMention() : 
-								player2.getAsMention())).queue();
+						channelID.sendMessage(String.format("Game Over. %s took too long to play.",
+							choice1 == -1 ? player1.getAsMention() : player2.getAsMention())).queue();
 						restart();
 					}
 				}
 			},
-			1000 * minutes * 60
-		);
+			1000 * minutes * 60);
 	}
-
+	
 	/**
 	 * The end game message
 	 */
@@ -180,7 +181,7 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 			this.choice1 == 0 ? "scissors" : this.choice1 == 1 ? "paper" : "rock",
 			this.player2.getName(),
 			this.choice2 == 0 ? "scissors" : this.choice2 == 1 ? "paper" : "rock")).queue();
-		switch(this.winner(this.choice1, this.choice2)) {
+		switch (this.winner(this.choice1, this.choice2)) {
 			case 1:
 				this.channelID.sendMessage(String.format("%s is the winner!",
 					this.player1.getAsMention())).queue();
@@ -197,20 +198,21 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 				break;
 		}
 	}
-
+	
 	/**
 	 * Returns winner
+	 * 
 	 * @param p1 player 1 choice
 	 * @param p2 player 2 choice
 	 * @return 0 = draw, 1 = c1, -1 = c2
 	 */
 	public int winner(int p1, int p2) {
-//		if (p1 == p2)
-//			return 0;
+		// if (p1 == p2)
+		// return 0;
 		
-		if ((p1+1)%3 == p2) {
+		if ((p1 + 1) % 3 == p2) {
 			return 1;
-		} else if (((p1-1)%3 < 0 ? ((p1-1)%3)+3 : (p1-1)%3) == p2) {
+		} else if (((p1 - 1) % 3 < 0 ? ((p1 - 1) % 3) + 3 : (p1 - 1) % 3) == p2) {
 			// Technically this isn't needed, could be replaced by testing if p1==p2 at the beginning
 			return -1;
 		}
@@ -238,7 +240,8 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 			if (this.choice1 != -1 && this.choice2 != -1) {
 				this.winMessage();
 			}
-		} else if (this.game && !(content.equals("rock") || content.equals("paper") || content.equals("scissors")) && !event.isFromGuild()) {
+		} else if (this.game && !(content.equals("rock") || content.equals("paper") || content.equals("scissors"))
+			&& !event.isFromGuild()) {
 			channel.sendMessage("Invalid input. Please put \"rock\", \"paper\", or \"scissors\"").queue();
 		}
 		
@@ -252,15 +255,15 @@ public class RockPaperScissorsEvent extends ListenerAdapter {
 		/**
 		 * Quit command
 		 */
-		if (content.equals("~~rpsquit") 
+		if (content.equals("~~rpsquit")
 			&& (objMember.getId().equals(this.player1.getId())
-			|| objMember.getId().equals(this.player2.getId()))) {
+				|| objMember.getId().equals(this.player2.getId()))) {
 			
-			channel.sendMessage(String.format("%s forfeited. %s won!", 
-				objMember.getNickname(), 
-				objMember.getId().equals(this.player1.getId()) ? 
-					this.player2.getAsMention() : 
-					this.player1.getAsMention())).queue();
+			channel.sendMessage(String.format("%s forfeited. %s won!",
+				objMember.getNickname(),
+				objMember.getId().equals(this.player1.getId()) ? this.player2.getAsMention()
+					: this.player1.getAsMention()))
+				.queue();
 			this.restart();
 		}
 	}

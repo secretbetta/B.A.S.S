@@ -23,10 +23,10 @@ public class Main {
 					.setActivity(Activity.playing("try ~~help"))
 					.build();
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
-			api.addEventListener(new MyEventListener());
-			api.addEventListener(new TicTacToeEvent());
-			api.addEventListener(new TestEvent());
-			api.addEventListener(new RockPaperScissorsEvent());
+			api.addEventListener(new MyEventListener()); // Main Events
+			api.addEventListener(new TicTacToeEvent()); // Tic Tac Toe
+			api.addEventListener(new TestEvent()); // Testing Events
+			api.addEventListener(new RockPaperScissorsEvent()); // Rock Paper Scissors
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
