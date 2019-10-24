@@ -67,46 +67,6 @@ public class MyEventListener extends ListenerAdapter {
 		LeaderboardSheet sheets = new LeaderboardSheet();
 		return sheets.getPlayer(name1, name2);
 	}
-
-	/**
-	 * Help command, outputs to channel all possible commands for bot
-	 * @param channel Channel to output to
-	 */
-	public static void help(MessageChannel channel) {
-		String[][] cmds = {
-				{"~~help", "All possible commands"},
-				{"~~leaderboard <Player 1> <Player 2>", 
-					"Shows leaderboard. Player flags are optional to print scores between two people"},
-				{"~~id", "Gets unique user ID"},
-				{"~~hello", "world"},
-				{"~~test", "Test command, differs from time to time"},
-				{"~~mquote", "Sends random movie quote"},
-				{"~~suggestion [Command]", "Command suggestion for Andrew to make"},
-				{"~~ping", "Pong!"},
-				{"~~xkcd",  "Gets a random comic from XKCD"},
-				{"RPS commands", "----------------------------"},
-				{"~~rps <@Opponent>", "Plays rock paper scissors against opponent. AI Compatible"},
-				{"~~rpsquit", "Quits current game"},
-				{"TTT commands", "----------------------------"},
-				{"~~ttt <@Opponent>", "Tic Tac Toe against mentioned opponent"},
-				{"~~move <1-9>", "Where to place your move, 1-9 from top left to bottom right"},
-				{"~~tttquit", "Quit Tic Tac Toe. Automatic loss"},
-				{"Admin commands", "----------------------------"},
-				{"~~admin", "Tests admin privileges"},
-				{"~~spongebob <@user>...", "Adds one or more users to spongebob troll function"},
-				{"-debug", "Put at end of command for runtime"}
-		};
-		
-		String content = "**Command List**\n```";
-		
-		for (int i = 0; i < cmds.length; i++) {
-			content += cmds[i][0] + ", " + cmds[i][1] + "\n";
-		}
-		
-		content += "```";
-		
-		channel.sendMessage(content).queue();
-	}
 	
 	/**
 	 * Shows main leaderboard of PvP scores
@@ -192,7 +152,9 @@ public class MyEventListener extends ListenerAdapter {
 		 * Outputs list of possible commands
 		 */
 		if (content.startsWith("~~help")) {
-			help(channel);
+			for (EmbedBuilder eb : HelpCmds.helpCmds()) {
+				channel.sendMessage(eb.build()).queue();
+			}
 		}
 		
 		/**
@@ -206,7 +168,6 @@ public class MyEventListener extends ListenerAdapter {
 		 * Gets unique user ID
 		 */
 		if (content.startsWith("~~id")) {
-			System.out.println(objMember.getId());
 			channel.sendMessage("Your id is: " + objMember.getId()).queue();
 		}
 		
