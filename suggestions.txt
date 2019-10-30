@@ -7,3 +7,6 @@
  * would you rather
  * make a birthday thing on the bot
  * create  mafia in discord....
+ * fix -debug argument
+ * ~~bugreport command
+ * yahtzee

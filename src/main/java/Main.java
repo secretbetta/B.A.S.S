@@ -6,10 +6,11 @@ import net.dv8tion.jda.api.entities.Activity;
 
 /**
  * Discord Bot Loader
+ * 
  * @author Andrew
- *
  */
 public class Main {
+	
 	public static void main(String[] args) throws Exception {
 		try {
 			if (args.length == 0) {
@@ -19,9 +20,9 @@ public class Main {
 			
 			System.out.println("Running B.A.S.S Bot");
 			JDA api = new JDABuilder(AccountType.BOT)
-					.setToken(args[0])
-					.setActivity(Activity.playing("try ~~help"))
-					.build();
+				.setToken(args[0])
+				.setActivity(Activity.playing("try ~~help"))
+				.build();
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
 			api.addEventListener(new MyEventListener()); // Main Events
 			api.addEventListener(new TicTacToeEvent()); // Tic Tac Toe

@@ -16,8 +16,8 @@ import java.util.stream.Stream;
 
 /**
  * Crawls URLs
+ * 
  * @author Andrew
- *
  */
 public class WebCrawler {
 	
@@ -26,13 +26,14 @@ public class WebCrawler {
 	
 	/**
 	 * Initializes limit and links
+	 * 
 	 * @param lim Number of links
 	 */
 	public WebCrawler(int lim) {
 		this.limit = lim;
 		this.links = new HashSet<URL>();
 	}
-
+	
 	/**
 	 * Removes the fragment component of a URL (if present), and properly encodes
 	 * the query string (if necessary).
@@ -43,46 +44,43 @@ public class WebCrawler {
 	private static URL clean(URL url) {
 		try {
 			return new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(),
-					url.getQuery(), null).toURL();
-		}
-		catch (MalformedURLException | URISyntaxException e) {
+				url.getQuery(), null).toURL();
+		} catch (MalformedURLException | URISyntaxException e) {
 			return url;
 		}
 	}
-
+	
 	/**
 	 * Fetches the HTML (without any HTTP headers) for the provided URL. Will
 	 * return null if the link does not point to a HTML page.
 	 *
 	 * @param url url to fetch HTML from
 	 * @return HTML as a String or null if the link was not HTML
-	 *
-	 * @see <a href="https://docs.oracle.com/javase/tutorial/networking/urls/readingURL.html">Reading Directly from a URL</a>
+	 * @see <a href="https://docs.oracle.com/javase/tutorial/networking/urls/readingURL.html">Reading Directly from a
+	 *      URL</a>
 	 */
 	public static String fetchHTML(URL url) {
 		String result = null;
-
+		
 		try {
 			URLConnection connection = url.openConnection();
 			String type = connection.getContentType();
-
+			
 			if (type != null && type.matches(".*\\bhtml\\b.*")) {
 				try (
-						InputStreamReader input = new InputStreamReader(connection.getInputStream());
-						BufferedReader reader = new BufferedReader(input);
-						Stream<String> stream = reader.lines();
-				) {
+					InputStreamReader input = new InputStreamReader(connection.getInputStream());
+					BufferedReader reader = new BufferedReader(input);
+					Stream<String> stream = reader.lines();) {
 					result = stream.collect(Collectors.joining("\n"));
 				}
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			result = null;
 		}
-
+		
 		return result;
 	}
-
+	
 	/**
 	 * Returns a list of all the HTTP(S) links found in the href attribute of the
 	 * anchor tags in the provided HTML. The links will be converted to absolute
@@ -92,7 +90,7 @@ public class WebCrawler {
 	 * @param base base url used to convert relative links to absolute3
 	 * @param html raw html associated with the base url
 	 * @return cleaned list of all http(s) links in the order they were found
-	 * @throws MalformedURLException 
+	 * @throws MalformedURLException
 	 */
 	public void listLinks(URL base, String html, int limit) throws MalformedURLException {
 		String regex = "(?is)<a.*?href.*?=[\\s]*?\"([^@&]*?)\"[^<]*?>";
@@ -111,7 +109,7 @@ public class WebCrawler {
 					locallinks.add(url);
 					this.limit--;
 				}
-			}	
+			}
 		}
 		
 		for (URL link : locallinks) {
@@ -121,6 +119,12 @@ public class WebCrawler {
 		this.links.addAll(locallinks);
 	}
 	
+	/**
+	 * Gets sImages from reddit specifically
+	 * 
+	 * @param url URL to fetch img links from
+	 * @return Lists of possible links
+	 */
 	public static List<String> getImgs(URL url) {
 		String regex = "(?is)<img alt=\"Post image\".*?src=.*?/>";
 		Pattern pattern = Pattern.compile(regex);
@@ -139,12 +143,17 @@ public class WebCrawler {
 		return imgs;
 	}
 	
+	/**
+	 * Cleans reddit images
+	 * 
+	 * @param links Reddit Links
+	 * @return List of img URLs
+	 */
 	public static List<String> cleanImgs(List<String> links) {
 		String regex = "(?is)(src=)\"(.*?)\"";
 		Pattern pattern = Pattern.compile(regex);
 		
 		List<String> imgs = new ArrayList<>();
-		
 		
 		Matcher matcher;
 		for (String link : links) {

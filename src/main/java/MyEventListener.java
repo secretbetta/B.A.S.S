@@ -21,8 +21,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
  * EventListener for Discord
+ * 
  * @author Andrew
- *
  */
 public class MyEventListener extends ListenerAdapter {
 	
@@ -32,35 +32,30 @@ public class MyEventListener extends ListenerAdapter {
 	
 	public MyEventListener() {
 		trollIds.add("268480279746838529"); // Sun's id
-//		trollIds.add("400805008276193290"); // Justine's id
+		// trollIds.add("400805008276193290"); // Justine's id
 	}
 	
 	/**
 	 * Gets Leaderboard from Main Leaderboard Sheet
 	 * 
 	 * @return Formatted String for Leaderboard
-	 * 
 	 * @throws IOException
-	 * @throws GeneralSecurityException 
-	 * 
+	 * @throws GeneralSecurityException
 	 * @see LeaderboardSheet#getLeaderboard()
 	 */
 	public static String getLeaderboard() throws IOException, GeneralSecurityException {
 		LeaderboardSheet sheets = new LeaderboardSheet();
 		return sheets.getLeaderboard();
 	}
-
+	
 	/**
 	 * Gets Player VS Player List of scores
 	 * 
 	 * @param name1 Player 1
 	 * @param name2 Player 2
-	 * 
 	 * @return Formatted string of scores
-	 * 
 	 * @throws GeneralSecurityException
 	 * @throws IOException
-	 * 
 	 * @see LeaderboardSheet#getPlayer(String, String)
 	 */
 	public static String getPlayerVS(String name1, String name2) throws GeneralSecurityException, IOException {
@@ -75,24 +70,23 @@ public class MyEventListener extends ListenerAdapter {
 	 * @return Message to send to discord chat
 	 * @throws GeneralSecurityException
 	 * @throws IOException
-	 * 
 	 * @see #getPlayerVS(String, String)
 	 * @see #getLeaderboard()
 	 */
 	public static String leaderboardShow(String content) throws GeneralSecurityException, IOException {
-    	if (content.split("\\s+").length >= 2 && !content.split("\\s+")[1].equals("-debug")) {
-    		String[] names = content.split("\\s+");
-    		if (names.length >= 3) {
-    			return getPlayerVS(names[1], names[2]);
-    		} else {
-    			return "Invalid command input.\n"
-    					+ "Format: ~~leaderboard <Player1> <Player2>";
-    		}
-    	} else {
-    		return getLeaderboard();
-    	}
+		if (content.split("\\s+").length >= 2 && !content.split("\\s+")[1].equals("-debug")) {
+			String[] names = content.split("\\s+");
+			if (names.length >= 3) {
+				return getPlayerVS(names[1], names[2]);
+			} else {
+				return "Invalid command input.\n"
+					+ "Format: ~~leaderboard <Player1> <Player2>";
+			}
+		} else {
+			return getLeaderboard();
+		}
 	}
-
+	
 	/**
 	 * ManIpuLAtES STrINg tO RaNdom UPperCasE aND LoWErcAse WordS
 	 * 
@@ -103,15 +97,16 @@ public class MyEventListener extends ListenerAdapter {
 		String newContent = "";
 		
 		for (int i = 0; i < content.length(); i++) {
-			newContent += (int)(Math.random()*2) == 0 ? 
-					Character.toLowerCase(content.charAt(i)) : Character.toUpperCase(content.charAt(i));
+			newContent += (int) (Math.random() * 2) == 0 ? Character.toLowerCase(content.charAt(i))
+				: Character.toUpperCase(content.charAt(i));
 		}
 		
 		return newContent;
 	}
-
+	
 	/**
 	 * Adds suggestions to my list of things to do
+	 * 
 	 * @param suggestion
 	 * @return
 	 * @throws IOException
@@ -123,9 +118,10 @@ public class MyEventListener extends ListenerAdapter {
 		writer.close();
 	}
 	
-    /**
+	/**
 	 * Message Handler
 	 */
+	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		if (event.getAuthor().isBot()) {
 			return;
@@ -251,7 +247,7 @@ public class MyEventListener extends ListenerAdapter {
 						content.substring(13))).queue();
 				} else {
 					channel.sendMessage("Add a command suggestion by using the command"
-							+ "\n~~suggestion <suggestion>").queue();
+						+ "\n~~suggestion <suggestion>").queue();
 				}
 			} catch (IOException e) {
 				System.err.println("Cannot write into file");
@@ -261,8 +257,7 @@ public class MyEventListener extends ListenerAdapter {
 		if (content.startsWith("~~pm")) {
 			List<Member> members = message.getMentionedMembers();
 			User user = members.get(0).getUser();
-			user.openPrivateChannel().queue((ch) ->
-			{
+			user.openPrivateChannel().queue((ch) -> {
 				channel.sendMessage("test").queue();
 			});
 		}
@@ -289,10 +284,10 @@ public class MyEventListener extends ListenerAdapter {
 		 * Debugger
 		 */
 		if (content.endsWith("-debug") && objMember.hasPermission(Permission.ADMINISTRATOR)) {
-    		Duration elapsed = Duration.between(start, Instant.now());
-    		double seconds = (double)elapsed.toMillis() / Duration.ofSeconds(1).toMillis();
-    		channel.sendMessage("Time Elapsed: " + seconds).queue();
-    	}
+			Duration elapsed = Duration.between(start, Instant.now());
+			double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();
+			channel.sendMessage("Time Elapsed: " + seconds).queue();
+		}
 		
 		/** Automated Functions **/
 		
