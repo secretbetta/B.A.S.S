@@ -54,15 +54,17 @@ public class TestEvent extends ListenerAdapter {
 			ArrayList<Integer> scoresheet = new ArrayList<>();
 			Yahtzee game = new Yahtzee();
 			game.roll();
-			String dice = "";
-			game.changeDie();
-			int[] dices = game.die();
-			for (int p : dices) {
-				dice += String.format("[%d]", p);
-			}
-			System.out.println("Dice: " + dice);
-			System.out.println(game.move(Integer.parseInt(content.split(" ")[1])));
+			System.out.println(game.getDice());
+			game.move(Integer.parseInt(content.split(" ")[1]));
 			channel.sendMessage(game.getScoresheet().build()).queue();
+		}
+		
+		if (message.getEmbeds().size() > 0 && message.getEmbeds().get(0).getTitle().equals("Scoresheet")) {
+			System.out.println("BOO YAH");
+			String msgId = message.getId();
+			for (int x = 0; x < 13; x++) {
+				message.addReaction(String.format("U+1f1%02x", (x + 6 + 16 * 14))).queue();
+			}
 		}
 		
 		/**

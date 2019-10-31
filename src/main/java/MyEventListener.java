@@ -292,10 +292,17 @@ public class MyEventListener extends ListenerAdapter {
 		/** Automated Functions **/
 		
 		/**
-		 * Trolls people
+		 * Trolls people using spongebob meme
 		 */
 		if (objMember != null && this.trollIds.contains(objMember.getId())) {
 			channel.sendMessage(spongebobUpper(content)).queue();
+		}
+		
+		/**
+		 * If user @<mentions> people, gets told to shut up
+		 */
+		if (message.mentionsEveryone()) {
+			channel.sendMessage(String.format("Shut up, %s I'm sleeping.", objMember.getAsMention())).queue();
 		}
 	}
 }

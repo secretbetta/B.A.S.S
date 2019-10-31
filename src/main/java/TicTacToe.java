@@ -1,9 +1,10 @@
 /**
  * TicTacToe Game Class
+ * 
  * @author Andrew
- *
  */
 public class TicTacToe {
+	
 	/* Game board */
 	private char[] board;
 	
@@ -17,8 +18,8 @@ public class TicTacToe {
 	/**
 	 * The move maker method
 	 * 
-	 * @param x coord x
-	 * @param y coord y
+	 * @param x      coord x
+	 * @param y      coord y
 	 * @param player x, o
 	 * @return
 	 */
@@ -39,13 +40,14 @@ public class TicTacToe {
 	
 	/**
 	 * Checks for winner, draw, or game is still on going
+	 * 
 	 * @return "x" or "o" for winner, none for on going game, draw for a tie
 	 */
 	public String winner() {
 		for (int x = 0; x < 8; x++) {
 			String line = null;
 			switch (x) {
-				case 0: 
+				case 0:
 					line = "" + this.board[0] + this.board[1] + this.board[2];
 					break;
 				case 1:
@@ -90,11 +92,12 @@ public class TicTacToe {
 	/**
 	 * To String of tic tac toe board
 	 */
+	@Override
 	public String toString() {
 		String content = "```\n";
 		for (int x = 0; x < 3; x++) {
 			for (int y = 0; y < 3; y++) {
-				content += String.format("[%c]", (board[x*3 + y] != '\0') ? board[x*3+y] : ' ');
+				content += String.format("[%c]", (board[x * 3 + y] != '\0') ? board[x * 3 + y] : ' ');
 			}
 			content += "\n";
 		}

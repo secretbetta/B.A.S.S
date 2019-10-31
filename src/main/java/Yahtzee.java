@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.User;
 
 /**
  * Yahtzee game
- * Supports singleplayer and multiplayer //TODO WIP
+ * Supports singleplayer and multiplayer
  * 
  * @author Andrew
  */
@@ -83,13 +83,31 @@ public class Yahtzee {
 	}
 	
 	/**
-	 * Rolls dice/die
+	 * Rolls dice
+	 * 
+	 * @return true if rolled, false if cannot roll
 	 */
-	public void roll() {
+	public boolean roll() {
+		if (this.roll >= 3) {
+			return false;
+		} else {
+			boolean flag = false;
+			for (boolean d : this.diceChoice) {
+				if (!d) {
+					flag = true;
+					break;
+				}
+			}
+			if (!flag) {
+				return false;
+			}
+		}
 		for (int x = 0; x < 5; x++) {
 			this.dice[x] = (int) (Math.random() * 6 + 1);
 		}
 		this.diceChoice = new boolean[5];
+		roll++;
+		return true;
 	}
 	
 	/**
@@ -112,6 +130,8 @@ public class Yahtzee {
 						points += p;
 					}
 				}
+				System.out.println(c);
+				System.out.println(points);
 				break;
 			case 6:
 			case 7:
@@ -173,10 +193,6 @@ public class Yahtzee {
 		return move(c, points);
 	}
 	
-	public int[] die() {
-		return this.dice;
-	}
-	
 	/**
 	 * Helper method for {@link #move(int)}
 	 * 
@@ -191,6 +207,19 @@ public class Yahtzee {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Gets dice
+	 * 
+	 * @return String of dice in [][][][][] format
+	 */
+	public String getDice() {
+		String dice = "";
+		for (int d : this.dice) {
+			dice += String.format("[%d]", d);
+		}
+		return dice;
 	}
 	
 	/**
@@ -246,10 +275,4 @@ public class Yahtzee {
 			100), false);
 		return scoresheet;
 	}
-	
-	public static void main(String[] args) {
-		Yahtzee game = new Yahtzee();
-		System.out.println(game.getScoresheet().toString());
-	}
-	
 }
