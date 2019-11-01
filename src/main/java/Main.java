@@ -28,7 +28,7 @@ public class Main {
 			api.addEventListener(new TicTacToeEvent()); // Tic Tac Toe
 			api.addEventListener(new TestEvent()); // Testing Events
 			api.addEventListener(new RockPaperScissorsEvent()); // Rock Paper Scissors
-			api.addEventListener(new EmotesTestEvent());
+			api.addEventListener(new YahtzeeEvent()); // Yahtzee
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

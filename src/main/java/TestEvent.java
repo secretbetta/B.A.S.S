@@ -1,12 +1,15 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
+import javax.annotation.Nonnull;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
@@ -18,6 +21,13 @@ public class TestEvent extends ListenerAdapter {
 	
 	User player1 = null;
 	User player2 = null;
+	
+	@Override
+	public void onUserActivityStart(@Nonnull UserActivityStartEvent event) {
+		if (event.getNewActivity().getName().toLowerCase().contains("coding")) {
+			System.out.println("God, you're coding again?");
+		}
+	}
 	
 	@SuppressWarnings("unused")
 	@Override
