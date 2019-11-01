@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.util.ArrayList;
 
 import javax.annotation.Nonnull;
 
@@ -46,6 +45,7 @@ public class TestEvent extends ListenerAdapter {
 			eb.setTitle("Test Embed");
 			eb.setColor(Color.blue);
 			eb.setDescription("This is just a test format");
+			// Emote emote;
 			eb.addField("Field test", "Testing field", false);
 			eb.addBlankField(true);
 			eb.setAuthor("Test png", null,
@@ -60,22 +60,21 @@ public class TestEvent extends ListenerAdapter {
 		/**
 		 * Test message, changes for testing purposes :p
 		 */
-		if (content.startsWith("~~scores")) {
-			ArrayList<Integer> scoresheet = new ArrayList<>();
-			Yahtzee game = new Yahtzee();
-			game.roll();
-			System.out.println(game.getDice());
-			game.move(Integer.parseInt(content.split(" ")[1]));
-			channel.sendMessage(game.getScoresheet().build()).queue();
-		}
+		// if (content.startsWith("~~scores")) {
+		// ArrayList<Integer> scoresheet = new ArrayList<>();
+		// Yahtzee game = new Yahtzee();
+		// game.roll();
+		// System.out.println(game.getDice());
+		// game.move(Integer.parseInt(content.split(" ")[1]));
+		// channel.sendMessage(game.getScoresheet().build()).queue();
+		// }
 		
-		if (message.getEmbeds().size() > 0 && message.getEmbeds().get(0).getTitle().equals("Scoresheet")) {
-			System.out.println("BOO YAH");
-			String msgId = message.getId();
-			for (int x = 0; x < 13; x++) {
-				message.addReaction(String.format("U+1f1%02x", (x + 6 + 16 * 14))).queue();
-			}
-		}
+		// if (message.getEmbeds().size() > 0 && message.getEmbeds().get(0).getTitle().equals("Scoresheet")) {
+		// String msgId = message.getId();
+		// for (int x = 0; x < 13; x++) {
+		// message.addReaction(String.format("U+1f1%02x", (x + 6 + 16 * 14))).queue();
+		// }
+		// }
 		
 		/**
 		 * PM/DM
@@ -88,7 +87,6 @@ public class TestEvent extends ListenerAdapter {
 	}
 	
 	public static void main(String[] args) {
-		// Test stuff here
 	}
 	
 }

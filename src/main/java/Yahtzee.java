@@ -1,22 +1,20 @@
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 import java.util.TreeSet;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.MessageEmbed.Field;
 
 /**
  * Yahtzee game
- * Supports singleplayer and multiplayer
+ * Multiplayer
  * 
  * @author Andrew
  */
 public class Yahtzee {
 	
-	private User player1;
-	private User player2;
-	private int round; // 0-13
-	private int roll; // 0-3
 	private boolean[] diceChoice; // Which dice to store
 	private int[] dice; // 5 Dice
 	
@@ -56,14 +54,15 @@ public class Yahtzee {
 	 * Makes a new game, resets everything
 	 */
 	public void newGame() {
-		this.round = 0;
-		this.roll = 0;
 		this.diceChoice = new boolean[5];
 		this.dice = new int[5];
-		this.scores = new int[14];
-		this.scoresChoice = new boolean[14];
+		this.scores = new int[13];
+		this.scoresChoice = new boolean[13];
 	}
 	
+	/**
+	 * Testing purposes
+	 */
 	public void changeDie() {
 		this.dice = new int[] { 3, 3, 3, 3, 3 };
 	}
@@ -88,25 +87,20 @@ public class Yahtzee {
 	 * @return true if rolled, false if cannot roll
 	 */
 	public boolean roll() {
-		if (this.roll >= 3) {
+		boolean flag = false;
+		for (boolean d : this.diceChoice) {
+			if (!d) {
+				flag = true;
+				break;
+			}
+		}
+		if (!flag) {
 			return false;
-		} else {
-			boolean flag = false;
-			for (boolean d : this.diceChoice) {
-				if (!d) {
-					flag = true;
-					break;
-				}
-			}
-			if (!flag) {
-				return false;
-			}
 		}
 		for (int x = 0; x < 5; x++) {
 			this.dice[x] = (int) (Math.random() * 6 + 1);
 		}
 		this.diceChoice = new boolean[5];
-		roll++;
 		return true;
 	}
 	
@@ -130,8 +124,6 @@ public class Yahtzee {
 						points += p;
 					}
 				}
-				System.out.println(c);
-				System.out.println(points);
 				break;
 			case 6:
 			case 7:
@@ -203,6 +195,7 @@ public class Yahtzee {
 	private boolean move(int c, int points) {
 		if (!this.scoresChoice[c]) {
 			this.scores[c] = points;
+			System.out.println("Points " + this.scores[c]);
 			return (this.scoresChoice[c] = true);
 		}
 		
@@ -228,51 +221,170 @@ public class Yahtzee {
 	 * @return Scoresheet
 	 */
 	public EmbedBuilder getScoresheet() {
+		int lower = 0;
+		int upper = 0;
+		
+		for (int x = 0; x < 6; x++) {
+			lower += this.scores[x];
+		}
+		for (int x = 6; x < 13; x++) {
+			upper += this.scores[x];
+		}
+		
 		EmbedBuilder scoresheet = new EmbedBuilder();
 		scoresheet.setTitle("Scoresheet");
 		scoresheet.setColor(Color.yellow);
 		scoresheet.addField("Upper Section", String.format("```css\n"
-			+ "One's: \t\t\t\t\t%d\n"
-			+ "Two's: \t\t\t\t\t%d\n"
-			+ "Three's:   \t\t\t\t%d\n"
-			+ "Four's:\t\t\t\t\t%d\n"
-			+ "Five's:\t\t\t\t\t%d\n"
-			+ "Six's: \t\t\t\t\t%d\n"
-			+ "Upper Bonus:   \t\t\t%d\n"
+			+ "[A] One's: \t\t\t\t\t%d\n"
+			+ "[B] Two's: \t\t\t\t\t%d\n"
+			+ "[C] Three's:   \t\t\t\t%d\n"
+			+ "[D] Four's:\t\t\t\t\t%d\n"
+			+ "[E] Five's:\t\t\t\t\t%d\n"
+			+ "[F] Six's: \t\t\t\t\t%d\n"
+			+ "Upper Bonus:   \t\t\t\t%d\n"
 			+ "```",
-			scores[0],
-			scores[1],
-			scores[2],
-			scores[3],
-			scores[4],
-			scores[5],
-			35), false);
+			this.scores[0],
+			this.scores[1],
+			this.scores[2],
+			this.scores[3],
+			this.scores[4],
+			this.scores[5],
+			lower >= 63 ? 35 : 0), false);
 		scoresheet.addField("Lower Section", String.format("```css\n"
-			+ "Three of a kind:   \t\t%2d\n"
-			+ "Four of a kind:\t\t\t%2d\n"
-			+ "Full house:    \t\t\t%2d\n"
-			+ "Low Straight:  \t\t\t%2d\n"
-			+ "High Straight: \t\t\t%2d\n"
-			+ "Yahtzee:   \t\t\t\t%2d\n"
-			+ "Chance:\t\t\t\t\t%2d\n"
-			+ "Yahtzee Bonus: \t\t\t%3d\n"
+			+ "[G] Three of a kind:   \t\t%2d\n"
+			+ "[H] Four of a kind:\t\t\t%2d\n"
+			+ "[I] Full house:    \t\t\t%2d\n"
+			+ "[J] Low Straight:  \t\t\t%2d\n"
+			+ "[K] High Straight: \t\t\t%2d\n"
+			+ "[L] Yahtzee:   \t\t\t\t%2d\n"
+			+ "[M] Chance:\t\t\t\t\t%2d\n"
+			+ "Yahtzee Bonus: \t\t\t\t%3d\n"
 			+ "```",
-			scores[6],
-			scores[7],
-			scores[9],
-			scores[10],
-			scores[11],
-			scores[8],
-			scores[12],
+			this.scores[6],
+			this.scores[7],
+			this.scores[9],
+			this.scores[10],
+			this.scores[11],
+			this.scores[8],
+			this.scores[12],
 			100), false);
+		
 		scoresheet.addField("Totals", String.format("```css\n"
-			+ "Total of lower section:\t%3d\n"
-			+ "Total of upper section:\t%3d\n"
-			+ "Grand total:   \t\t\t%3d\n"
+			+ "Total of lower section:\t\t%3d\n"
+			+ "Total of upper section:\t\t%3d\n"
+			+ "Grand total:   \t\t\t\t%3d\n"
 			+ "```",
-			100,
-			100,
-			100), false);
+			lower,
+			upper,
+			lower + upper), false);
 		return scoresheet;
+	}
+	
+	public static void main(String[] args) {
+		Yahtzee game1 = new Yahtzee();
+		Yahtzee game2 = new Yahtzee();
+		Scanner scan = new Scanner(System.in);
+		
+		int round = 13;
+		
+		while (round > 0) {
+			
+			int t = 1;
+			System.out.println("------------------------");
+			System.out.println("Player 1\nTurn number: " + t);
+			System.out.println("Rolling dice...");
+			game1.roll();
+			System.out.println("Your dice are...");
+			System.out.println(game1.getDice());
+			for (int turn = 1; turn <= 3; turn++) {
+				// 1-13 = put on scoresheet (A-M for emojis)
+				// 0 to roll (N for emoji)
+				int choice = scan.nextInt();
+				if (turn == 3) {
+					while (choice == 0) {
+						System.out.println("No more turns. You must choose a score");
+						choice = scan.nextInt();
+					}
+				}
+				/**
+				 * Actual game in Yahtzee Event:
+				 * Emojis = choice
+				 * if player enters ~~
+				 */
+				if (choice == 0) {
+					game1.roll();
+					System.out.println("\n------------------------");
+					System.out.println("Turn number: " + (t + turn));
+					System.out.println("Your dice are...");
+					System.out.println(game1.getDice());
+				} else if (choice >= 1 && choice <= 13) {
+					if (game1.move(choice - 1)) {
+						turn = 4;
+						System.out.println("Your score is...");
+						List<Field> scoresheet1 = game1.getScoresheet().getFields();
+						for (Field score : scoresheet1) {
+							System.out.println(score.getName());
+							System.out.println(score.getValue());
+						}
+					} else {
+						turn--;
+						System.out.println("You have already made a move here,"
+							+ " cannot enter score here. Please choose another score");
+					}
+				} else {
+					System.out.println("Invalid move. "
+						+ "Please enter 1-13 for score on scoresheet or 0 to roll dice.");
+					turn--;
+				}
+			}
+			
+			System.out.println();
+			System.out.println("------------------------");
+			System.out.println("Player 2\nTurn number: " + t);
+			System.out.println("Rolling dice...");
+			game2.roll();
+			System.out.println("Your dice are...");
+			System.out.println(game2.getDice());
+			for (int turn = 1; turn <= 3; turn++) {
+				// 1-13 = put on scoresheet (A-M for emojis)
+				// 0 to roll (N for emoji)
+				int choice = scan.nextInt();
+				if (turn == 3) {
+					while (choice == 0) {
+						System.out.println("No more turns. You must choose a score");
+						choice = scan.nextInt();
+					}
+				}
+				if (choice == 0) {
+					game2.roll();
+					System.out.println("\n------------------------");
+					System.out.println("Turn number: " + (t + turn));
+					System.out.println("Your dice are...");
+					System.out.println(game2.getDice());
+				} else if (choice >= 1 && choice <= 13) {
+					if (game2.move(choice - 1)) {
+						turn = 4;
+						System.out.println("Your score is...");
+						List<Field> scoresheet2 = game2.getScoresheet().getFields();
+						for (Field score : scoresheet2) {
+							System.out.println(score.getName());
+							System.out.println(score.getValue());
+						}
+					} else {
+						turn--;
+						System.out.println("You have already made a move here,"
+							+ " cannot enter score here. Please choose another score");
+					}
+				} else {
+					System.out.println("Invalid move. "
+						+ "Please enter 1-13 for score on scoresheet or 0 to roll dice.");
+					turn--;
+				}
+			}
+			round--;
+		}
+		
+		scan.close();
+		
 	}
 }
