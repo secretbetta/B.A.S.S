@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
@@ -41,7 +42,6 @@ public class YahtzeeEvent extends ListenerAdapter {
 	
 	@Override
 	public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
-		Member objMember = event.getMember();
 		MessageChannel channel = event.getChannel();
 		User user = event.getAuthor();
 		Message msg = event.getMessage();
@@ -63,29 +63,45 @@ public class YahtzeeEvent extends ListenerAdapter {
 		}
 		
 		if (content.startsWith("~~keep")) {
-			String[] keep = content.split(" ");
-			if (keep[1].matches("[0-9]{1,5}")) {
+			String[] keep = content.replace("[\\D\\s]", "").split(" ");
+			if (keep[1].matches("[1-6]{1,6}")) {
 				this.game1.chooseDie(keep[1]);
+			} else {
+				channel.sendMessage("Invalid input. Usage:\n"
+					+ "~~keep [1-6]").queue();
 			}
 			
 		}
 		
-		if (content.startsWith("~~scores") && this.game) {
-			if (user.getId().equals(this.player1.getId())) {
-				channel.sendMessage(game1.getScoresheet().build()).queue();
-			} else if (user.getId().equals(this.player2.getId())) {
-				channel.sendMessage(game2.getScoresheet().build()).queue();
-			} else {
-				channel.sendMessage("You're not even playing...").queue();
+		if (content.startsWith("~~scores")) {
+			channel.sendMessage(game1.getScoresheet().build()).queue();
+		}
+		
+		// if (content.startsWith("~~scores") && this.game) {
+		// if (user.getId().equals(this.player1.getId())) {
+		// channel.sendMessage(game1.getScoresheet().build()).queue();
+		// } else if (user.getId().equals(this.player2.getId())) {
+		// channel.sendMessage(game2.getScoresheet().build()).queue();
+		// } else {
+		// channel.sendMessage("You're not even playing...").queue();
+		// }
+		// }
+		
+		if (msg.getEmbeds().size() > 0 && msg.getEmbeds().get(0).getTitle().equals("Scoresheet")) {
+			// String msgId = msg.getId();
+			for (int x = 0; x < 13; x++) {
+				msg.addReaction(String.format("U+1f1%02x", (x + 6 + 16 * 14))).queue();
 			}
+			List<MessageReaction> react = msg.getReactions();
+			System.out.println(react.get(0).getReactionEmote().getEmoji());
 		}
 	}
 	
 	@Override
 	public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
-		System.out.println("Reactions");
-		System.out.println(event.getReaction());
-		System.out.println(event.getUser().getName());
+		// System.out.println("Reactions");
+		// System.out.println(event.getReaction());
+		// System.out.println(event.getUser().getName());
 	}
 	
 	public static void main(String[] args) {

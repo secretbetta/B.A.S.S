@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -6,6 +7,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
@@ -46,7 +48,11 @@ public class TestEvent extends ListenerAdapter {
 			eb.setColor(Color.blue);
 			eb.setDescription("This is just a test format");
 			// Emote emote;
-			eb.addField("Field test", "Testing field", false);
+			// U+1f1e4
+			String.format("U+1f1%02x", (0 + 6 + 16 * 14));
+			eb.addField("Field test", ":large_blue_circle::large_blue_circle::large_blue_circle:"
+				+ ":large_blue_circle::large_blue_circle::large_blue_circle:", false); // Can use discord's emojis
+																						// command directly in embed
 			eb.addBlankField(true);
 			eb.setAuthor("Test png", null,
 				"https://img.pngio.com/ceshi-test-testing-icon-with-png-and-vector-format-for-free-testing-png-512_512.png");
@@ -69,12 +75,14 @@ public class TestEvent extends ListenerAdapter {
 		// channel.sendMessage(game.getScoresheet().build()).queue();
 		// }
 		
-		// if (message.getEmbeds().size() > 0 && message.getEmbeds().get(0).getTitle().equals("Scoresheet")) {
-		// String msgId = message.getId();
-		// for (int x = 0; x < 13; x++) {
-		// message.addReaction(String.format("U+1f1%02x", (x + 6 + 16 * 14))).queue();
-		// }
-		// }
+		if (message.getEmbeds().size() > 0 && message.getEmbeds().get(0).getTitle().toString().equals("Scoresheet")) {
+			String msgId = message.getId();
+			for (int x = 0; x < 13; x++) {
+				message.addReaction(String.format("U+1f1%02x", (x + 6 + 16 * 14))).queue();
+			}
+			List<MessageReaction> react = message.getReactions();
+			System.out.println(react.get(0).getReactionEmote().getEmoji());
+		}
 		
 		/**
 		 * PM/DM

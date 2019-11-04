@@ -1,12 +1,17 @@
  * weather getter
- * troll <@400805008276193290>
- * webcrawler for various things
  * connect discord bot with amazon echo
  * something related to puppies - sarah
- * xkcd image grabber
  * would you rather
  * make a birthday thing on the bot
- * create  mafia in discord....
+ * create mafia in discord....
  * fix -debug argument
  * ~~bugreport command
  * yahtzee
+ * connect4
+  - U+1f535 - blue circle
+  - U+26ab - black circle
+  - U+1f534 - red circle
+ * better tictactoe
+  - U+2b55 - red O
+  - U+2716 - black X
+ * blackjack
