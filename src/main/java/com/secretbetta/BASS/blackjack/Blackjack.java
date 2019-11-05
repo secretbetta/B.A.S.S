@@ -150,6 +150,10 @@ public class Blackjack {
 		return hand;
 	}
 	
+	public int addCards(int player) {
+		return addCards(this.playerHands.get(player));
+	}
+	
 	/**
 	 * <h1>Sum of cards in hand.</h1>
 	 * Aces = 1 or 11, Face cards = 10, Number cards = their corresponding number

@@ -28,12 +28,12 @@ public class Main {
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
 			api.addEventListener(new MyEventListener()); // Main Events
 			api.addEventListener(new TicTacToeEvent()); // Tic Tac Toe
-			api.addEventListener(new TestEvent()); // Testing Events
+			// api.addEventListener(new TestEvent()); // Testing Events
 			api.addEventListener(new RockPaperScissorsEvent()); // Rock Paper Scissors
 			api.addEventListener(new YahtzeeEvent()); // Yahtzee
 			// api.addEventListener(new Poker()); // Poker
 			api.addEventListener(new BlackjackEvent());
-			api.addEventListener(new EmotesTestEvent()); // Emotes Testing Event
+			// api.addEventListener(new EmotesTestEvent()); // Emotes Testing Event
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
