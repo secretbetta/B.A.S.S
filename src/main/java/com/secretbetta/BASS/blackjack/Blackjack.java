@@ -2,7 +2,10 @@ package com.secretbetta.BASS.blackjack;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Scanner;
+
+import com.google.api.client.util.ArrayMap;
 
 /**
  * Blackjack game
@@ -15,16 +18,35 @@ public class Blackjack {
 	private ArrayList<String> cards;
 	
 	/* Player Hands */
-	private ArrayList<String> p1hand;
-	private ArrayList<String> p2hand;
+	private Map<Integer, ArrayList<String>> playerHands;
 	
 	/**
 	 * Initializes deck of cards with 52 cards (in sorted order)
 	 */
 	public Blackjack() {
 		this.cards = newDeck();
-		this.p1hand = new ArrayList<>();
-		this.p2hand = new ArrayList<>();
+		this.playerHands = new ArrayMap<>();
+	}
+	
+	/**
+	 * Initializes deck of cards and number of players
+	 * 
+	 * @param players Number of players
+	 */
+	public Blackjack(int players) {
+		this();
+		this.initializePlayers(players);
+	}
+	
+	/**
+	 * Initializes number of player hands
+	 * 
+	 * @param n Number of players
+	 */
+	public void initializePlayers(int n) {
+		for (int x = 0; x < n; x++) {
+			this.playerHands.put(x, new ArrayList<String>());
+		}
 	}
 	
 	/**
@@ -49,11 +71,8 @@ public class Blackjack {
 	 * Collects all cards from players to main deck
 	 */
 	public void collectCards() {
-		while (this.p1hand.size() != 0) {
-			this.cards.add(this.p1hand.remove(0));
-		}
-		while (this.p2hand.size() != 0) {
-			this.cards.add(this.p2hand.remove(0));
+		for (ArrayList<String> playercards : this.playerHands.values()) {
+			this.cards.addAll(playercards);
 		}
 	}
 	
@@ -64,14 +83,8 @@ public class Blackjack {
 	 * @param player 0 = Player1 or 1 = Player2
 	 */
 	public void deal(int n, int player) {
-		if (player == 0) {
-			for (int p = 0; p < n; p++) {
-				this.p1hand.add(this.cards.remove((int) Math.random() * this.cards.size()));
-			}
-		} else if (player == 1) {
-			for (int p = 0; p < n; p++) {
-				this.p2hand.add(this.cards.remove((int) Math.random() * this.cards.size()));
-			}
+		for (int p = 0; p < n; p++) {
+			this.playerHands.get(player).add(this.cards.remove((int) Math.random() * this.cards.size()));
 		}
 	}
 	
@@ -79,8 +92,9 @@ public class Blackjack {
 	 * Deals n cards to all players
 	 */
 	public void dealAll(int n) {
-		this.deal(n, 0);
-		this.deal(n, 1);
+		for (int player : this.playerHands.keySet()) {
+			this.deal(n, player);
+		}
 	}
 	
 	/**
@@ -92,30 +106,23 @@ public class Blackjack {
 		return this.cards.size();
 	}
 	
+	/**
+	 * Gets hand of player in ArrayList
+	 * 
+	 * @param player Player to get hand from
+	 * @return ArrayList of player's hand
+	 */
 	public ArrayList<String> getHand(int player) {
-		if (player == 0) {
-			return this.p1hand;
-		} else if (player == 1) {
-			return this.p2hand;
-		} else {
-			return null;
-		}
+		return this.playerHands.get(player);
 	}
 	
 	/**
-	 * <h1>Debug output</h1>
-	 * Prints cards in array format
+	 * Prints player hand
+	 * 
+	 * @param player Which player to get hand
 	 */
-	public void printCards() {
-		System.out.println(this.cards);
-	}
-	
-	public void printHand(int player) {
-		if (player == 0) {
-			System.out.println(this.p1hand);
-		} else if (player == 1) {
-			System.out.println(this.p2hand);
-		}
+	public String printHand(int player) {
+		return this.playerHands.get(player).toString();
 	}
 	
 	/**
@@ -125,41 +132,169 @@ public class Blackjack {
 		Collections.shuffle(this.cards);
 	}
 	
-	public static void main(String[] args) {
-		Blackjack game = new Blackjack();
-		Scanner scan = new Scanner(System.in);
-		game.shuffle();
-		game.dealAll(2);
-		System.out.print("Player 1: ");
-		game.printHand(0);
-		System.out.print("Player 2: ");
-		game.printHand(1);
+	/**
+	 * Custom sorting method
+	 * 
+	 * @param hand Hand to sort cards
+	 * @return Custom sorted cards in hand
+	 */
+	public static ArrayList<String> sortHand(ArrayList<String> hand) {
+		int ace = 0;
+		for (int x = 0; x < hand.size(); x++) {
+			if (hand.get(x).charAt(0) == 'A') {
+				ace++;
+				hand.add(hand.remove(x));
+			}
+		}
+		Collections.sort(hand.subList(0, hand.size() - ace));
+		return hand;
+	}
+	
+	/**
+	 * <h1>Sum of cards in hand.</h1>
+	 * Aces = 1 or 11, Face cards = 10, Number cards = their corresponding number
+	 * 
+	 * @param hand Hand to count
+	 * @return Sum of cards
+	 */
+	public static int addCards(ArrayList<String> hand) {
+		hand = sortHand(hand);
+		int sum = 0;
+		for (String card : hand) {
+			switch (card.substring(0, 1)) {
+				case "J":
+				case "Q":
+				case "K":
+					sum += 10;
+					break;
+				case "A":
+					if (sum + 11 <= 21) {
+						sum += 11;
+					} else {
+						sum += 1;
+					}
+					break;
+				default:
+					if (card.length() == 2) {
+						sum += Integer.parseInt(card.substring(0, 1));
+					} else {
+						sum += Integer.parseInt(card.substring(0, 2));
+					}
+					break;
+			}
+		}
+		return sum;
+	}
+	
+	/**
+	 * Returns winner with custom msgs
+	 * 
+	 * @return Winner or draw
+	 */
+	public String winner() {
+		ArrayList<Integer> sum = new ArrayList<>();
+		boolean[] busted = new boolean[this.playerHands.size()];
 		
-		int[] sums = new int[2];
+		for (int player : this.playerHands.keySet()) {
+			sum.add(addCards(this.playerHands.get(player)));
+			busted[player] = sum.get(player) > 21;
+		}
 		
-		for (int p = 0; p < 2; p++) {
-			for (String card : game.getHand(p)) {
-				switch (card.substring(0, 1)) {
-					case "D":
-					case "J":
-					case "Q":
-					case "K":
-						sums[p] += 10;
-						break;
-					case "A":
-						if (sums[p] + 11 > 21) {
-							sums[p] += 1;
-						} else {
-							sums[p] += 11;
-						}
-						break;
-					default:
-						sums[p] += Integer.parseInt(card.substring(0, 1));
-						break;
+		boolean bust = true;
+		
+		for (int p = 0; p < this.playerHands.size(); p++) {
+			if (!busted[p]) {
+				bust = false;
+				break;
+			}
+		}
+		
+		String winners = "Winner(s): \n";
+		if (bust) {
+			return "All players busted. Draw";
+		} else {
+			int highest = 0;
+			for (int p = 0; p < this.playerHands.size(); p++) {
+				if (!busted[p] && highest < sum.get(p)) {
+					highest = sum.get(p);
+				}
+			}
+			for (int p = 0; p < this.playerHands.size(); p++) {
+				if (sum.get(p) == highest) {
+					winners += String.format("Player %d\n", p + 1);
 				}
 			}
 		}
-		System.out.println("Player 1 Sum: " + sums[0]);
-		System.out.println("Player 2 Sum: " + sums[1]);
+		
+		return winners;
+	}
+	
+	public static void main(String[] args) {
+		int players = 4;
+		
+		Blackjack game = new Blackjack(players);
+		Scanner scan = new Scanner(System.in);
+		game.shuffle();
+		game.dealAll(2);
+		
+		for (int p = 0; p < players; p++) {
+			System.out.println(String.format("Player %d: ", p + 1));
+			System.out.println(game.printHand(p));
+		}
+		System.out.println();
+		
+		int[] sums = new int[players];
+		
+		for (int p = 0; p < players; p++) {
+			sums[p] = addCards(game.getHand(p));
+			System.out.println(String.format("Player %d Sum: %d", p + 1, sums[p]));
+		}
+		System.out.println();
+		
+		int player = 0;
+		boolean[] stay = new boolean[players];
+		
+		boolean gameover = false;
+		
+		while (!gameover) {
+			if (!stay[player]) {
+				System.out.println(String.format("Player %d's turn", player + 1));
+				System.out.println("1 = hit, 2 = stay");
+				int play = scan.nextInt();
+				System.out.println();
+				switch (play) {
+					case 1:
+						game.deal(1, player);
+						break;
+					case 2:
+						System.out.println(String.format("Player %d stayed.", player + 1));
+						stay[player] = true;
+						break;
+				}
+				sums[player] = addCards(game.getHand(player));
+				if (sums[player] >= 21) {
+					stay[player] = true;
+				}
+				System.out.println(String.format("Player %d's hand: %s", player + 1, game.getHand(player)));
+				System.out.println(String.format("Player %d's Sum: %d", player + 1, sums[player]));
+				System.out.println();
+			}
+			player++;
+			player %= players;
+			
+			gameover = true;
+			for (int x = 0; x < players; x++) {
+				if (stay[x] == false) {
+					gameover = false;
+					break;
+				}
+			}
+		}
+		
+		System.out.println(game.winner());
+		for (int p = 0; p < players; p++) {
+			System.out.print(String.format("Player %d: ", p + 1));
+			System.out.println(game.printHand(p));
+		}
 	}
 }
