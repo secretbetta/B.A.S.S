@@ -233,7 +233,10 @@ public class Blackjack {
 		return winners;
 	}
 	
-	public static void main(String[] args) {
+	/**
+	 * Game on console
+	 */
+	public static void main() {
 		int players = 4;
 		
 		Blackjack game = new Blackjack(players);
@@ -300,5 +303,6 @@ public class Blackjack {
 			System.out.print(String.format("Player %d: ", p + 1));
 			System.out.println(game.printHand(p));
 		}
+		scan.close();
 	}
 }
