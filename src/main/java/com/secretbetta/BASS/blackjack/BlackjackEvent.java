@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -21,9 +22,14 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  */
 public class BlackjackEvent extends ListenerAdapter {
 	
+	/**
+	 * TODO Timer for each player. If timer is up, that player automatically forfeits
+	 */
+	
 	private boolean game = false;
 	private Blackjack blackjack;
 	private List<Member> players;
+	private ArrayList<Message> privatemsg;
 	private int[] rounds; // TODO Max number of cards in hand = 5
 	private boolean[] stays;
 	private int[] sums;
@@ -45,6 +51,7 @@ public class BlackjackEvent extends ListenerAdapter {
 		this.stays = new boolean[players];
 		this.chnl = null;
 		this.sums = new int[players];
+		this.privatemsg = new ArrayList<>();
 	}
 	
 	@Override
@@ -58,7 +65,7 @@ public class BlackjackEvent extends ListenerAdapter {
 		 * Main game command
 		 */
 		if (content.startsWith("~~blackjack") && !game) {
-			if (message.getMentionedMembers().size() > 0) {
+			if (message.getMentionedMembers().size() > 0) { // Checks if multiplayer
 				List<Member> players = new ArrayList<>();
 				players.add(message.getMember());
 				players.addAll(message.getMentionedMembers());
@@ -70,12 +77,12 @@ public class BlackjackEvent extends ListenerAdapter {
 				for (Member player : players) {
 					channel.sendMessage(String.format("%s\n", player.getNickname())).queue();
 					this.sums[p] = blackjack.addCards(p);
-					player.getUser()
-						.openPrivateChannel()
-						.complete()
-						.sendMessage(String.format("Your cards are: %s\n"
-							+ "Click [1] to hit. Click [2] to stay.", this.blackjack.getHand(p).toString()))
-						.queue();
+					
+					EmbedBuilder emb = new EmbedBuilder();
+					emb.setTitle("BlackJack");
+					emb.setDescription("**Cards** " + this.blackjack.getHand(p).toString());
+					emb.addField("", "Click :one: to hit. Click :two: to stay.", false);
+					player.getUser().openPrivateChannel().complete().sendMessage(emb.build()).queue();
 					p++;
 				}
 			} else {
@@ -92,18 +99,25 @@ public class BlackjackEvent extends ListenerAdapter {
 				}
 			}
 			
-			channel.sendMessage(this.blackjack.winner()).queue();
+			channel.sendMessage(this.blackjack.winner()).queue(); // TODO Might need a new method in blackjack as a win
+																	// method
+			for (int p = 0; p < this.players.size(); p++) {
+				this.chnl.sendMessage(String.format("%s's Hand: %s", this.players.get(p).getNickname(),
+					this.blackjack.getHand(p).toString())).queue(); // TODO Embed!!!
+			}
 			game = false;
 		}
 	}
 	
 	@Override
 	public void onPrivateMessageReceived(@Nonnull PrivateMessageReceivedEvent event) {
+		this.privatemsg.add(event.getMessage());
 		if (event.getAuthor().isBot()) {
-			if (event.getMessage().getContentRaw().startsWith("Your cards are: ")
-				&& event.getMessage().getContentRaw().contains("Click")) {
-				event.getMessage().addReaction("U+31U+20e3").queue();
-				event.getMessage().addReaction("U+32U+20e3").queue();
+			if (event.getMessage().getEmbeds().size() > 0) {
+				if (event.getMessage().getEmbeds().get(0).getTitle().equals("BlackJack")) {
+					event.getMessage().addReaction("U+31U+20e3").queue();
+					event.getMessage().addReaction("U+32U+20e3").queue();
+				}
 			}
 		}
 	}
@@ -116,7 +130,7 @@ public class BlackjackEvent extends ListenerAdapter {
 		
 		boolean flag = false;
 		
-		for (Member mmb : this.players) {
+		for (Member mmb : this.players) { // TODO Change this.players to list of Users and not Members
 			if (mmb.getId().equals(event.getUser().getId())) {
 				flag = true;
 			}
@@ -130,27 +144,33 @@ public class BlackjackEvent extends ListenerAdapter {
 			 */
 			if (choice.getAsCodepoints().equals("U+31U+20e3")) { // Deal more
 				for (int x = 0; x < this.players.size(); x++) {
-					if (this.players.get(x).getId().equals(event.getUser().getId())) {
+					if (!this.stays[x] && this.players.get(x).getId().equals(event.getUser().getId())) {
 						this.blackjack.deal(1, x);
 						this.sums[x] = this.blackjack.addCards(x);
 						
 						/**
 						 * Does the hand check
+						 * TODO Clean this shit up lmao
 						 */
+						EmbedBuilder emb = new EmbedBuilder();
+						emb.setTitle("BlackJack");
+						emb.setDescription("**Cards** " + this.blackjack.getHand(x).toString());
+						
 						if (this.sums[x] < 21) { // Still playable
-							event.getChannel().sendMessage(String.format("Your cards are: %s"
-								+ "Click [1] to hit. Click [2] to stay.", this.blackjack.getHand(x).toString()))
-								.queue();
-						} else if (this.sums[x] > 21) { // Busted, readies up
-							event.getChannel()
-								.sendMessage(String.format("Your cards are: %s", this.blackjack.getHand(x).toString()))
-								.queue();
-							event.getChannel().sendMessage("You busted!").queue();
+							emb.addField("", "Click :one: to hit. Click :two: to stay.", false);
+							this.privatemsg.get(x).editMessage(emb.build()).queue();
+							// this.privatemsg.get(x).clearReactions().queue();
+							this.privatemsg.get(x).addReaction("U+31U+20e3").queue();
+							this.privatemsg.get(x).addReaction("U+32U+20e3").queue();
+						} else if (this.sums[x] > 21) { // Busted, automatic ready up
+							emb.addField("", "You busted!", false);
+							this.privatemsg.get(x).editMessage(emb.build()).queue();
 							this.stays[x] = true;
 							this.chnl.sendMessage(String.format("%s is ready.", event.getUser().getAsMention()))
 								.queue();
 						} else { // Automatic stay for hand = 21
-							event.getChannel().sendMessage("Good job! You got 21. Now to wait for the others").queue();
+							emb.addField("", "You got 21!", false);
+							this.privatemsg.get(x).editMessage(emb.build()).queue();
 							this.stays[x] = true;
 							this.chnl.sendMessage(String.format("%s is ready.", event.getUser().getAsMention()))
 								.queue();
@@ -159,7 +179,8 @@ public class BlackjackEvent extends ListenerAdapter {
 					}
 				}
 			} else if (choice.getAsCodepoints().equals("U+32U+20e3")) { // Stay
-				for (int x = 0; x < this.players.size(); x++) {
+				for (int x = 0; x < this.players.size(); x++) { // TODO This could probably be in a method or something
+					// Also I could probably embed this...
 					if (this.players.get(x).getId().equals(event.getUser().getId())) {
 						this.stays[x] = true;
 						this.chnl.sendMessage(String.format("%s is ready.", event.getUser().getAsMention())).queue();
