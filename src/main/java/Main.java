@@ -1,3 +1,5 @@
+import com.secretbetta.BASS.blackjack.BlackjackEvent;
+
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -30,6 +32,7 @@ public class Main {
 			api.addEventListener(new RockPaperScissorsEvent()); // Rock Paper Scissors
 			api.addEventListener(new YahtzeeEvent()); // Yahtzee
 			// api.addEventListener(new Poker()); // Poker
+			api.addEventListener(new BlackjackEvent());
 			api.addEventListener(new EmotesTestEvent()); // Emotes Testing Event
 		} catch (Exception e) {
 			e.printStackTrace();
