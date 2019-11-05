@@ -150,6 +150,12 @@ public class Blackjack {
 		return hand;
 	}
 	
+	/**
+	 * Sum of player's hand
+	 * 
+	 * @param player Player
+	 * @return sum of hand
+	 */
 	public int addCards(int player) {
 		return addCards(this.playerHands.get(player));
 	}
