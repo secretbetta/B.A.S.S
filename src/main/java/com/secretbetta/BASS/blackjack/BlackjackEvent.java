@@ -82,10 +82,12 @@ public class BlackjackEvent extends ListenerAdapter {
 				
 				@Override
 				public void run() {
-					for (int x = 0; x < BlackjackEvent.this.stays.length; x++) {
-						BlackjackEvent.this.stays[x] = true;
+					if (BlackjackEvent.this.game) {
+						for (int x = 0; x < BlackjackEvent.this.stays.length; x++) {
+							BlackjackEvent.this.stays[x] = true;
+						}
+						BlackjackEvent.this.chnl.sendMessage("Time is up!").queue();
 					}
-					BlackjackEvent.this.chnl.sendMessage("Time is up!").queue();
 				}
 			},
 			1000 * minutes * 60);
@@ -167,7 +169,7 @@ public class BlackjackEvent extends ListenerAdapter {
 			 * Prints each player's hand
 			 */
 			for (int p = 0; p < this.players.size(); p++) {
-				if (this.sums[p] == -1) {
+				if (this.sums[p] != -1) {
 					this.chnl.sendMessage(String.format("%s's Hand: ", this.players.get(p).getAsMention())).queue();
 					String cards = "";
 					for (String card : this.blackjack.getHand(p)) {
