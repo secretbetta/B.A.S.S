@@ -26,20 +26,20 @@ public class BlackjackEvent extends ListenerAdapter {
 	 * TODO Timer for each player. If timer is up, that player automatically forfeits
 	 */
 	
-	private boolean game = false;
-	private Blackjack blackjack;
-	private List<User> players;
-	private ArrayList<Message> privatemsg;
+	private boolean game = false; // Game is running or not
+	private Blackjack blackjack; // Actual game class
+	private List<User> players; // List of players
+	private ArrayList<Message> privatemsg; // List of private msgs to edit
 	// private int[] rounds;
-	private boolean[] stays;
-	private int[] sums;
-	private MessageChannel chnl;
+	private boolean[] stays; // Who chooses to stay
+	private int[] sums; // Sum of cards (auto checked)
+	private MessageChannel chnl; // Main channel of the game
 	
 	/**
 	 * Creates a new game and initializes everything
 	 * 
 	 * @param players Number of players
-	 * @param users   List of plauers
+	 * @param users   List of players
 	 */
 	public void newGame(int players, List<User> users) {
 		this.blackjack = new Blackjack(players);
@@ -54,6 +54,12 @@ public class BlackjackEvent extends ListenerAdapter {
 		this.privatemsg = new ArrayList<>();
 	}
 	
+	/**
+	 * Gets player's hand in embed format
+	 * 
+	 * @param player Player to get hand from
+	 * @return Embedded message
+	 */
 	public EmbedBuilder getHand(int player) {
 		EmbedBuilder emb = new EmbedBuilder();
 		emb.setTitle("BlackJack");
@@ -63,6 +69,26 @@ public class BlackjackEvent extends ListenerAdapter {
 		}
 		
 		return emb;
+	}
+	
+	/**
+	 * Timer method
+	 * 
+	 * @param minutes time before game ends
+	 */
+	public void timer(int minutes) {
+		new java.util.Timer().schedule(
+			new java.util.TimerTask() {
+				
+				@Override
+				public void run() {
+					for (int x = 0; x < BlackjackEvent.this.stays.length; x++) {
+						BlackjackEvent.this.stays[x] = true;
+					}
+					BlackjackEvent.this.chnl.sendMessage("Time is up!").queue();
+				}
+			},
+			1000 * minutes * 60);
 	}
 	
 	@Override
@@ -83,20 +109,22 @@ public class BlackjackEvent extends ListenerAdapter {
 				players.addAll(message.getMentionedUsers());
 				this.newGame(players.size(), players);
 				
-				channel.sendMessage("Welcome to BlackJack! The players are:\n").queue();
+				channel.sendMessage("Welcome to BlackJack! You have 5 minutes to finish the game.\n"
+					+ "The players are:\n")
+					.queue();
 				int p = 0;
 				
 				// Sends msg to each player
 				for (User player : players) {
 					channel.sendMessage(String.format("%s\n", player.getAsMention())).queue();
 					this.sums[p] = this.blackjack.addCards(p);
-					
+					this.timer(5);
 					EmbedBuilder emb = this.getHand(p);
 					emb.addField("", "Click :one: to hit. Click :two: to stay.", false);
 					player.openPrivateChannel().complete().sendMessage(emb.build()).queue();
 					p++;
 				}
-			} else {
+			} else { // Invalid command usage
 				channel.sendMessage("Invalid command. Correct usage:\n"
 					+ "~~blackjack <@mention>...\n"
 					+ "Multiple mentions possible. Up to 8 total players").queue();
@@ -214,20 +242,4 @@ public class BlackjackEvent extends ListenerAdapter {
 			}
 		}
 	}
-	
-	/**
-	 * 5 minutes per game
-	 */
-	// new java.util.Timer().schedule(
-	// new java.util.TimerTask() {
-	//
-	// @Override
-	// public void run() {
-	// // chnl.sendMessage(String.format("Game Over. %s took too long to play.",
-	// // player == 0 ? player1.getEffectiveName() : player2.getEffectiveName())).queue();
-	// // reset();
-	//
-	// }
-	// },
-	// 1000 * 5 * 60);
 }
