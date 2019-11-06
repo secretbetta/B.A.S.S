@@ -54,6 +54,17 @@ public class BlackjackEvent extends ListenerAdapter {
 		this.privatemsg = new ArrayList<>();
 	}
 	
+	public EmbedBuilder getHand(int player) {
+		EmbedBuilder emb = new EmbedBuilder();
+		emb.setTitle("BlackJack");
+		emb.setDescription("**Cards**: ");
+		for (String card : this.blackjack.getHand(player)) {
+			emb.appendDescription(card + " ");
+		}
+		
+		return emb;
+	}
+	
 	@Override
 	public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
 		Message message = event.getMessage();
@@ -65,23 +76,22 @@ public class BlackjackEvent extends ListenerAdapter {
 		 * Main game command
 		 */
 		if (content.startsWith("~~blackjack") && !game) {
-			if (message.getMentionedMembers().size() > 0 && message.getMentionedMembers().size() <= 8) { // Checks if
-																											// multiplayer
+			// Checks if multiplayer
+			if (message.getMentionedMembers().size() > 0 && message.getMentionedMembers().size() <= 8) {
 				List<User> players = new ArrayList<>();
 				players.add(message.getAuthor());
 				players.addAll(message.getMentionedUsers());
 				newGame(players.size(), players);
+				
 				channel.sendMessage("Welcome to BlackJack! The players are:\n").queue();
 				int p = 0;
 				
 				// Sends msg to each player
 				for (User player : players) {
-					channel.sendMessage(String.format("%s\n", player.getName())).queue();
+					channel.sendMessage(String.format("%s\n", player.getAsMention())).queue();
 					this.sums[p] = blackjack.addCards(p);
 					
-					EmbedBuilder emb = new EmbedBuilder();
-					emb.setTitle("BlackJack");
-					emb.setDescription("**Cards** " + this.blackjack.getHand(p).toString());
+					EmbedBuilder emb = getHand(p);
 					emb.addField("", "Click :one: to hit. Click :two: to stay.", false);
 					player.openPrivateChannel().complete().sendMessage(emb.build()).queue();
 					p++;
@@ -100,11 +110,23 @@ public class BlackjackEvent extends ListenerAdapter {
 				}
 			}
 			
-			channel.sendMessage(this.blackjack.winner()).queue(); // TODO Might need a new method in blackjack as a win
-																	// method
+			String winner = this.blackjack.winner();
+			if (winner.contains("Player")) {
+				channel.sendMessage(
+					String.format("**%s is the winner.**",
+						this.players.get(Character.getNumericValue(winner.charAt(19) - 1))))
+					.queue();
+			} else {
+				channel.sendMessage(winner).queue();
+			}
+			
 			for (int p = 0; p < this.players.size(); p++) {
-				this.chnl.sendMessage(String.format("%s's Hand: %s", this.players.get(p).getName(),
-					this.blackjack.getHand(p).toString())).queue(); // TODO Embed!!!
+				this.chnl.sendMessage(String.format("%s's Hand: ", this.players.get(p).getAsMention())).queue();
+				String cards = "";
+				for (String card : this.blackjack.getHand(p)) {
+					cards += card + " ";
+				}
+				this.chnl.sendMessage(cards).queue();
 			}
 			game = false;
 		}
@@ -142,31 +164,25 @@ public class BlackjackEvent extends ListenerAdapter {
 						this.sums[x] = this.blackjack.addCards(x);
 						
 						/**
-						 * Does the hand check
-						 * TODO Clean this shit up lmao
+						 * Cards in hand sum check
 						 */
-						EmbedBuilder emb = new EmbedBuilder();
-						emb.setTitle("BlackJack");
-						emb.setDescription("**Cards** " + this.blackjack.getHand(x).toString());
+						EmbedBuilder emb = getHand(x);
 						
 						if (this.sums[x] < 21) { // Still playable
 							emb.addField("", "Click :one: to hit. Click :two: to stay.", false);
 							this.privatemsg.get(x).editMessage(emb.build()).queue();
 							this.privatemsg.get(x).addReaction("U+31U+20e3").queue();
 							this.privatemsg.get(x).addReaction("U+32U+20e3").queue();
+							return;
 						} else if (this.sums[x] > 21) { // Busted, automatic ready up
 							emb.addField("", "You busted!", false);
-							this.privatemsg.get(x).editMessage(emb.build()).queue();
-							this.stays[x] = true;
-							this.chnl.sendMessage(String.format("%s is ready.", event.getUser().getAsMention()))
-								.queue();
 						} else { // Automatic stay for hand = 21
 							emb.addField("", "You got 21!", false);
-							this.privatemsg.get(x).editMessage(emb.build()).queue();
-							this.stays[x] = true;
-							this.chnl.sendMessage(String.format("%s is ready.", event.getUser().getAsMention()))
-								.queue();
 						}
+						this.privatemsg.get(x).editMessage(emb.build()).queue();
+						this.stays[x] = true;
+						this.chnl.sendMessage(String.format("%s is ready.", event.getUser().getAsMention()))
+							.queue();
 						return;
 					}
 				}
