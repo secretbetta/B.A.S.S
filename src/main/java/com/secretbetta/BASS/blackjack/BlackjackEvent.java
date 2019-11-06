@@ -152,7 +152,6 @@ public class BlackjackEvent extends ListenerAdapter {
 						if (this.sums[x] < 21) { // Still playable
 							emb.addField("", "Click :one: to hit. Click :two: to stay.", false);
 							this.privatemsg.get(x).editMessage(emb.build()).queue();
-							// this.privatemsg.get(x).clearReactions().queue();
 							this.privatemsg.get(x).addReaction("U+31U+20e3").queue();
 							this.privatemsg.get(x).addReaction("U+32U+20e3").queue();
 						} else if (this.sums[x] > 21) { // Busted, automatic ready up
@@ -179,4 +178,20 @@ public class BlackjackEvent extends ListenerAdapter {
 			}
 		}
 	}
+	
+	/**
+	 * 5 minutes per game
+	 */
+	// new java.util.Timer().schedule(
+	// new java.util.TimerTask() {
+	//
+	// @Override
+	// public void run() {
+	// // chnl.sendMessage(String.format("Game Over. %s took too long to play.",
+	// // player == 0 ? player1.getEffectiveName() : player2.getEffectiveName())).queue();
+	// // reset();
+	//
+	// }
+	// },
+	// 1000 * 5 * 60);
 }
