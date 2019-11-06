@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -31,7 +32,7 @@ public class MyEventListener extends ListenerAdapter {
 	private List<String> trollIds = new ArrayList<>();
 	
 	public MyEventListener() {
-		trollIds.add("268480279746838529"); // Sun's id
+		this.trollIds.add("268480279746838529"); // Sun's id
 		// trollIds.add("400805008276193290"); // Justine's id
 	}
 	
@@ -142,6 +143,13 @@ public class MyEventListener extends ListenerAdapter {
 			channel.sendMessage("Congrats, you're an administrator").queue();
 		} else if (content.startsWith("~~admin") && !objMember.hasPermission(Permission.ADMINISTRATOR)) {
 			channel.sendMessage("You do not have permission for this command").queue();
+		}
+		
+		/**
+		 * Funfacts about discord bot as of 11/6/2019 2:20pm
+		 */
+		if (content.equals("~~funfacts")) {
+			channel.sendMessage("Fun facts!").addFile(new File("pictures/funfacts.jpg")).queue();
 		}
 		
 		/**
