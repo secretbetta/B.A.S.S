@@ -75,13 +75,13 @@ public class BlackjackEvent extends ListenerAdapter {
 		/**
 		 * Main game command
 		 */
-		if (content.startsWith("~~blackjack") && !game) {
+		if (content.startsWith("~~blackjack") && !this.game) {
 			// Checks if multiplayer
 			if (message.getMentionedMembers().size() > 0 && message.getMentionedMembers().size() <= 8) {
 				List<User> players = new ArrayList<>();
 				players.add(message.getAuthor());
 				players.addAll(message.getMentionedUsers());
-				newGame(players.size(), players);
+				this.newGame(players.size(), players);
 				
 				channel.sendMessage("Welcome to BlackJack! The players are:\n").queue();
 				int p = 0;
@@ -89,9 +89,9 @@ public class BlackjackEvent extends ListenerAdapter {
 				// Sends msg to each player
 				for (User player : players) {
 					channel.sendMessage(String.format("%s\n", player.getAsMention())).queue();
-					this.sums[p] = blackjack.addCards(p);
+					this.sums[p] = this.blackjack.addCards(p);
 					
-					EmbedBuilder emb = getHand(p);
+					EmbedBuilder emb = this.getHand(p);
 					emb.addField("", "Click :one: to hit. Click :two: to stay.", false);
 					player.openPrivateChannel().complete().sendMessage(emb.build()).queue();
 					p++;
@@ -107,15 +107,15 @@ public class BlackjackEvent extends ListenerAdapter {
 		 * Quit command
 		 * Automatically kicks them out of game.
 		 */
-		if (game) {
+		if (this.game) {
 			if (content.startsWith("~~quit")) {
 				int p = this.players.indexOf(event.getAuthor());
-				stays[p] = true;
+				this.stays[p] = true;
 				this.sums[p] = -1;
 			}
 		}
 		
-		if (game) { // Checks to see if everyone is ready
+		if (this.game) { // Checks to see if everyone is ready
 			for (boolean stay : this.stays) {
 				if (!stay) {
 					return;
@@ -148,7 +148,7 @@ public class BlackjackEvent extends ListenerAdapter {
 					this.chnl.sendMessage(cards).queue();
 				}
 			}
-			game = false;
+			this.game = false;
 		}
 	}
 	
@@ -171,7 +171,7 @@ public class BlackjackEvent extends ListenerAdapter {
 			return;
 		}
 		
-		if (game && this.players.contains(event.getUser())) {
+		if (this.game && this.players.contains(event.getUser())) {
 			ReactionEmote choice = event.getReactionEmote();
 			
 			/**
@@ -186,7 +186,7 @@ public class BlackjackEvent extends ListenerAdapter {
 						/**
 						 * Cards in hand sum check
 						 */
-						EmbedBuilder emb = getHand(x);
+						EmbedBuilder emb = this.getHand(x);
 						
 						if (this.sums[x] < 21) { // Still playable
 							emb.addField("", "Click :one: to hit. Click :two: to stay.", false);
