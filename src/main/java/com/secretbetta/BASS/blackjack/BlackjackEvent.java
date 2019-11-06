@@ -103,6 +103,18 @@ public class BlackjackEvent extends ListenerAdapter {
 			}
 		}
 		
+		/**
+		 * Quit command
+		 * Automatically kicks them out of game.
+		 */
+		if (game) {
+			if (content.startsWith("~~quit")) {
+				int p = this.players.indexOf(event.getAuthor());
+				stays[p] = true;
+				this.sums[p] = -1;
+			}
+		}
+		
 		if (game) { // Checks to see if everyone is ready
 			for (boolean stay : this.stays) {
 				if (!stay) {
@@ -110,6 +122,9 @@ public class BlackjackEvent extends ListenerAdapter {
 				}
 			}
 			
+			/**
+			 * Win message
+			 */
 			String winner = this.blackjack.winner();
 			if (winner.contains("Player")) {
 				channel.sendMessage(
@@ -120,13 +135,18 @@ public class BlackjackEvent extends ListenerAdapter {
 				channel.sendMessage(winner).queue();
 			}
 			
+			/**
+			 * Prints each player's hand
+			 */
 			for (int p = 0; p < this.players.size(); p++) {
-				this.chnl.sendMessage(String.format("%s's Hand: ", this.players.get(p).getAsMention())).queue();
-				String cards = "";
-				for (String card : this.blackjack.getHand(p)) {
-					cards += card + " ";
+				if (this.sums[p] == -1) {
+					this.chnl.sendMessage(String.format("%s's Hand: ", this.players.get(p).getAsMention())).queue();
+					String cards = "";
+					for (String card : this.blackjack.getHand(p)) {
+						cards += card + " ";
+					}
+					this.chnl.sendMessage(cards).queue();
 				}
-				this.chnl.sendMessage(cards).queue();
 			}
 			game = false;
 		}
