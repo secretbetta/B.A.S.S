@@ -119,12 +119,86 @@ public class Poker {
 		return false;
 	}
 	
-	public boolean isFlush() {
-		return false;
+	/**
+	 * Checks if there is a flush in hand
+	 * 
+	 * @param hand Hand to check
+	 * @return True if there is a flush, false if not
+	 */
+	public boolean isFlush(ArrayList<Card> hand) {
+		return this.getHighestFlush(hand).size() == 5;
 	}
 	
-	public boolean isStraight() {
-		return false;
+	/**
+	 * Gets highest flush in hand
+	 * 
+	 * @param hand Hand to get flush from
+	 * @return 5 Cards of highest flush
+	 */
+	public ArrayList<Card> getHighestFlush(ArrayList<Card> hand) {
+		hand.addAll(this.river);
+		Collections.sort(hand);
+		Collections.reverse(hand);
+		
+		ArrayList<Card> flush = new ArrayList<>();
+		int[] suits = new int[4];
+		
+		for (Card card : hand) {
+			suits[card.getCardSuit() - 1]++;
+		}
+		
+		for (int x = 3; x >= 0; x--) {
+			if (suits[x] >= 5) {
+				int count = 5;
+				for (Card card : hand) {
+					if (card.getCardSuit() == x + 1 && count > 0) {
+						flush.add(card);
+						count--;
+					}
+				}
+				return flush;
+			}
+		}
+		
+		return new ArrayList<>();
+	}
+	
+	/**
+	 * Checks if there is a straight of 5 cards that exists in hand
+	 * 
+	 * @param hand Hand to check
+	 * @return True if a straight exists, false if not
+	 */
+	public boolean isStraight(ArrayList<Card> hand) {
+		return this.getStraight(hand).size() == 5;
+	}
+	
+	/**
+	 * Gets highest straight in hand
+	 * 
+	 * @param hand Hand to get straight from
+	 * @return Highest straight of 5 cards
+	 */
+	public ArrayList<Card> getStraight(ArrayList<Card> hand) {
+		Collections.sort(hand);
+		Collections.reverse(hand);
+		
+		ArrayList<Card> straight = new ArrayList<>();
+		
+		straight.add(hand.get(0));
+		for (int c = 0; c < hand.size() - 1; c++) {
+			if (hand.get(c).getCardNumber() - 1 == hand.get(c + 1).getCardNumber()) {
+				straight.add(hand.get(c + 1));
+			} else if (hand.get(c).getCardNumber() != hand.get(c + 1).getCardNumber()) {
+				straight = new ArrayList<>();
+				straight.add(hand.get(c));
+			}
+			if (straight.size() == 5) {
+				return straight;
+			}
+		}
+		
+		return new ArrayList<>();
 	}
 	
 	/**
@@ -228,10 +302,10 @@ public class Poker {
 		
 		ArrayList<Card> hand = new ArrayList<>();
 		
-		for (int c = 0; c < 10; c++) {
-			hand.add(game.deck.remove(0));
+		for (int c = 0; c < 20; c++) {
+			hand.add(game.deck.remove(c));
 		}
 		System.out.println(hand);
-		System.out.println(game.getThree(hand));
+		System.out.println(game.getHighestFlush(hand));
 	}
 }
