@@ -111,12 +111,100 @@ public class Poker {
 		return false;
 	}
 	
-	public boolean isFourOfAKind() {
-		return false;
+	public ArrayList<Card> getStraightFlush(ArrayList<Card> hand) {
+		hand.addAll(this.river);
+		Collections.sort(hand);
+		Collections.reverse(hand);
+		
+		ArrayList<Card> straight = new ArrayList<>();
+		
+		straight.add(hand.get(0));
+		for (int c = 0; c < hand.size() - 1; c++) {
+			if (hand.get(c).getCardNumber() - 1 == hand.get(c + 1).getCardNumber()
+				&& hand.get(c).getCardSuit() == hand.get(c + 1).getCardSuit()) {
+				straight.add(hand.get(c + 1));
+			} else if (hand.get(c).getCardNumber() != hand.get(c + 1).getCardNumber()
+				&& hand.get(c).getCardNumber() - 1 != hand.get(c + 1).getCardNumber()) {
+				straight = new ArrayList<>();
+				straight.add(hand.get(c));
+			}
+			// else if (hand.get(c).getCardSuit() != hand.get(c + 1).getCardSuit()) {
+			// straight = new ArrayList<>();
+			// straight.add(hand.get(c));
+			// }
+			if (straight.size() == 5) {
+				return straight;
+			}
+		}
+		
+		return new ArrayList<>();
 	}
 	
-	public boolean isFullHouse() {
-		return false;
+	/**
+	 * Checks if hand has four of a kind
+	 * 
+	 * @param hand
+	 * @return
+	 */
+	public boolean isFourOfAKind(ArrayList<Card> hand) {
+		return this.getFour(hand).size() == 4;
+	}
+	
+	/**
+	 * Get fours of a kind from hand
+	 * 
+	 * @param hand
+	 * @return
+	 */
+	public ArrayList<Card> getFour(ArrayList<Card> hand) {
+		hand.addAll(this.river);
+		Collections.sort(hand);
+		Collections.reverse(hand);
+		
+		ArrayList<Card> four = new ArrayList<>();
+		for (int c = 0; c < hand.size() - 2; c++) {
+			if (hand.get(c).getCardNumber() == hand.get(c + 1).getCardNumber()
+				&& hand.get(c + 1).getCardNumber() == hand.get(c + 2).getCardNumber()
+				&& hand.get(c + 2).getCardNumber() == hand.get(c + 3).getCardNumber()) {
+				for (int x = c; x < c + 4; x++) {
+					four.add(hand.get(x));
+				}
+				return four;
+			}
+		}
+		
+		return four;
+	}
+	
+	/**
+	 * Checks if hand is a full house
+	 * 
+	 * @param hand Hand to check
+	 * @return True if full house is present, false if not
+	 */
+	public boolean isFullHouse(ArrayList<Card> hand) {
+		ArrayList<Card> three = this.getThree(hand);
+		hand.removeAll(three);
+		return this.isPair(hand);
+	}
+	
+	/**
+	 * Gets full house from cards
+	 * 
+	 * @param hand
+	 * @return
+	 */
+	public ArrayList<Card> getFullHouse(ArrayList<Card> hand) {
+		hand.addAll(this.river);
+		ArrayList<Card> fullhouse = new ArrayList<>();
+		
+		fullhouse.addAll(this.getThree(hand));
+		hand.removeAll(fullhouse);
+		
+		ArrayMap<Card, Card> pairs = this.getPairs(hand);
+		fullhouse.add(pairs.getKey(pairs.size() - 1));
+		fullhouse.add(pairs.get(pairs.getKey(pairs.size() - 1)));
+		return fullhouse;
 	}
 	
 	/**
@@ -180,6 +268,7 @@ public class Poker {
 	 * @return Highest straight of 5 cards
 	 */
 	public ArrayList<Card> getStraight(ArrayList<Card> hand) {
+		hand.addAll(this.river);
 		Collections.sort(hand);
 		Collections.reverse(hand);
 		
@@ -303,9 +392,11 @@ public class Poker {
 		ArrayList<Card> hand = new ArrayList<>();
 		
 		for (int c = 0; c < 20; c++) {
-			hand.add(game.deck.remove(c));
+			hand.add(game.deck.remove(game.deck.size() - 2));
 		}
+		
 		System.out.println(hand);
-		System.out.println(game.getHighestFlush(hand));
+		ArrayList<Card> fullhouse = game.getStraightFlush(hand);
+		System.out.println("four = " + fullhouse);
 	}
 }
