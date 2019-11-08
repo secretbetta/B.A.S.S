@@ -103,12 +103,14 @@ public class Poker {
 		
 	}
 	
-	public boolean isRoyalFlush() {
-		return false;
+	public boolean isRoyalFlush(ArrayList<Card> hand) {
+		ArrayList<Card> straight = this.getStraightFlush(hand);
+		Collections.sort(straight);
+		return straight.size() == 5 && straight.get(4).getCardNumber() == 14;
 	}
 	
-	public boolean isStraightFlush() {
-		return false;
+	public boolean isStraightFlush(ArrayList<Card> hand) {
+		return this.getStraightFlush(hand).size() == 5;
 	}
 	
 	public ArrayList<Card> getStraightFlush(ArrayList<Card> hand) {
@@ -116,43 +118,27 @@ public class Poker {
 		Collections.sort(hand);
 		Collections.reverse(hand);
 		
-		ArrayList<Card> straight = new ArrayList<>();
-		Card prev = null;
-		
-		System.out.println(this.getStraight(this.getHighestFlush(hand)));
-		
-		// for (int s = 4; s >= 1; s--) {
-		// for (int c = 0; c < hand.size() - 1; c++) {
-		// if (hand.get(c).getCardSuit() == s) {
-		// if (hand.get(c).getCardNumber() - 1 == hand.get(c + 1).getCardNumber()) {
-		// // System.out.println(hand.get(c));
-		// straight.add(hand.get(c));
-		// } else if (hand.get(c).getCardNumber() != hand.get(c + 1).getCardNumber()) {
-		// straight = new ArrayList<>();
-		// straight.add(hand.get(c));
-		// }
-		// if (straight.size() == 5) {
-		// return straight;
-		// }
-		// }
-		// }
-		// straight = new ArrayList<>();
-		// }
-		prev = hand.get(0);
-		for (int c = 1; c < hand.size(); c++) {
-			if (hand.get(c).getCardSuit() == 4) {
-				System.out.print(prev + " ");
-				if (prev.getCardNumber() - 1 == hand.get(c).getCardNumber()) {
-					prev = hand.get(c);
+		ArrayList<ArrayList<Card>> hands = new ArrayList<>();
+		ArrayList<Card> temp = new ArrayList<>();
+		for (int s = 4; s >= 1; s--) {
+			for (Card card : hand) {
+				if (card.getCardSuit() == s) {
+					temp.add(card);
 				}
 			}
+			hands.add(temp);
+			temp = new ArrayList<>();
 		}
-		System.out.println();
+		int max = 0;
+		Card card = hands.get(0).get(0);
+		for (int c = 0; c < hands.size(); c++) {
+			if (Collections.max(hands.get(c)).compareTo(card) >= 0 && this.isStraight(hands.get(c))) {
+				card = Collections.max(hands.get(c));
+				max = c;
+			}
+		}
 		
-		return this.getStraight(this.getHighestFlush(hand));
-		// AGH i wished this work. Won't work for A, Q, J, 10, 9, 8
-		// because highest flush is A, Q, J, 10, 9. and highest straight is Q, J, 10, 9, 8
-		// Idea: Get ALL possible straights, check if each straight is a flush. EZ. inefficient tho
+		return this.getStraight(hands.get(max));
 	}
 	
 	/**
@@ -414,5 +400,6 @@ public class Poker {
 		System.out.println(hand);
 		ArrayList<Card> fullhouse = game.getStraightFlush(hand);
 		System.out.println("straight flush = " + fullhouse);
+		System.out.println("Royal flush = " + game.isRoyalFlush(hand));
 	}
 }
