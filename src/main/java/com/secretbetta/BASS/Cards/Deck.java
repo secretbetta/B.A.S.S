@@ -29,6 +29,16 @@ public class Deck {
 	}
 	
 	/**
+	 * Appends all elements of otherDeck to {@link #deck}
+	 * 
+	 * @param otherDeck Other deck to append to main deck
+	 * @return True if deck changed when this is called
+	 */
+	public boolean addAll(ArrayList<Card> otherDeck) {
+		return this.deck.addAll(otherDeck);
+	}
+	
+	/**
 	 * @param decks
 	 */
 	public void newDeck(int decks) {

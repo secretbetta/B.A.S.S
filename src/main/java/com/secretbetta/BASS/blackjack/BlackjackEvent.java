@@ -98,12 +98,12 @@ public class BlackjackEvent extends ListenerAdapter {
 		Message message = event.getMessage();
 		String content = message.getContentRaw();
 		MessageChannel channel = event.getChannel();
-		this.chnl = channel;
 		
 		/**
 		 * Main game command
 		 */
 		if (content.startsWith("~~blackjack") && !this.game) {
+			this.chnl = channel;
 			// Checks if multiplayer
 			if (message.getMentionedMembers().size() > 0 && message.getMentionedMembers().size() <= 8) {
 				List<User> players = new ArrayList<>();
@@ -111,7 +111,7 @@ public class BlackjackEvent extends ListenerAdapter {
 				players.addAll(message.getMentionedUsers());
 				this.newGame(players.size(), players);
 				
-				channel.sendMessage("Welcome to BlackJack! You have 5 minutes to finish the game.\n"
+				this.chnl.sendMessage("Welcome to BlackJack! You have 5 minutes to finish the game.\n"
 					+ "The players are:\n")
 					.queue();
 				int p = 0;
@@ -200,7 +200,6 @@ public class BlackjackEvent extends ListenerAdapter {
 		if (event.getUser().isBot()) {
 			return;
 		}
-		
 		if (this.game && this.players.contains(event.getUser())) {
 			ReactionEmote choice = event.getReactionEmote();
 			
@@ -242,6 +241,7 @@ public class BlackjackEvent extends ListenerAdapter {
 					this.chnl.sendMessage(String.format("%s is ready.", event.getUser().getAsMention())).queue();
 				}
 			}
+			
 		}
 	}
 }
