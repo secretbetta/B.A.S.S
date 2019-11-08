@@ -117,27 +117,42 @@ public class Poker {
 		Collections.reverse(hand);
 		
 		ArrayList<Card> straight = new ArrayList<>();
+		Card prev = null;
 		
-		straight.add(hand.get(0));
-		for (int c = 0; c < hand.size() - 1; c++) {
-			if (hand.get(c).getCardNumber() - 1 == hand.get(c + 1).getCardNumber()
-				&& hand.get(c).getCardSuit() == hand.get(c + 1).getCardSuit()) {
-				straight.add(hand.get(c + 1));
-			} else if (hand.get(c).getCardNumber() != hand.get(c + 1).getCardNumber()
-				&& hand.get(c).getCardNumber() - 1 != hand.get(c + 1).getCardNumber()) {
-				straight = new ArrayList<>();
-				straight.add(hand.get(c));
-			}
-			// else if (hand.get(c).getCardSuit() != hand.get(c + 1).getCardSuit()) {
-			// straight = new ArrayList<>();
-			// straight.add(hand.get(c));
-			// }
-			if (straight.size() == 5) {
-				return straight;
+		System.out.println(this.getStraight(this.getHighestFlush(hand)));
+		
+		// for (int s = 4; s >= 1; s--) {
+		// for (int c = 0; c < hand.size() - 1; c++) {
+		// if (hand.get(c).getCardSuit() == s) {
+		// if (hand.get(c).getCardNumber() - 1 == hand.get(c + 1).getCardNumber()) {
+		// // System.out.println(hand.get(c));
+		// straight.add(hand.get(c));
+		// } else if (hand.get(c).getCardNumber() != hand.get(c + 1).getCardNumber()) {
+		// straight = new ArrayList<>();
+		// straight.add(hand.get(c));
+		// }
+		// if (straight.size() == 5) {
+		// return straight;
+		// }
+		// }
+		// }
+		// straight = new ArrayList<>();
+		// }
+		prev = hand.get(0);
+		for (int c = 1; c < hand.size(); c++) {
+			if (hand.get(c).getCardSuit() == 4) {
+				System.out.print(prev + " ");
+				if (prev.getCardNumber() - 1 == hand.get(c).getCardNumber()) {
+					prev = hand.get(c);
+				}
 			}
 		}
+		System.out.println();
 		
-		return new ArrayList<>();
+		return this.getStraight(this.getHighestFlush(hand));
+		// AGH i wished this work. Won't work for A, Q, J, 10, 9, 8
+		// because highest flush is A, Q, J, 10, 9. and highest straight is Q, J, 10, 9, 8
+		// Idea: Get ALL possible straights, check if each straight is a flush. EZ. inefficient tho
 	}
 	
 	/**
@@ -183,8 +198,7 @@ public class Poker {
 	 * @return True if full house is present, false if not
 	 */
 	public boolean isFullHouse(ArrayList<Card> hand) {
-		ArrayList<Card> three = this.getThree(hand);
-		hand.removeAll(three);
+		hand.removeAll(this.getThree(hand));
 		return this.isPair(hand);
 	}
 	
@@ -385,18 +399,20 @@ public class Poker {
 	public static void main(String[] args) {
 		Poker game = new Poker();
 		game.deck.shuffle();
-		System.out.println(game);
+		// System.out.println(game);
 		game.deck.sort();
-		System.out.println(game); // Might make card and deck classes
+		// System.out.println(game); // Might make card and deck classes
 		
 		ArrayList<Card> hand = new ArrayList<>();
 		
-		for (int c = 0; c < 20; c++) {
+		for (int c = 0; c < 25; c++) {
 			hand.add(game.deck.remove(game.deck.size() - 2));
 		}
+		System.out.println(hand);
+		hand.remove(5);
 		
 		System.out.println(hand);
 		ArrayList<Card> fullhouse = game.getStraightFlush(hand);
-		System.out.println("four = " + fullhouse);
+		System.out.println("straight flush = " + fullhouse);
 	}
 }
