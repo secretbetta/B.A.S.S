@@ -3,6 +3,7 @@ package com.secretbetta.BASS.Poker;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Scanner;
 
 import com.google.api.client.util.ArrayMap;
 import com.secretbetta.BASS.Cards.Card;
@@ -432,5 +433,13 @@ public class Poker {
 		System.out.println(game.getPlayerInfo(1));
 		game.dealRiver(3);
 		System.out.println("River: " + game.getRiver());
+		
+		Scanner scan = new Scanner(System.in);
+		
+		int choice = 0; // Raise, check, fold. check if current bet != raised bet
+		int raise = 0;
+		while (true) {
+			
+		}
 	}
 }
