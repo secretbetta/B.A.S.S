@@ -37,6 +37,7 @@ public class TicTacToeEvent extends ListenerAdapter {
 	 * Resets the game
 	 */
 	public void reset() {
+		this.msg.clearReactions();
 		this.tttGame.newGame();
 		this.player = 0;
 		this.gameStart = false;
@@ -122,8 +123,6 @@ public class TicTacToeEvent extends ListenerAdapter {
 			channel.sendMessage(String.format("Player 1: %s\nPlayer 2: %s",
 				event.getAuthor().getAsMention(), players.get(0))).queue();
 			channel.sendMessage(this.tttGame.toString()).queue();
-			// channel.sendMessage(String.format("%s's turn.",
-			// event.getMember().getEffectiveName())).queue();
 			
 			this.player1 = objMember;
 			this.player2 = players.get(0);
@@ -149,18 +148,15 @@ public class TicTacToeEvent extends ListenerAdapter {
 	
 	@Override
 	public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
-		if (this.gameStart
-			&& (this.player == 0 ? this.player1.getId() : this.player2.getId()).equals(event.getUser().getId())) {
-			this.tttGame.move(Character.getNumericValue(event.getReactionEmote().getAsCodepoints().charAt(3)) - 1,
-				(this.player == 0 ? 'x' : 'o'));
-			this.msg.editMessage(this.tttGame.toString() + "\n" + this.winCheck()).queue();
-			this.player = (this.player + 1) % 2;
-			event.getReaction().removeReaction().queue();
-			event.getReaction().removeReaction(event.getUser()).queue();
-		} else if (this.gameStart
-			&& !(this.player == 0 ? this.player1.getId() : this.player2.getId()).equals(event.getUser().getId())
-			&& this.msg.getId().equals(event.getMessageId()) && !event.getUser().isBot()) {
-			event.getReaction().removeReaction(event.getUser()).queue();
+		if (this.gameStart && !event.getUser().isBot()) {
+			if ((this.player == 0 ? this.player1.getId() : this.player2.getId()).equals(event.getUser().getId())) {
+				this.msg.editMessage(this.tttGame.toString() + "\n" + this.winCheck()).queue();
+				this.player = (this.player + 1) % 2;
+				event.getReaction().removeReaction().queue();
+				event.getReaction().removeReaction(event.getUser()).queue();
+			} else {
+				event.getReaction().removeReaction(event.getUser()).queue();
+			}
 		}
 	}
 }

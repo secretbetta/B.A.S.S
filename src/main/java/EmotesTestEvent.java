@@ -5,7 +5,7 @@ public class EmotesTestEvent extends ListenerAdapter {
 	
 	@Override
 	public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
-		System.out.println(event.getReaction());
-		System.out.println(event.getUser().getName());
+		System.err.println(event.getReaction());
+		System.err.println(event.getUser().getName());
 	}
 }
