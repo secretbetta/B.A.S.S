@@ -242,6 +242,8 @@ public class MyEventListener extends ListenerAdapter {
 						member.getEffectiveName())).queue();
 				}
 			}
+		} else if (content.startsWith("~~spongebob") && !objMember.hasPermission(Permission.ADMINISTRATOR)) {
+			channel.sendMessage("You do not have permission to run this command.").queue();
 		}
 		
 		/**
