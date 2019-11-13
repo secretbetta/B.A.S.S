@@ -24,7 +24,7 @@ public class YahtzeeEvent extends ListenerAdapter {
 	private boolean game;
 	
 	public YahtzeeEvent() {
-		newGame();
+		this.newGame();
 	}
 	
 	public void newGame() {
@@ -33,7 +33,7 @@ public class YahtzeeEvent extends ListenerAdapter {
 		this.player1 = null;
 		this.player2 = null;
 		this.player = 0;
-		game = false;
+		this.game = false;
 	}
 	
 	public void nextRound() {
@@ -46,9 +46,6 @@ public class YahtzeeEvent extends ListenerAdapter {
 		User user = event.getAuthor();
 		Message msg = event.getMessage();
 		String content = msg.getContentRaw();
-		System.out.println("Yahtzee Event");
-		System.out.println(event.getAuthor().getName());
-		System.out.println(event.getMessage().getContentRaw());
 		
 		if (content.startsWith("~~yahtzee") && !this.game) {
 			List<Member> members;
@@ -74,7 +71,7 @@ public class YahtzeeEvent extends ListenerAdapter {
 		}
 		
 		if (content.startsWith("~~scores")) {
-			channel.sendMessage(game1.getScoresheet().build()).queue();
+			channel.sendMessage(this.game1.getScoresheet().build()).queue();
 		}
 		
 		// if (content.startsWith("~~scores") && this.game) {
