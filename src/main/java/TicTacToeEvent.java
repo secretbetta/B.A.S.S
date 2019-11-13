@@ -1,29 +1,35 @@
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
  * TicTacToe event listener
+ * 
  * @author Andrew
  *
  */
 public class TicTacToeEvent extends ListenerAdapter {
+	
 	private TicTacToe tttGame;
 	private int player;
 	private Member player1;
 	private Member player2;
 	private boolean gameStart;
+	private Message msg;
 	
 	/**
 	 * Initializes event
 	 */
 	public TicTacToeEvent() {
 		this.tttGame = new TicTacToe();
-		player = 0;
+		this.player = 0;
 		this.gameStart = false;
 	}
 	
@@ -40,35 +46,59 @@ public class TicTacToeEvent extends ListenerAdapter {
 	
 	/**
 	 * Checks winner, else returns player's turn
+	 * 
 	 * @return turn of player if no winner
 	 */
 	public String winCheck() {
 		if (this.tttGame.winner().length() == 1) {
 			String line = String.format("Winner is %s!",
-					this.tttGame.winner().equals("x") ? 
-							this.player1.getEffectiveName() : 
-							this.player2.getEffectiveName());
+				this.tttGame.winner().equals("x") ? this.player1.getEffectiveName() : this.player2.getEffectiveName());
 			this.reset();
 			return line;
 		} else if (this.tttGame.winner().equals("draw")) {
 			this.reset();
 			return "It's a tie!";
 		} else {
-			return (String.format("%s's turn. Type ~~move <num> ", 
-					(this.player == 0 ? 
-						this.player1.getEffectiveName() : 
-						this.player2.getEffectiveName())));
+			return (String.format("%s's turn.",
+				(this.player == 1 ? this.player1.getEffectiveName() : this.player2.getEffectiveName())));
 		}
+	}
+	
+	public void timer(MessageChannel channel, int minutes) {
+		new java.util.Timer().schedule(
+			new java.util.TimerTask() {
+				
+				@Override
+				public void run() {
+					channel.sendMessage(String.format("Game Over. %s took too long to play.",
+						TicTacToeEvent.this.player == 0 ? TicTacToeEvent.this.player1.getEffectiveName()
+							: TicTacToeEvent.this.player2.getEffectiveName()))
+						.queue();
+					TicTacToeEvent.this.reset();
+				}
+			},
+			1000 * minutes * 60);
 	}
 	
 	/**
 	 * Event Handler
 	 */
+	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		Message message = event.getMessage();
 		Member objMember = event.getMember();
 		String content = message.getContentRaw().toLowerCase();
 		MessageChannel channel = event.getChannel();
+		
+		/**
+		 * Gets the game
+		 */
+		if (content.startsWith("```\ntic tac toe") && event.getAuthor().isBot()) {
+			this.msg = message;
+			for (int x = 1; x <= 9; x++) {
+				this.msg.addReaction(String.format("U+3%dU+fe0fU+20e3", x)).queue();
+			}
+		}
 		
 		/**
 		 * Game starter
@@ -85,93 +115,52 @@ public class TicTacToeEvent extends ListenerAdapter {
 				return;
 			} else if (players.get(0).getId().equals(objMember.getId())) {
 				channel.sendMessage("I know you're lonely and all... "
-						+ "but you can't play against yourself...").queue();
+					+ "but you can't play against yourself...").queue();
 				return;
 			}
 			channel.sendMessage("Game will end in 5 minutes").queue();
-			channel.sendMessage(String.format("Player 1: %s\nPlayer 2: %s", 
-					event.getAuthor().getAsMention(), players.get(0))).queue();
-			channel.sendMessage(tttGame.toString()).queue();
-			channel.sendMessage(String.format("%s's turn. Type ~~move <num> ", 
-					event.getMember().getEffectiveName())).queue();
+			channel.sendMessage(String.format("Player 1: %s\nPlayer 2: %s",
+				event.getAuthor().getAsMention(), players.get(0))).queue();
+			channel.sendMessage(this.tttGame.toString()).queue();
+			// channel.sendMessage(String.format("%s's turn.",
+			// event.getMember().getEffectiveName())).queue();
 			
 			this.player1 = objMember;
 			this.player2 = players.get(0);
 			this.gameStart = true;
+			this.timer(channel, 5);
 		} else if (content.split(" ")[0].equals("~~ttt") && this.gameStart) {
 			channel.sendMessage("Game has already started").queue();
 			return;
 		}
 		
 		/**
-		 * Move input
-		 */
-		if (content.startsWith("~~move") && this.gameStart && 
-				(this.player == 0 ? 
-				this.player1.getId() : this.player2.getId())
-				.equals(objMember.getId())) {
-			try {
-				if (content.split(" ").length > 1 && 
-						Integer.parseInt(content.split(" ")[1], 10)-1 < 9 &&
-						Integer.parseInt(content.split(" ")[1], 10)-1 >= 0) {
-					if (tttGame.move(Integer.parseInt(content.split(" ")[1])-1, 
-							(this.player == 0 ? 'x' : 'o'))) {
-						this.player = (this.player + 1) % 2;
-						channel.sendMessage(tttGame.toString()).queue();
-					} else if (!tttGame.move(Integer.parseInt(content.split(" ")[1])-1, 
-							(this.player == 0 ? 'x' : 'o'))) {
-						channel.sendMessage("Cannot place in this square! Try again.").queue();
-					}
-					
-					/**
-					 * Win check and resets game
-					 */
-					channel.sendMessage(winCheck()).queue();
-				} else {
-					channel.sendMessage("Invalid input. Enter a number from 1-9 inclusive").queue();
-					channel.sendMessage(tttGame.toString()).queue();
-				}
-			} catch (NumberFormatException e) {
-				channel.sendMessage("Invalid input. Enter a number from 1-9 inclusive").queue();
-				channel.sendMessage(tttGame.toString()).queue();
-			}
-		} else if (content.startsWith("~~move") && this.gameStart && !(this.player == 0 ? 
-				this.player1.getId() : 
-				this.player2.getId()).equals(objMember.getId())) {
-			channel.sendMessage("It's not your turn!").queue();
-		} else if (content.startsWith("~~move") && !this.gameStart) {
-			channel.sendMessage("No game playing!").queue();
-		}
-		
-		/**
 		 * Quit cmd
 		 */
-		if (content.equals("~~tttquit") && this.gameStart && 
-				(this.player1.getId().equals(objMember.getId()) || 
+		if (content.equals("~~tttquit") && this.gameStart &&
+			(this.player1.getId().equals(objMember.getId()) ||
 				this.player2.getId().equals(objMember.getId()))) {
 			channel.sendMessage(String.format("Player %s has forfeited.", objMember.getEffectiveName())).queue();
-			reset();
+			this.reset();
 		} else if (content.equals("~~quit") && !this.gameStart) {
 			channel.sendMessage("No game playing!").queue();
 		}
-		
-		/**
-		 * 5 minutes per game
-		 */
-		if (this.gameStart) {
-			new java.util.Timer().schedule(
-				new java.util.TimerTask() {
-					@Override
-					public void run() {
-						channel.sendMessage(String.format("Game Over. %s took too long to play.", 
-								player == 0 ? 
-								player1.getEffectiveName() : 
-								player2.getEffectiveName())).queue();
-						reset();
-					}
-				},
-				1000 * 5 * 60
-			);
+	}
+	
+	@Override
+	public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
+		if (this.gameStart
+			&& (this.player == 0 ? this.player1.getId() : this.player2.getId()).equals(event.getUser().getId())) {
+			this.tttGame.move(Character.getNumericValue(event.getReactionEmote().getAsCodepoints().charAt(3)) - 1,
+				(this.player == 0 ? 'x' : 'o'));
+			this.msg.editMessage(this.tttGame.toString() + "\n" + this.winCheck()).queue();
+			this.player = (this.player + 1) % 2;
+			event.getReaction().removeReaction().queue();
+			event.getReaction().removeReaction(event.getUser()).queue();
+		} else if (this.gameStart
+			&& !(this.player == 0 ? this.player1.getId() : this.player2.getId()).equals(event.getUser().getId())
+			&& this.msg.getId().equals(event.getMessageId()) && !event.getUser().isBot()) {
+			event.getReaction().removeReaction(event.getUser()).queue();
 		}
 	}
 }
