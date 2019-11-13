@@ -39,6 +39,7 @@ public class TicTacToeEvent extends ListenerAdapter {
 	public void reset() {
 		this.msg.clearReactions();
 		this.tttGame.newGame();
+		this.msg = null;
 		this.player = 0;
 		this.gameStart = false;
 		this.player1 = null;
@@ -65,6 +66,12 @@ public class TicTacToeEvent extends ListenerAdapter {
 		}
 	}
 	
+	/**
+	 * Timer for Tic Tac Toe Game
+	 * 
+	 * @param channel Which channel game is being played on
+	 * @param minutes Minutes per game
+	 */
 	public void timer(MessageChannel channel, int minutes) {
 		new java.util.Timer().schedule(
 			new java.util.TimerTask() {
@@ -148,7 +155,7 @@ public class TicTacToeEvent extends ListenerAdapter {
 	
 	@Override
 	public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
-		if (this.gameStart && !event.getUser().isBot()) {
+		if (this.gameStart && !event.getUser().isBot() && event.getChannel().equals(this.msg.getChannel())) {
 			if ((this.player == 0 ? this.player1.getId() : this.player2.getId()).equals(event.getUser().getId())) {
 				this.msg.editMessage(this.tttGame.toString() + "\n" + this.winCheck()).queue();
 				this.player = (this.player + 1) % 2;
