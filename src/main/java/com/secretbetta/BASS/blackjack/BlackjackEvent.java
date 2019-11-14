@@ -138,7 +138,7 @@ public class BlackjackEvent extends ListenerAdapter {
 		 * Automatically kicks them out of game.
 		 */
 		if (this.game) {
-			if (content.startsWith("~~quit")) {
+			if (content.startsWith("~~bjquit")) {
 				int p = this.players.indexOf(event.getAuthor());
 				this.stays[p] = true;
 				this.sums[p] = -1;
