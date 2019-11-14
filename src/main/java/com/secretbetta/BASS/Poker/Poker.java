@@ -2,7 +2,6 @@ package com.secretbetta.BASS.Poker;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Scanner;
 
 import com.google.api.client.util.ArrayMap;
@@ -18,7 +17,8 @@ public class Poker {
 	private ArrayList<Card> river;
 	
 	/* Player Hands */
-	private Map<Integer, ArrayList<Card>> playerHands;
+	// private Map<Integer, ArrayList<Card>> playerHands;
+	private ArrayList<ArrayList<Card>> playerHands;
 	
 	/* Player Bets */
 	private int[] bets;
@@ -26,13 +26,18 @@ public class Poker {
 	/* Player money */
 	private int[] money;
 	
+	int button = 0; // First player to play
+	int bigblind = 50;
+	int player = 0; // Which player's turn is it
+	int turn = 0; // How many draws. 0 is "flop". 3 is last turn
+	
 	/**
 	 * Initializes deck of cards with 52 cards (in sorted order)
 	 */
 	public Poker() {
 		this.deck = newDeck();
 		this.river = new ArrayList<>();
-		this.playerHands = new ArrayMap<>();
+		this.playerHands = new ArrayList<>();
 	}
 	
 	/**
@@ -53,7 +58,7 @@ public class Poker {
 	public void initializePlayers(int n) {
 		this.money = new int[n];
 		for (int x = 0; x < n; x++) {
-			this.playerHands.put(x, new ArrayList<Card>());
+			this.playerHands.add(new ArrayList<Card>());
 			this.money[x] = 1000;
 		}
 	}
@@ -72,7 +77,7 @@ public class Poker {
 	 * Collects all cards from players to main deck
 	 */
 	public void collectCards() {
-		for (ArrayList<Card> playercards : this.playerHands.values()) {
+		for (ArrayList<Card> playercards : this.playerHands) {
 			this.deck.addAll(playercards);
 		}
 	}
@@ -99,7 +104,7 @@ public class Poker {
 	 * Deals n cards to all players
 	 */
 	public void dealAll(int n) {
-		for (int player : this.playerHands.keySet()) {
+		for (int player = 0; player < this.playerHands.size(); player++) {
 			this.deal(n, player);
 		}
 	}
