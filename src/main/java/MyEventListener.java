@@ -299,6 +299,20 @@ public class MyEventListener extends ListenerAdapter {
 			channel.sendMessage("Time Elapsed: " + seconds).queue();
 		}
 		
+		if (content.equals("~~probability of people that stand above andrew")) {
+			channel.sendMessage("Calculating...").queue();
+			channel.sendTyping().queue();
+			new java.util.Timer().schedule(
+				new java.util.TimerTask() {
+					
+					@Override
+					public void run() {
+						channel.sendMessage("0%").queue();
+					}
+				},
+				1000 * 10);
+		}
+		
 		/** Automated Functions **/
 		
 		/**
