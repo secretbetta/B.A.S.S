@@ -24,12 +24,16 @@ public class Poker {
 	private int[] bets;
 	
 	/* Player money */
-	private int[] money;
+	private int[] bal;
+	
+	boolean[] call;
+	boolean[] fold;
 	
 	int button = 0; // First player to play
 	int bigblind = 50;
 	int player = 0; // Which player's turn is it
 	int turn = 0; // How many draws. 0 is "flop". 3 is last turn
+	int pot = 0;
 	
 	/**
 	 * Initializes deck of cards with 52 cards (in sorted order)
@@ -56,10 +60,14 @@ public class Poker {
 	 * @param n Number of players
 	 */
 	public void initializePlayers(int n) {
-		this.money = new int[n];
+		this.bal = new int[n];
+		this.call = new boolean[n];
+		this.fold = new boolean[n];
+		this.bets = new int[n];
 		for (int x = 0; x < n; x++) {
 			this.playerHands.add(new ArrayList<Card>());
-			this.money[x] = 1000;
+			this.bal[x] = 1000;
+			System.err.print(this.call[x]);
 		}
 	}
 	
@@ -82,9 +90,23 @@ public class Poker {
 		}
 	}
 	
+	/**
+	 * Deals c cards to river
+	 * 
+	 * @param c Number of cards dealt to river
+	 */
 	public void dealRiver(int c) {
 		for (int x = 0; x < c; x++) {
 			this.river.add(this.deck.remove(0));
+		}
+	}
+	
+	public void raise(int player, int money) {
+		player %= this.playerHands.size();
+		if (!this.fold[player] && money < this.bal[player]) {
+			this.bets[player] += money;
+			this.bal[player] -= money;
+			this.pot += money;
 		}
 	}
 	
@@ -107,14 +129,6 @@ public class Poker {
 		for (int player = 0; player < this.playerHands.size(); player++) {
 			this.deal(n, player);
 		}
-	}
-	
-	public void raise() {
-		
-	}
-	
-	public void check() {
-		
 	}
 	
 	public String getHand(int player) {
@@ -420,7 +434,7 @@ public class Poker {
 		String info = "";
 		info += String.format("Player %d\n"
 			+ "Cards: %s\n"
-			+ "Balance: %d\n", player + 1, this.playerHands.get(player), this.money[player]);
+			+ "Balance: %d\n", player + 1, this.playerHands.get(player), this.bal[player]);
 		return info;
 	}
 	
@@ -429,22 +443,61 @@ public class Poker {
 		return this.deck.toString();
 	}
 	
-	public static void main(String[] args) {
-		Poker game = new Poker(2);
-		game.deck.shuffle();
-		System.out.println(game + "\n");
-		game.dealAll(2);
-		System.out.println(game.getPlayerInfo(0));
-		System.out.println(game.getPlayerInfo(1));
-		game.dealRiver(3);
-		System.out.println("River: " + game.getRiver());
-		
-		Scanner scan = new Scanner(System.in);
-		
-		int choice = 0; // Raise, check, fold. check if current bet != raised bet
-		int raise = 0;
-		while (true) {
-			
+	public static boolean atLeastOneFalse(boolean[] check) {
+		for (boolean c : check) {
+			if (!c) {
+				return true;
+			}
 		}
+		return false;
+	}
+	
+	public static void main(String[] args) {
+		int players = 3;
+		Scanner scan = new Scanner(System.in);
+		Poker game = new Poker(players);
+		game.deck.shuffle();
+		
+		game.dealAll(2);
+		
+		int button = 0;
+		int player = button;
+		int blind = 50;
+		game.raise(button + 1, blind / 2);
+		game.raise(button + 2, blind);
+		
+		for (int p = 0; p < players; p++) {
+			System.out.println(game.getPlayerInfo(p));
+		}
+		
+		int choice = 0;
+		while (atLeastOneFalse(game.call)) {
+			// Each player, call, raise, or fold
+			if (!game.fold[player]) {
+				System.out.printf("Player %d, type 0 to call, 1 to raise, or 2 to fold", player + 1);
+				switch (scan.nextInt()) {
+					case 0: // call
+						game.call[player] = true;
+						// game.raise(player);
+						// Player puts in same amount of money as highest bet
+						break;
+					case 1: // raise
+						System.out.printf("Player %d, raise by how much?", player + 1);
+						int bet = scan.nextInt();
+						game.raise(player, bet);
+						break;
+					case 2: // fold
+						game.fold[player] = true;
+						break;
+				}
+			}
+			player++;
+			player %= players;
+		}
+		
+		for (int p = 0; p < players; p++) {
+			System.out.println(game.getPlayerInfo(p));
+		}
+		System.out.println(game.pot);
 	}
 }
