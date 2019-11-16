@@ -31,9 +31,10 @@ public class Poker {
 	
 	int button = 0; // First player to play
 	int bigblind = 50;
-	int player = 0; // Which player's turn is it
 	int turn = 0; // How many draws. 0 is "flop". 3 is last turn
 	int pot = 0;
+	int maxbet = 0;
+	int players = 0;
 	
 	/**
 	 * Initializes deck of cards with 52 cards (in sorted order)
@@ -60,6 +61,7 @@ public class Poker {
 	 * @param n Number of players
 	 */
 	public void initializePlayers(int n) {
+		this.players = n;
 		this.bal = new int[n];
 		this.call = new boolean[n];
 		this.fold = new boolean[n];
@@ -102,12 +104,37 @@ public class Poker {
 	}
 	
 	public void raise(int player, int money) {
-		player %= this.playerHands.size();
-		if (!this.fold[player] && money < this.bal[player]) {
+		/**
+		 * TODO Fix this???? might just redo it
+		 * raise bets[player]
+		 * subtract money from balance of player
+		 * set other player(s) calls to false and this player to true
+		 * adds money amount to pot
+		 * changes maxbet to current player's max bet
+		 */
+		player %= this.players;
+		if (!this.fold[player] && money < this.bal[player] && money + this.bets[player] > this.maxbet) {
 			this.bets[player] += money;
-			this.bal[player] -= money;
+			this.bal[player] -= this.bets[player] + money;
+			this.call = new boolean[this.players];
+			this.call[player] = true;
 			this.pot += money;
+			this.maxbet = this.bets[player];
 		}
+	}
+	
+	public void call(int player) {
+		if (!this.fold[player] && this.maxbet < this.bal[player]) {
+			this.pot += this.maxbet - this.bets[player];
+			this.bal[player] -= this.maxbet - this.bets[player];
+			this.call[player] = true;
+		}
+	}
+	
+	public void resetRound() {
+		this.call = new boolean[this.players];
+		this.fold = new boolean[this.players];
+		this.collectCards();
 	}
 	
 	/**
@@ -126,7 +153,7 @@ public class Poker {
 	 * Deals n cards to all players
 	 */
 	public void dealAll(int n) {
-		for (int player = 0; player < this.playerHands.size(); player++) {
+		for (int player = 0; player < this.players; player++) {
 			this.deal(n, player);
 		}
 	}
@@ -470,26 +497,25 @@ public class Poker {
 			System.out.println(game.getPlayerInfo(p));
 		}
 		
-		int choice = 0;
 		while (atLeastOneFalse(game.call)) {
 			// Each player, call, raise, or fold
 			if (!game.fold[player]) {
-				System.out.printf("Player %d, type 0 to call, 1 to raise, or 2 to fold", player + 1);
+				System.out.printf("Player %d, type 0 to call, 1 to raise, or 2 to fold\n", player + 1);
 				switch (scan.nextInt()) {
 					case 0: // call
-						game.call[player] = true;
+						game.call(player);
 						// game.raise(player);
 						// Player puts in same amount of money as highest bet
 						break;
 					case 1: // raise
-						System.out.printf("Player %d, raise by how much?", player + 1);
-						int bet = scan.nextInt();
-						game.raise(player, bet);
+						System.out.printf("Player %d, raise by how much?\n", player + 1);
+						game.raise(player, scan.nextInt());
 						break;
 					case 2: // fold
 						game.fold[player] = true;
 						break;
 				}
+				System.out.println("Current max bet: " + game.maxbet);
 			}
 			player++;
 			player %= players;
@@ -498,6 +524,10 @@ public class Poker {
 		for (int p = 0; p < players; p++) {
 			System.out.println(game.getPlayerInfo(p));
 		}
-		System.out.println(game.pot);
+		System.out.println("Pot: " + game.pot);
+		
+		// while (atLeastOneFalse(game.call)) {
+		//
+		// }
 	}
 }
