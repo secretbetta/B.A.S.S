@@ -115,12 +115,17 @@ public class Poker {
 		player %= this.players;
 		if (!this.fold[player] && money < this.bal[player] && money + this.bets[player] > this.maxbet) {
 			this.bets[player] += money;
-			this.bal[player] -= this.bets[player] + money;
+			this.bal[player] -= money - this.bets[player];
 			this.call = new boolean[this.players];
 			this.call[player] = true;
 			this.pot += money;
 			this.maxbet = this.bets[player];
 		}
+		
+		if (!this.fold[player] && money < this.bal[player] && money + this.bets[player] > this.maxbet) {
+			
+		}
+		
 	}
 	
 	public void call(int player) {
