@@ -115,7 +115,7 @@ public class Poker {
 			this.bets[player] += money;
 			this.bal[player] -= money;
 			this.pot += money;
-			this.maxbet = this.bets[player] + money;
+			this.maxbet = this.bets[player];
 			this.call = new boolean[this.players];
 			this.call[player] = true;
 		}
@@ -548,9 +548,9 @@ public class Poker {
 							game.fold[player] = true;
 							break;
 					}
+					System.err.println(game.getPlayerInfo(player));
 					System.out.println("Current max bet: " + game.maxbet);
 				}
-				System.err.println(game.getPlayerInfo(player));
 				player++;
 				player %= players;
 			}
