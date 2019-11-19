@@ -47,9 +47,7 @@ public class BlackjackEvent extends ListenerAdapter {
 		this.game = true;
 		this.blackjack.shuffle();
 		this.blackjack.dealAll(2);
-		// this.rounds = new int[players];
 		this.stays = new boolean[players];
-		this.chnl = null;
 		this.sums = new int[players];
 		this.privatemsg = new ArrayList<>();
 	}
@@ -110,7 +108,6 @@ public class BlackjackEvent extends ListenerAdapter {
 				players.add(message.getAuthor());
 				players.addAll(message.getMentionedUsers());
 				this.newGame(players.size(), players);
-				
 				this.chnl.sendMessage("Welcome to BlackJack! You have 5 minutes to finish the game.\n"
 					+ "The players are:\n")
 					.queue();
