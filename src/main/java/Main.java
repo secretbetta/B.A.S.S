@@ -1,3 +1,6 @@
+import com.jagrosh.jdautilities.command.CommandClientBuilder;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.secretbetta.BASS.Poker.PokerCommand;
 import com.secretbetta.BASS.blackjack.BlackjackEvent;
 
 import net.dv8tion.jda.api.AccountType;
@@ -20,6 +23,18 @@ public class Main {
 				System.exit(1);
 			}
 			
+			CommandClientBuilder client = new CommandClientBuilder();
+			EventWaiter waiter = new EventWaiter();
+			
+			client.setPrefix("~~");
+			client.setAlternativePrefix("b/");
+			
+			client.setEmojis("✔", "⚠", "❌");
+			client.setOwnerId("268511458801745921");
+			client.useDefaultGame();
+			
+			client.addCommand(new PokerCommand(waiter));
+			
 			System.out.println("Running B.A.S.S Bot");
 			JDA api = new JDABuilder(AccountType.BOT)
 				.setToken(args[0])
@@ -28,10 +43,11 @@ public class Main {
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
 			api.addEventListener(new MyEventListener()); // Main Events
 			api.addEventListener(new TicTacToeEvent()); // Tic Tac Toe
-			// api.addEventListener(new TestEvent()); // Testing Events
 			api.addEventListener(new RockPaperScissorsEvent()); // Rock Paper Scissors
 			api.addEventListener(new YahtzeeEvent()); // Yahtzee
 			api.addEventListener(new BlackjackEvent());
+			api.addEventListener(waiter, client.build());
+			// api.addEventListener(new TestEvent()); // Testing Events
 			// api.addEventListener(new EmotesTestEvent()); // Emotes Testing Event
 		} catch (Exception e) {
 			e.printStackTrace();

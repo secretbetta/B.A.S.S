@@ -69,7 +69,6 @@ public class Poker {
 		for (int x = 0; x < n; x++) {
 			this.playerHands.add(new ArrayList<Card>());
 			this.bal[x] = 1000;
-			System.err.print(this.call[x]);
 		}
 	}
 	
@@ -478,9 +477,10 @@ public class Poker {
 	public String getPlayerInfo(int player) {
 		String info = "";
 		info += String.format("Player %d\n"
-			+ "Cards: %s\n"
 			+ "Balance: %d\n"
-			+ "Bet: %d\n", player + 1, this.playerHands.get(player), this.bal[player], this.bets[player]);
+			+ "Bet: %d\n"
+			+ "Call? %b\n", player + 1, this.bal[player], this.bets[player],
+			this.call[player]);
 		return info;
 	}
 	
@@ -500,6 +500,7 @@ public class Poker {
 	
 	public static void main(String[] args) {
 		int players = 3;
+		@SuppressWarnings("resource")
 		Scanner scan = new Scanner(System.in);
 		Poker game = new Poker(players);
 		game.deck.shuffle();
@@ -538,6 +539,8 @@ public class Poker {
 							} else {
 								game.check(player);
 							}
+							System.err.println("raised? " + raised);
+							System.err.println("Player: " + player);
 							break;
 						case 1: // raise
 							System.out.printf("Player %d, raise by how much?\n", player + 1);
@@ -546,6 +549,7 @@ public class Poker {
 							break;
 						case 2: // fold
 							game.fold[player] = true;
+							game.call[player] = true;
 							break;
 					}
 					System.err.println(game.getPlayerInfo(player));
