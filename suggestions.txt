@@ -1,4 +1,5 @@
  * weather getter
+ * 
  * connect discord bot with amazon echo
  * something related to puppies - sarah
  * would you rather
@@ -11,7 +12,6 @@
   - U+1f535 - blue circle
   - U+26ab - black circle
   - U+1f534 - red circle
- * better tictactoe
-  - U+2b55 - red O
-  - U+2716 - black X
  * poker
+ * commands count
+ * use github's secret manager for tokens
