@@ -55,12 +55,14 @@ public class PokerCommand extends Command {
 			event.reply(embed.build());
 			
 			this.waiter.waitForEvent(GuildMessageReceivedEvent.class,
+				// e -> e.getMessage().getEmbeds().size() > 1,
 				e -> e.getAuthor().equals(event.getAuthor())
 					&& e.getChannel().equals(event.getChannel())
-					&& !e.getMessage().equals(event.getMessage()),
+					&& !e.getMessage().equals(event.getMessage())
+					&& e.getMessage().getContentRaw().equals("test"),
 				e -> {
 					for (int x = 0; x < 3; x++) {
-						event.getMessage().addReaction("");
+						event.getMessage().addReaction("U+3" + (x + 1) + "U+20e3");
 					}
 				});
 			
