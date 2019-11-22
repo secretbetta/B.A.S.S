@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 /**
  * XKCD comic crawler
+ * 
  * @author Andrew
  *
  */
@@ -23,6 +24,7 @@ public class xkcdCrawler {
 	
 	/**
 	 * Gets random XKCD post and crawls it
+	 * 
 	 * @throws MalformedURLException
 	 */
 	public xkcdCrawler() throws MalformedURLException {
@@ -32,13 +34,14 @@ public class xkcdCrawler {
 		this.permlink = null;
 		this.html = WebCrawler.fetchHTML(new URL("https://c.xkcd.com/random/comic/"));
 		
-		links = new ArrayList<String>();
+		this.links = new ArrayList<String>();
 		
 		this.getPost();
 	}
 	
 	/**
 	 * Crawls XKCD post
+	 * 
 	 * @param url URL of post
 	 */
 	public xkcdCrawler(URL url) {
@@ -47,11 +50,12 @@ public class xkcdCrawler {
 		this.desc = null;
 		this.html = WebCrawler.fetchHTML(url);
 		
-		links = new ArrayList<String>();
+		this.links = new ArrayList<String>();
 	}
 	
 	/**
 	 * Compiles post
+	 * 
 	 * @return List of urls
 	 */
 	public List<String> getPost() {
@@ -69,6 +73,7 @@ public class xkcdCrawler {
 	
 	/**
 	 * Cleans image links
+	 * 
 	 * @return List of image urls
 	 */
 	public List<String> cleanImgs() {
@@ -76,7 +81,6 @@ public class xkcdCrawler {
 		Pattern pattern = Pattern.compile(regex);
 		
 		List<String> imgs = new ArrayList<>();
-		
 		
 		Matcher matcher;
 		for (String link : this.links) {
@@ -91,17 +95,24 @@ public class xkcdCrawler {
 	
 	/**
 	 * Gets XKCD img url
+	 * 
 	 * @return image URL in string
 	 * @throws MalformedURLException
 	 */
 	public String getXKCDimg() throws MalformedURLException {
-		List<String> imgs = cleanImgs();
-		this.img = "https:" + imgs.get(2);
+		List<String> imgs = this.cleanImgs();
+		try {
+			this.img = "https:" + imgs.get(2);
+		} catch (IndexOutOfBoundsException e) {
+			System.err.printf("Index out of bounds. Index = %d, Size = %d\n", 2, imgs.size());
+			System.err.println("Imgs: " + imgs + "\nLinks: " + this.links);
+		}
 		return this.img;
 	}
 	
 	/**
 	 * Gets XKCD post tite
+	 * 
 	 * @return post title
 	 */
 	public String getXKCDtitle() {
@@ -109,7 +120,6 @@ public class xkcdCrawler {
 		Pattern pattern = Pattern.compile(regex);
 		
 		List<String> imgs = new ArrayList<>();
-		
 		
 		Matcher matcher;
 		for (String link : this.links) {
@@ -125,6 +135,7 @@ public class xkcdCrawler {
 	
 	/**
 	 * Gets XKCD post description
+	 * 
 	 * @return post description
 	 */
 	public String getXKCDdesc() {
@@ -134,7 +145,7 @@ public class xkcdCrawler {
 		List<String> imgs = new ArrayList<>();
 		
 		Matcher matcher;
-		for (String link : links) {
+		for (String link : this.links) {
 			matcher = pattern.matcher(link);
 			while (matcher.find()) {
 				imgs.add(matcher.group(2));
@@ -147,6 +158,7 @@ public class xkcdCrawler {
 	
 	/**
 	 * Gets permanents link to comic
+	 * 
 	 * @return Permanent link
 	 */
 	public String getXKCDpermLink() {
