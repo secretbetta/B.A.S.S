@@ -35,7 +35,6 @@ public class Poker {
 	int pot = 0;
 	int maxbet = 0;
 	int players = 0;
-	int player = 0;
 	
 	/**
 	 * Initializes deck of cards with 52 cards (in sorted order)

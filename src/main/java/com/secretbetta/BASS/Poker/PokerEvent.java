@@ -17,17 +17,34 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class PokerEvent extends ListenerAdapter {
 	
-	boolean start = false;
 	Poker game;
-	List<Member> players = new ArrayList<>();
-	MessageChannel mainchnl = null;
 	
-	public void startGame(int p, MessageChannel chnl) {
+	List<Member> players = new ArrayList<>();
+	
+	MessageChannel mainchnl = null;
+	Message main = null;
+	
+	int player;
+	int button;
+	
+	private final int blind = 50;
+	
+	boolean start = false;
+	
+	public void startGame(int p, MessageChannel chnl, Message main) {
 		this.game = new Poker(p);
 		this.start = true;
 		this.mainchnl = chnl;
+		this.main = main;
+		this.player = 0;
+		this.button = 0;
 	}
 	
+	/**
+	 * Gets GUI in EmbedBuilder Format
+	 * 
+	 * @return
+	 */
 	public EmbedBuilder getGui() {
 		EmbedBuilder embed = new EmbedBuilder();
 		embed.setTitle("Poker Game");
@@ -40,23 +57,30 @@ public class PokerEvent extends ListenerAdapter {
 				this.game.getPlayerInfo(x));
 		}
 		embed.addField("Players", playerHands, false);
-		embed.setFooter(String.format("%s's turn", this.players.get(this.game.player).getNickname()));
+		embed.setFooter(String.format("%s's turn", this.players.get(this.player).getNickname()));
 		
 		return embed;
 	}
 	
 	@Override
 	public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
+		if (event.getAuthor().isBot()) {
+			return;
+		}
 		Message msg = event.getMessage();
 		Member author = event.getMember();
 		MessageChannel chnl = event.getChannel();
 		String content = msg.getContentRaw().toLowerCase();
 		
-		this.players.addAll(msg.getMentionedMembers());
-		if (content.startsWith("~~poker") && (this.players.size() >= 1)) {
+		if (content.startsWith("~~poker") && (msg.getMentionedMembers().size() >= 1)) {
+			this.players.addAll(msg.getMentionedMembers());
 			this.players.add(0, author);
 			
-			this.startGame(this.players.size(), chnl);
+			this.startGame(this.players.size(), chnl, msg);
+			
+			this.game.raise(this.button, this.blind / 2);
+			this.game.raise(this.button + 1, this.blind);
+			
 			chnl.sendMessage(this.getGui().build()).queue();
 		}
 	}
@@ -76,16 +100,29 @@ public class PokerEvent extends ListenerAdapter {
 	
 	@Override
 	public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
+		if (event.getUser().isBot()) {
+			return;
+		}
+		
 		Member player = event.getMember();
 		MessageChannel chnl = event.getChannel();
 		
-		if (player.equals(this.players.get(this.game.player))) {
+		System.err.println(event.getMessageId());
+		if (event.getReaction().getMessageId().equals(this.main.getId())) {
+			event.getReaction().removeReaction(event.getUser()).queue();
+		}
+		
+		if (player.equals(this.players.get(this.player)) && this.start) { // Checks if its player turn && a game
+																			// has started
 			switch (event.getReactionEmote().getEmoji()) {
-				case "U+31U+20e3": //
+				case "U+31U+20e3": // Call/Check
+					
 					break;
-				case "U+32U+20e3":
+				case "U+32U+20e3": // Raise
+					
 					break;
-				case "U+33U+20e3":
+				case "U+33U+20e3": // Fold
+					
 					break;
 			}
 		}
