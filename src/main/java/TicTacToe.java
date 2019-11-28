@@ -12,7 +12,7 @@ public class TicTacToe {
 	 * Initializes TicTacToe board
 	 */
 	public TicTacToe() {
-		board = new char[9];
+		this.board = new char[9];
 	}
 	
 	/**
@@ -94,10 +94,10 @@ public class TicTacToe {
 	 */
 	@Override
 	public String toString() {
-		String content = "```\n";
+		String content = "```\nTic Tac Toe Game\n";
 		for (int x = 0; x < 3; x++) {
 			for (int y = 0; y < 3; y++) {
-				content += String.format("[%c]", (board[x * 3 + y] != '\0') ? board[x * 3 + y] : ' ');
+				content += String.format("[%c]", (this.board[x * 3 + y] != '\0') ? this.board[x * 3 + y] : ' ');
 			}
 			content += "\n";
 		}

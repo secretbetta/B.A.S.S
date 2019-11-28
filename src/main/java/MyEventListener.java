@@ -272,6 +272,8 @@ public class MyEventListener extends ListenerAdapter {
 						member.getEffectiveName())).queue();
 				}
 			}
+		} else if (content.startsWith("~~spongebob") && !objMember.hasPermission(Permission.ADMINISTRATOR)) {
+			channel.sendMessage("You do not have permission to run this command.").queue();
 		}
 		
 		/**
@@ -325,6 +327,20 @@ public class MyEventListener extends ListenerAdapter {
 			Duration elapsed = Duration.between(start, Instant.now());
 			double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();
 			channel.sendMessage("Time Elapsed: " + seconds).queue();
+		}
+		
+		if (content.equals("~~probability of people that stand above andrew")) {
+			channel.sendMessage("Calculating...").queue();
+			channel.sendTyping().queue();
+			new java.util.Timer().schedule(
+				new java.util.TimerTask() {
+					
+					@Override
+					public void run() {
+						channel.sendMessage("0%").queue();
+					}
+				},
+				1000 * 10);
 		}
 		
 		/** Automated Functions **/
