@@ -113,7 +113,7 @@ public class WebCrawler {
 		}
 		
 		for (URL link : locallinks) {
-			listLinks(link, fetchHTML(link), limit);
+			this.listLinks(link, fetchHTML(link), limit);
 		}
 		
 		this.links.addAll(locallinks);

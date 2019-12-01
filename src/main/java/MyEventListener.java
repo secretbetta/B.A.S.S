@@ -212,6 +212,16 @@ public class MyEventListener extends ListenerAdapter {
 		
 		/**
 		 * Sees if personal Minecraft Server is online
+		 * TODO Get all info for my minecraft server. including version and stuff
+		 * Not the actual order:
+		 * 1. Name of Server: Secretbetta's Minecraft Server
+		 * 2. IP Address: 73.162.89.39:25565
+		 * 3. World name:
+		 * 4. OP List:
+		 * 5. Up time?
+		 * 6. Difficulty
+		 * 7. Number of players online out of max
+		 * 8.
 		 */
 		if (content.equals("~~mc")) {
 			boolean open = true;
