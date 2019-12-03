@@ -7,6 +7,12 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 
+/**
+ * Minecraft Server information command
+ * 
+ * @author Andrew
+ *
+ */
 public class ServerInfo extends Command {
 	
 	public ServerInfo() {
@@ -22,23 +28,8 @@ public class ServerInfo extends Command {
 			return;
 		}
 		
-		System.err.println("ran");
-		
-		/**
-		 * Sees if personal Minecraft Server is online
-		 * TODO Get all info for my minecraft server. including version and stuff
-		 * Not the actual order:
-		 * 1. Name of Server: Secretbetta's Minecraft Server
-		 * 2. IP Address: 73.162.89.39:25565
-		 * 3. World name:
-		 * 4. OP List:
-		 * 5. Up time?
-		 * 6. Difficulty
-		 * 7. Number of players online out of max
-		 * 8. List of players online
-		 * 9.
-		 */
-		MinecraftServer ass = new MinecraftServer("73.162.89.39", 25565);
+		int timeout = 3000;
+		MinecraftServer ass = new MinecraftServer("73.162.89.39", 25565, timeout);
 		if (ass.fetchData()) {
 			event.reply("```Server is online```");
 			EmbedBuilder info = new EmbedBuilder();
