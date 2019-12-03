@@ -1,4 +1,5 @@
 package com.secretbetta.BASS.Minecraft;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -179,10 +180,6 @@ public final class MinecraftServer {
 				this.setMotd(data[3].replaceAll("§.|[^\\w ']", "").trim());
 				this.setPlayersOnline(Integer.parseInt(data[4]));
 				this.setMaxPlayers(Integer.parseInt(data[5]));
-				// System.err.println(data.length);
-				for (String line : data) {
-					System.err.println(line);
-				}
 			} else {
 				String[] data = string.split("§");
 				
@@ -209,15 +206,5 @@ public final class MinecraftServer {
 		}
 		
 		return true;
-	}
-	
-	public static void main(String[] args) {
-		MinecraftServer ass = new MinecraftServer("73.162.89.39", 25565);
-		System.out.println(ass.getAddress());
-		System.out.println(ass.fetchData());
-		System.out.println(ass.getGameVersion());
-		System.out.println(ass.getMotd());
-		System.out.println(ass.getPlayersOnline());
-		System.out.println(ass.getMaxPlayers());
 	}
 }
