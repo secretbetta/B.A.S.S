@@ -3,18 +3,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
-import java.net.Socket;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.net.SocketFactory;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -207,31 +202,6 @@ public class MyEventListener extends ListenerAdapter {
 			} catch (GeneralSecurityException e) {
 				e.printStackTrace();
 				System.err.println("Wtf happened? O.o");
-			}
-		}
-		
-		/**
-		 * Sees if personal Minecraft Server is online
-		 */
-		if (content.equals("~~mc")) {
-			boolean open = true;
-			try {
-				Socket socket = SocketFactory.getDefault().createSocket();
-				socket.setSoTimeout(5000);
-				socket.connect(new InetSocketAddress("73.162.89.39", 25565));
-				socket.close();
-			} catch (ConnectException e) {
-				System.err.println("Cannot get IP");
-				System.err.println(e.getLocalizedMessage());
-				open = false;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			if (open) {
-				channel.sendMessage("Secretbetta's Minecraft Server is online").queue();
-			} else {
-				channel.sendMessage("Secretbetta's Minecraft Server is offline").queue();
 			}
 		}
 		
