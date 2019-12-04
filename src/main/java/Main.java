@@ -1,3 +1,6 @@
+import com.jagrosh.jdautilities.command.CommandClientBuilder;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.secretbetta.BASS.Minecraft.ServerInfo;
 import com.secretbetta.BASS.Poker.PokerEvent;
 import com.secretbetta.BASS.blackjack.BlackjackEvent;
 
@@ -21,16 +24,17 @@ public class Main {
 				System.exit(1);
 			}
 			
-			// CommandClientBuilder client = new CommandClientBuilder();
-			// EventWaiter waiter = new EventWaiter();
-			//
-			// client.setPrefix("~~");
-			// client.setAlternativePrefix("b/");
-			//
-			// client.setEmojis("✔", "⚠", "❌");
-			// client.setOwnerId("268511458801745921");
-			// client.useDefaultGame();
-			//
+			CommandClientBuilder client = new CommandClientBuilder();
+			EventWaiter waiter = new EventWaiter();
+			
+			client.setPrefix("~~");
+			client.setAlternativePrefix("b/");
+			
+			client.setEmojis("✔", "⚠", "❌");
+			client.setOwnerId("268511458801745921");
+			client.useDefaultGame();
+			
+			client.addCommand(new ServerInfo());
 			// client.addCommand(new PokerCommand(waiter));
 			
 			System.out.println("Running B.A.S.S Bot");
@@ -45,7 +49,7 @@ public class Main {
 			api.addEventListener(new YahtzeeEvent()); // Yahtzee
 			api.addEventListener(new BlackjackEvent());
 			api.addEventListener(new PokerEvent());
-			// api.addEventListener(waiter, client.build());
+			api.addEventListener(waiter, client.build());
 			// api.addEventListener(new TestEvent()); // Testing Events
 			// api.addEventListener(new EmotesTestEvent()); // Emotes Testing Event
 		} catch (Exception e) {
