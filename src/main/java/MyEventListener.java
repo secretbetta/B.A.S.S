@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -9,6 +8,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.secretbetta.BASS.utlities.WebCrawler;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -207,20 +208,20 @@ public class MyEventListener extends ListenerAdapter {
 		/**
 		 * Gets random xkcd comic
 		 */
-		if (content.equals("~~xkcd")) {
-			try {
-				xkcdCrawler xkcd = new xkcdCrawler();
-				EmbedBuilder eb = new EmbedBuilder();
-				eb.setTitle(String.format("%s", xkcd.getXKCDtitle()));
-				eb.setColor(Color.blue);
-				eb.setImage(xkcd.getXKCDimg());
-				eb.setDescription(xkcd.getXKCDdesc());
-				eb.addField("", String.format("[Permanent link to comic](%s)", xkcd.getXKCDpermLink()), true);
-				channel.sendMessage(eb.build()).queue();
-			} catch (MalformedURLException e) {
-				System.err.println("URL Exception");
-			}
-		}
+		// if (content.equals("~~xkcd")) {
+		// try {
+		// xkcdCrawler xkcd = new xkcdCrawler();
+		// EmbedBuilder eb = new EmbedBuilder();
+		// eb.setTitle(String.format("%s", xkcd.getXKCDtitle()));
+		// eb.setColor(Color.blue);
+		// eb.setImage(xkcd.getXKCDimg());
+		// eb.setDescription(xkcd.getXKCDdesc());
+		// eb.addField("", String.format("[Permanent link to comic](%s)", xkcd.getXKCDpermLink()), true);
+		// channel.sendMessage(eb.build()).queue();
+		// } catch (MalformedURLException e) {
+		// System.err.println("URL Exception");
+		// }
+		// }
 		
 		/**
 		 * Debugger

@@ -3,6 +3,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.secretbetta.BASS.utlities.WebCrawler;
+
 /**
  * Crawls for puppies
  * 
