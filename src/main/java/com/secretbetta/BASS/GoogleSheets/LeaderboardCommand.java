@@ -6,6 +6,18 @@ import java.security.GeneralSecurityException;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+/**
+ * <h1>Leaderboard Command</h1>
+ * <p>
+ * Gets Player VS, gets Main leaderboard
+ * </p>
+ * Data from a Google Sheet
+ * 
+ * @see <a href=
+ *      "https://docs.google.com/spreadsheets/d/1-f49unMhxyZ0w_R4RR6i4Rcx_d8QoENDHLSaYmni5Wg/edit?usp=sharing">Leaderboard</a>
+ * @author Andrew
+ *
+ */
 public class LeaderboardCommand extends Command {
 	
 	public LeaderboardCommand() {
@@ -64,18 +76,26 @@ public class LeaderboardCommand extends Command {
 			return;
 		}
 		
+		/**
+		 * Main leaderboard getter
+		 */
 		if (event.getArgs().length() == 0) {
 			try {
 				event.reply(LeaderboardCommand.getLeaderboard());
 			} catch (IOException e) {
+				event.reply("Could not get data");
 				e.printStackTrace();
 			} catch (GeneralSecurityException e) {
+				event.reply("Could not access leaderboard");
 				e.printStackTrace();
 			}
+			return;
 		}
 		
+		/**
+		 * Player VS Leaderboard Getter
+		 */
 		String[] players = event.getArgs().split(" ");
-		
 		switch (players.length) {
 			case 1: // Not enough names
 				event.reply("Not enough names provided");
@@ -84,9 +104,10 @@ public class LeaderboardCommand extends Command {
 				try {
 					event.reply(LeaderboardCommand.getPlayerVS(players[0], players[1]));
 				} catch (GeneralSecurityException e) {
+					event.reply("Could not access leaderboard");
 					e.printStackTrace();
 				} catch (IOException e) {
-					event.reply("Couldn't get leaderboard");
+					event.reply("Could not get player(s) data");
 				}
 				break;
 		}
