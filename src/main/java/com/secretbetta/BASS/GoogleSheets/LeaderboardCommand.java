@@ -25,7 +25,7 @@ public class LeaderboardCommand extends Command {
 		this.name = "leaderboard";
 		this.arguments = "No args/<Player1> <Player2>";
 		this.help = "Leaderboard scores between two players";
-		// this.cooldown = 20;
+		this.cooldown = 20;
 	}
 	
 	/**
