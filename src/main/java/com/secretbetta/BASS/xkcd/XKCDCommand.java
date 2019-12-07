@@ -19,6 +19,11 @@ public class XKCDCommand extends Command {
 	
 	@Override
 	protected void execute(CommandEvent event) {
+		
+		if (event.getAuthor().isBot()) {
+			return;
+		}
+		
 		try {
 			xkcdCrawler xkcd = new xkcdCrawler();
 			EmbedBuilder eb = new EmbedBuilder();
