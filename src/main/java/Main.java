@@ -1,5 +1,6 @@
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.secretbetta.BASS.GoogleSheets.LeaderboardCommand;
 import com.secretbetta.BASS.Minecraft.ServerInfo;
 import com.secretbetta.BASS.Poker.PokerEvent;
 import com.secretbetta.BASS.blackjack.BlackjackEvent;
@@ -35,6 +36,7 @@ public class Main {
 			client.useDefaultGame();
 			
 			client.addCommand(new ServerInfo());
+			client.addCommand(new LeaderboardCommand());
 			// client.addCommand(new PokerCommand(waiter));
 			
 			System.out.println("Running B.A.S.S Bot");

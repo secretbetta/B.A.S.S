@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -34,58 +33,6 @@ public class MyEventListener extends ListenerAdapter {
 	public MyEventListener() {
 		this.trollIds.add("268480279746838529"); // Sun's id
 		// trollIds.add("400805008276193290"); // Justine's id
-	}
-	
-	/**
-	 * Gets Leaderboard from Main Leaderboard Sheet
-	 * 
-	 * @return Formatted String for Leaderboard
-	 * @throws IOException
-	 * @throws GeneralSecurityException
-	 * @see LeaderboardSheet#getLeaderboard()
-	 */
-	public static String getLeaderboard() throws IOException, GeneralSecurityException {
-		LeaderboardSheet sheets = new LeaderboardSheet();
-		return sheets.getLeaderboard();
-	}
-	
-	/**
-	 * Gets Player VS Player List of scores
-	 * 
-	 * @param name1 Player 1
-	 * @param name2 Player 2
-	 * @return Formatted string of scores
-	 * @throws GeneralSecurityException
-	 * @throws IOException
-	 * @see LeaderboardSheet#getPlayer(String, String)
-	 */
-	public static String getPlayerVS(String name1, String name2) throws GeneralSecurityException, IOException {
-		LeaderboardSheet sheets = new LeaderboardSheet();
-		return sheets.getPlayer(name1, name2);
-	}
-	
-	/**
-	 * Shows main leaderboard of PvP scores
-	 * 
-	 * @param content Names of players
-	 * @return Message to send to discord chat
-	 * @throws GeneralSecurityException
-	 * @throws IOException
-	 * @see #getPlayerVS(String, String)
-	 * @see #getLeaderboard()
-	 */
-	public static String leaderboardShow(String content) throws GeneralSecurityException, IOException {
-		if (content.split("\\s+").length >= 2 && !content.split("\\s+")[1].equals("-debug")) {
-			String[] names = content.split("\\s+");
-			if (names.length >= 3) {
-				return getPlayerVS(names[1], names[2]);
-			} else {
-				return "Invalid command input.\n"
-					+ "Format: ~~leaderboard <Player1> <Player2>";
-			}
-		} else {
-			return getLeaderboard();
-		}
 	}
 	
 	/**
@@ -190,21 +137,7 @@ public class MyEventListener extends ListenerAdapter {
 			channel.sendMessage(eb.build()).queue();
 		}
 		
-		/**
-		 * Shows Leaderboard
-		 */
-		if (content.startsWith("~~leaderboard")) {
-			try {
-				channel.sendMessage(leaderboardShow(content)).queue();
-			} catch (IOException e) {
-				System.err.println("Player 1 cannot be found");
-				channel.sendMessage("Player 1 not found").queue();
-			} catch (GeneralSecurityException e) {
-				e.printStackTrace();
-				System.err.println("Wtf happened? O.o");
-			}
-		}
-		
+		/*
 		 * Gets random movie quote
 		 */
 		if (content.startsWith("~~mquote")) {
