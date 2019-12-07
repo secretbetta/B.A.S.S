@@ -55,6 +55,8 @@ public class xkcdCrawler {
 		this.html = WebCrawler.fetchHTML(url);
 		
 		this.links = new ArrayList<String>();
+		
+		this.getPost();
 	}
 	
 	/**
@@ -124,7 +126,7 @@ public class xkcdCrawler {
 		Pattern pattern = Pattern.compile(regex);
 		
 		List<String> imgs = new ArrayList<>();
-		
+		System.err.println(this.links);
 		Matcher matcher;
 		for (String link : this.links) {
 			matcher = pattern.matcher(link);
