@@ -205,6 +205,7 @@ public class MyEventListener extends ListenerAdapter {
 			}
 		}
 		
+		/*
 		 * Gets random movie quote
 		 */
 		if (content.startsWith("~~mquote")) {
