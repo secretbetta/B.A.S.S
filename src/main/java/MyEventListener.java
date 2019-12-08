@@ -6,7 +6,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.secretbetta.BASS.utlities.WebCrawler;
@@ -29,29 +28,29 @@ public class MyEventListener extends ListenerAdapter {
 	
 	final static MovieQuoter mquotes = new MovieQuoter("marvelquotes.txt");
 	
-	private List<String> trollIds = new ArrayList<>();
-	
-	public MyEventListener() {
-		this.trollIds.add("268480279746838529"); // Sun's id
-		// trollIds.add("400805008276193290"); // Justine's id
-	}
-	
-	/**
-	 * ManIpuLAtES STrINg tO RaNdom UPperCasE aND LoWErcAse WordS
-	 * 
-	 * @param content Content to manipulate
-	 * @return Manipulated String
-	 */
-	private static String spongebobUpper(String content) {
-		String newContent = "";
-		
-		for (int i = 0; i < content.length(); i++) {
-			newContent += (int) (Math.random() * 2) == 0 ? Character.toLowerCase(content.charAt(i))
-				: Character.toUpperCase(content.charAt(i));
-		}
-		
-		return newContent;
-	}
+	// private List<String> trollIds = new ArrayList<>();
+	//
+	// public MyEventListener() {
+	// this.trollIds.add("268480279746838529"); // Sun's id
+	// // trollIds.add("400805008276193290"); // Justine's id
+	// }
+	//
+	// /**
+	// * ManIpuLAtES STrINg tO RaNdom UPperCasE aND LoWErcAse WordS
+	// *
+	// * @param content Content to manipulate
+	// * @return Manipulated String
+	// */
+	// private static String spongebobUpper(String content) {
+	// String newContent = "";
+	//
+	// for (int i = 0; i < content.length(); i++) {
+	// newContent += (int) (Math.random() * 2) == 0 ? Character.toLowerCase(content.charAt(i))
+	// : Character.toUpperCase(content.charAt(i));
+	// }
+	//
+	// return newContent;
+	// }
 	
 	/**
 	 * Adds suggestions to my list of things to do
@@ -162,22 +161,22 @@ public class MyEventListener extends ListenerAdapter {
 		/**
 		 * Spongebob command
 		 */
-		if (content.startsWith("~~spongebob") && objMember.hasPermission(Permission.ADMINISTRATOR)) {
-			List<Member> members = message.getMentionedMembers();
-			for (Member member : members) {
-				if (!this.trollIds.contains(member.getId())) {
-					this.trollIds.add(member.getId());
-					channel.sendMessage(String.format("%s has been added",
-						member.getEffectiveName())).queue();
-				} else {
-					this.trollIds.remove(member.getId());
-					channel.sendMessage(String.format("%s has been removed",
-						member.getEffectiveName())).queue();
-				}
-			}
-		} else if (content.startsWith("~~spongebob") && !objMember.hasPermission(Permission.ADMINISTRATOR)) {
-			channel.sendMessage("You do not have permission to run this command.").queue();
-		}
+		// if (content.startsWith("~~spongebob") && objMember.hasPermission(Permission.ADMINISTRATOR)) {
+		// List<Member> members = message.getMentionedMembers();
+		// for (Member member : members) {
+		// if (!this.trollIds.contains(member.getId())) {
+		// this.trollIds.add(member.getId());
+		// channel.sendMessage(String.format("%s has been added",
+		// member.getEffectiveName())).queue();
+		// } else {
+		// this.trollIds.remove(member.getId());
+		// channel.sendMessage(String.format("%s has been removed",
+		// member.getEffectiveName())).queue();
+		// }
+		// }
+		// } else if (content.startsWith("~~spongebob") && !objMember.hasPermission(Permission.ADMINISTRATOR)) {
+		// channel.sendMessage("You do not have permission to run this command.").queue();
+		// }
 		
 		/**
 		 * Suggestions command, allows users to add suggestions
@@ -233,9 +232,9 @@ public class MyEventListener extends ListenerAdapter {
 		/**
 		 * Trolls people using spongebob meme
 		 */
-		if (objMember != null && this.trollIds.contains(objMember.getId())) {
-			channel.sendMessage(spongebobUpper(content)).queue();
-		}
+		// if (objMember != null && this.trollIds.contains(objMember.getId())) {
+		// channel.sendMessage(spongebobUpper(content)).queue();
+		// }
 		
 		/**
 		 * If user @<mentions> people, gets told to shut up
