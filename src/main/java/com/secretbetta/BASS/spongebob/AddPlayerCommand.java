@@ -1,5 +1,6 @@
 package com.secretbetta.BASS.spongebob;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.jagrosh.jdautilities.command.Command;
@@ -14,9 +15,13 @@ public class AddPlayerCommand extends Command {
 	
 	public AddPlayerCommand() {
 		this.name = "spongebob";
-		this.help = "Adds player to list of peope to troll on spongebob meme";
+		this.help = "Adds player to list of people to troll on spongebob meme";
 		this.hidden = true;
-		this.troller = new Spongebob();
+		try {
+			this.troller = new Spongebob();
+		} catch (IOException e) {
+			System.err.println(e.getLocalizedMessage());
+		}
 		// this.userPermissions = ;
 	}
 	
@@ -29,13 +34,17 @@ public class AddPlayerCommand extends Command {
 		Message message = event.getMessage();
 		List<Member> members = message.getMentionedMembers();
 		for (Member member : members) {
-			switch (this.troller.changeList(member.getId())) {
-				case 0:
-					event.reply(member.getEffectiveName() + " has been removed.");
-					break;
-				case 1:
-					event.reply(member.getEffectiveName() + " has been added.");
-					break;
+			try {
+				switch (this.troller.changeList(member.getId())) {
+					case 0:
+						event.reply(member.getEffectiveName() + " has been removed.");
+						break;
+					case 1:
+						event.reply(member.getEffectiveName() + " has been added.");
+						break;
+				}
+			} catch (IOException e) {
+				System.err.println(e.getLocalizedMessage());
 			}
 		}
 	}
