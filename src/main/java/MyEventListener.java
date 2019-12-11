@@ -181,20 +181,20 @@ public class MyEventListener extends ListenerAdapter {
 		/**
 		 * Suggestions command, allows users to add suggestions
 		 */
-		if (content.startsWith("~~suggestion")) {
-			try {
-				if (content.length() > 13) {
-					suggestions(content.substring(13));
-					channel.sendMessage(String.format("Suggestion \"%s\" was added",
-						content.substring(13))).queue();
-				} else {
-					channel.sendMessage("Add a command suggestion by using the command"
-						+ "\n~~suggestion <suggestion>").queue();
-				}
-			} catch (IOException e) {
-				System.err.println("Cannot write into file");
-			}
-		}
+//		if (content.startsWith("~~suggestion")) {
+//			try {
+//				if (content.length() > 13) {
+//					suggestions(content.substring(13));
+//					channel.sendMessage(String.format("Suggestion \"%s\" was added",
+//						content.substring(13))).queue();
+//				} else {
+//					channel.sendMessage("Add a command suggestion by using the command"
+//						+ "\n~~suggestion <suggestion>").queue();
+//				}
+//			} catch (IOException e) {
+//				System.err.println("Cannot write into file");
+//			}
+//		}
 		
 		if (content.startsWith("~~pm")) {
 			List<Member> members = message.getMentionedMembers();
