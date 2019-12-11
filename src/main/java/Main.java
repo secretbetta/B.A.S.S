@@ -56,7 +56,9 @@ public class Main {
 			api.addEventListener(waiter, client.build());
 			// api.addEventListener(new TestEvent()); // Testing Events
 			// api.addEventListener(new EmotesTestEvent()); // Emotes Testing Event
+			System.out.println("Finished running");
 		} catch (Exception e) {
+			System.err.println(e.getLocalizedMessage());
 			e.printStackTrace();
 		}
 	}

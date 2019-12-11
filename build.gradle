@@ -18,9 +18,9 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.api-client:google-api-client:1.23.0'
-    compile 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
-    compile 'com.google.apis:google-api-services-sheets:v4-rev516-1.23.0'
+	compile 'com.google.api-client:google-api-client:1.30.4'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.30.4'
+    compile 'com.google.apis:google-api-services-sheets:v4-rev581-1.25.0'
     compile 'com.google.apis:google-api-services-script:v1-rev175-1.23.0'
     compile 'net.dv8tion:JDA:4.0.0_62'
     compile 'com.jagrosh:jda-utilities:3.0.2'
