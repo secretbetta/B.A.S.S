@@ -108,20 +108,6 @@ public class MyEventListener extends ListenerAdapter {
 			}
 		}
 		
-		/**
-		 * Hello World
-		 */
-		if (content.startsWith("~~hello")) {
-			channel.sendMessage("world").queue();
-		}
-		
-		/**
-		 * Gets unique user ID
-		 */
-		if (content.startsWith("~~id")) {
-			channel.sendMessage("Your id is: " + objMember.getId()).queue();
-		}
-		
 		if (content.equals("~~img")) {
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("Image");
@@ -141,21 +127,14 @@ public class MyEventListener extends ListenerAdapter {
 		 * Gets random movie quote
 		 */
 		if (content.startsWith("~~mquote")) {
-			channel.sendMessage(mquotes.getRandomQuote()).queue();
-		}
-		
-		/**
-		 * Gets bot ping
-		 */
-		if (content.startsWith("~~ping")) {
-			channel.sendMessage("Pong! + " + event.getJDA().getGatewayPing()).queue();
+			channel.sendMessage(MyEventListener.mquotes.getRandomQuote()).queue();
 		}
 		
 		/**
 		 * Gets puppies from reddit.com/r/puppies
 		 */
 		if (content.equals("~~puppies")) {
-			// TODO use webcrawler class for this
+			// use webcrawler class for this
 		}
 		
 		/**
@@ -177,24 +156,6 @@ public class MyEventListener extends ListenerAdapter {
 		// } else if (content.startsWith("~~spongebob") && !objMember.hasPermission(Permission.ADMINISTRATOR)) {
 		// channel.sendMessage("You do not have permission to run this command.").queue();
 		// }
-		
-		/**
-		 * Suggestions command, allows users to add suggestions
-		 */
-//		if (content.startsWith("~~suggestion")) {
-//			try {
-//				if (content.length() > 13) {
-//					suggestions(content.substring(13));
-//					channel.sendMessage(String.format("Suggestion \"%s\" was added",
-//						content.substring(13))).queue();
-//				} else {
-//					channel.sendMessage("Add a command suggestion by using the command"
-//						+ "\n~~suggestion <suggestion>").queue();
-//				}
-//			} catch (IOException e) {
-//				System.err.println("Cannot write into file");
-//			}
-//		}
 		
 		if (content.startsWith("~~pm")) {
 			List<Member> members = message.getMentionedMembers();
