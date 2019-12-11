@@ -5,6 +5,7 @@ import com.secretbetta.BASS.GoogleSheets.LeaderboardCommand;
 import com.secretbetta.BASS.Minecraft.ServerInfo;
 import com.secretbetta.BASS.Poker.PokerEvent;
 import com.secretbetta.BASS.blackjack.BlackjackEvent;
+import com.secretbetta.BASS.debug.FunFactCommand;
 import com.secretbetta.BASS.debug.IDCommand;
 import com.secretbetta.BASS.debug.SuggestionsCommand;
 import com.secretbetta.BASS.xkcd.XKCDCommand;
@@ -16,7 +17,7 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 
 /**
- * Discord Bot Loader
+ * Discord Bot Driver
  * 
  * @author Andrew
  */
@@ -41,17 +42,12 @@ public class Main {
 			
 			client.addCommands(
 				new ServerInfo(),
+				new PingCommand(), // Jagrosh's Ping Command
 				new LeaderboardCommand(),
 				new XKCDCommand(),
 				new SuggestionsCommand(),
 				new IDCommand(),
-				new PingCommand());
-			// client.addCommand(new LeaderboardCommand());
-			// client.addCommand(new XKCDCommand());
-			// client.addCommand(new SuggestionsCommand());
-			// client.addCommand(new IDCommand());
-			// client.addCommand(new com.jagrosh.jdautilities.examples.command.PingCommand()); // Jagrosh's ping command
-			// client.addCommand(new PokerCommand(waiter));
+				new FunFactCommand());
 			
 			System.out.println("Running B.A.S.S Bot");
 			JDA api = new JDABuilder(AccountType.BOT)
