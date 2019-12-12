@@ -17,9 +17,9 @@ public class SpongeBobEvent extends ListenerAdapter {
 		MessageChannel channel = event.getChannel();
 		Message msg = event.getMessage();
 		String content = msg.getContentRaw();
-		
+		// TODO Spongebob command + event
 		// if (this.trollIds.contains(id)) {
-		// channel.sendMessage(spongebobUpper(content)).queue();
+		// channel.sendMessage(Spongebob.spongebobUpper(content)).queue();
 		// }
 	}
 }
