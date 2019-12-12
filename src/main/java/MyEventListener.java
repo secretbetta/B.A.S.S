@@ -83,15 +83,6 @@ public class MyEventListener extends ListenerAdapter {
 		/** Commands **/
 		
 		/**
-		 * Administrator test
-		 */
-		if (content.startsWith("~~admin") && objMember.hasPermission(Permission.ADMINISTRATOR)) {
-			channel.sendMessage("Congrats, you're an administrator").queue();
-		} else if (content.startsWith("~~admin") && !objMember.hasPermission(Permission.ADMINISTRATOR)) {
-			channel.sendMessage("You do not have permission for this command").queue();
-		}
-		
-		/**
 		 * Outputs list of possible commands
 		 */
 		if (content.startsWith("~~help")) {

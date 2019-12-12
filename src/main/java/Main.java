@@ -5,6 +5,7 @@ import com.secretbetta.BASS.GoogleSheets.LeaderboardCommand;
 import com.secretbetta.BASS.Minecraft.ServerInfo;
 import com.secretbetta.BASS.Poker.PokerEvent;
 import com.secretbetta.BASS.blackjack.BlackjackEvent;
+import com.secretbetta.BASS.debug.AdminTestCommand;
 import com.secretbetta.BASS.debug.FunFactCommand;
 import com.secretbetta.BASS.debug.IDCommand;
 import com.secretbetta.BASS.debug.SuggestionsCommand;
@@ -47,7 +48,8 @@ public class Main {
 				new XKCDCommand(),
 				new SuggestionsCommand(),
 				new IDCommand(),
-				new FunFactCommand());
+				new FunFactCommand(),
+				new AdminTestCommand());
 			
 			System.out.println("Running B.A.S.S Bot");
 			JDA api = new JDABuilder(AccountType.BOT)
