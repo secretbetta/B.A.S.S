@@ -1,9 +1,13 @@
+package com.secretbetta.BASS.xkcd;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.secretbetta.BASS.utlities.WebCrawler;
 
 /**
  * XKCD comic crawler
@@ -51,6 +55,8 @@ public class xkcdCrawler {
 		this.html = WebCrawler.fetchHTML(url);
 		
 		this.links = new ArrayList<String>();
+		
+		this.getPost();
 	}
 	
 	/**
@@ -120,7 +126,7 @@ public class xkcdCrawler {
 		Pattern pattern = Pattern.compile(regex);
 		
 		List<String> imgs = new ArrayList<>();
-		
+		System.err.println(this.links);
 		Matcher matcher;
 		for (String link : this.links) {
 			matcher = pattern.matcher(link);

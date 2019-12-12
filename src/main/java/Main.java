@@ -1,8 +1,15 @@
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.jagrosh.jdautilities.examples.command.PingCommand;
+import com.secretbetta.BASS.GoogleSheets.LeaderboardCommand;
 import com.secretbetta.BASS.Minecraft.ServerInfo;
 import com.secretbetta.BASS.Poker.PokerEvent;
 import com.secretbetta.BASS.blackjack.BlackjackEvent;
+import com.secretbetta.BASS.debug.AdminTestCommand;
+import com.secretbetta.BASS.debug.FunFactCommand;
+import com.secretbetta.BASS.debug.IDCommand;
+import com.secretbetta.BASS.debug.SuggestionsCommand;
+import com.secretbetta.BASS.xkcd.XKCDCommand;
 
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
@@ -11,7 +18,7 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 
 /**
- * Discord Bot Loader
+ * Discord Bot Driver
  * 
  * @author Andrew
  */
@@ -34,8 +41,15 @@ public class Main {
 			client.setOwnerId("268511458801745921");
 			client.useDefaultGame();
 			
-			client.addCommand(new ServerInfo());
-			// client.addCommand(new PokerCommand(waiter));
+			client.addCommands(
+				new ServerInfo(),
+				new PingCommand(), // Jagrosh's Ping Command
+				new LeaderboardCommand(),
+				new XKCDCommand(),
+				new SuggestionsCommand(),
+				new IDCommand(),
+				new FunFactCommand(),
+				new AdminTestCommand());
 			
 			System.out.println("Running B.A.S.S Bot");
 			JDA api = new JDABuilder(AccountType.BOT)
@@ -52,7 +66,9 @@ public class Main {
 			api.addEventListener(waiter, client.build());
 			// api.addEventListener(new TestEvent()); // Testing Events
 			// api.addEventListener(new EmotesTestEvent()); // Emotes Testing Event
+			System.out.println("Finished running");
 		} catch (Exception e) {
+			System.err.println(e.getLocalizedMessage());
 			e.printStackTrace();
 		}
 	}
