@@ -41,6 +41,7 @@ public class Main {
 			client.setEmojis("✔", "⚠", "❌");
 			client.setOwnerId("268511458801745921");
 			client.useDefaultGame();
+			client.useHelpBuilder(false);
 			
 			client.addCommands(
 				new ServerInfo(),

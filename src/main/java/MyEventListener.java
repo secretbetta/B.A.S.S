@@ -1,25 +1,20 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
 import com.secretbetta.BASS.utlities.WebCrawler;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
  * EventListener for Discord
+ * Soon to be a test event listener for all things miscellaneous
  * 
  * @author Andrew
  */
@@ -50,20 +45,6 @@ public class MyEventListener extends ListenerAdapter {
 	//
 	// return newContent;
 	// }
-	
-	/**
-	 * Adds suggestions to my list of things to do
-	 * 
-	 * @param suggestion
-	 * @return
-	 * @throws IOException
-	 */
-	public static void suggestions(String suggestion) throws IOException {
-		String path = "suggestions.txt";
-		BufferedWriter writer = new BufferedWriter(new FileWriter(path, true));
-		writer.append(String.format(" * %s\n", suggestion));
-		writer.close();
-	}
 	
 	/**
 	 * Message Handler
@@ -139,23 +120,6 @@ public class MyEventListener extends ListenerAdapter {
 		// } else if (content.startsWith("~~spongebob") && !objMember.hasPermission(Permission.ADMINISTRATOR)) {
 		// channel.sendMessage("You do not have permission to run this command.").queue();
 		// }
-		
-		if (content.startsWith("~~pm")) {
-			List<Member> members = message.getMentionedMembers();
-			User user = members.get(0).getUser();
-			user.openPrivateChannel().queue((ch) -> {
-				channel.sendMessage("test").queue();
-			});
-		}
-		
-		/**
-		 * Debugger
-		 */
-		if (content.endsWith("-debug") && objMember.hasPermission(Permission.ADMINISTRATOR)) {
-			Duration elapsed = Duration.between(start, Instant.now());
-			double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();
-			channel.sendMessage("Time Elapsed: " + seconds).queue();
-		}
 		
 		if (content.equals("~~probability of people that stand above andrew")) {
 			channel.sendMessage("Calculating...").queue();
