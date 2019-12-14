@@ -9,6 +9,7 @@ import com.secretbetta.BASS.debug.AdminTestCommand;
 import com.secretbetta.BASS.debug.FunFactCommand;
 import com.secretbetta.BASS.debug.IDCommand;
 import com.secretbetta.BASS.debug.SuggestionsCommand;
+import com.secretbetta.BASS.debug.TestCommand;
 import com.secretbetta.BASS.xkcd.XKCDCommand;
 
 import net.dv8tion.jda.api.AccountType;
@@ -49,7 +50,8 @@ public class Main {
 				new SuggestionsCommand(),
 				new IDCommand(),
 				new FunFactCommand(),
-				new AdminTestCommand());
+				new AdminTestCommand(),
+				new TestCommand());
 			
 			System.out.println("Running B.A.S.S Bot");
 			JDA api = new JDABuilder(AccountType.BOT)
