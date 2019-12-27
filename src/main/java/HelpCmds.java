@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
  * Commands Class
  * 
  * @author Andrew
- *
  */
 public class HelpCmds {
 	
@@ -29,6 +28,7 @@ public class HelpCmds {
 																												// BASS
 																												// Icon
 			.addField("~~help", "Lists all possible commands", false)
+			.addField("~~bug", "reports a bug", false)
 			.addField("~~leaderboard <Player1> <Player2>",
 				"Shows leaderboard. Player flags are optional to print scores between two people", false)
 			.addField("~~id", "Gets unique user ID", false)

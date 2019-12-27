@@ -15,4 +15,4 @@
  * poker
  * commands count
  * use github's secret manager for tokens
- * bug report: leaderboard formmating
+ * bug report: leaderboard formmating * Purge Command

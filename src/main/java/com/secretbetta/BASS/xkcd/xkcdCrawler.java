@@ -13,7 +13,6 @@ import com.secretbetta.BASS.utlities.WebCrawler;
  * XKCD comic crawler
  * 
  * @author Andrew
- *
  */
 public class xkcdCrawler {
 	
@@ -117,7 +116,7 @@ public class xkcdCrawler {
 	}
 	
 	/**
-	 * Gets XKCD post tite
+	 * Gets XKCD post title
 	 * 
 	 * @return post title
 	 */

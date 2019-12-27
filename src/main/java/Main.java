@@ -1,11 +1,13 @@
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.PingCommand;
+import com.secretbetta.BASS.Cute.PuppyCommand;
 import com.secretbetta.BASS.GoogleSheets.LeaderboardCommand;
 import com.secretbetta.BASS.Minecraft.ServerInfo;
 import com.secretbetta.BASS.Poker.PokerEvent;
 import com.secretbetta.BASS.blackjack.BlackjackEvent;
 import com.secretbetta.BASS.debug.AdminTestCommand;
+import com.secretbetta.BASS.debug.BugReportCommand;
 import com.secretbetta.BASS.debug.FunFactCommand;
 import com.secretbetta.BASS.debug.IDCommand;
 import com.secretbetta.BASS.debug.SuggestionsCommand;
@@ -52,7 +54,9 @@ public class Main {
 				new IDCommand(),
 				new FunFactCommand(),
 				new AdminTestCommand(),
-				new TestCommand());
+				new TestCommand(),
+				new BugReportCommand(),
+				new PuppyCommand());
 			
 			System.out.println("Running B.A.S.S Bot");
 			JDA api = new JDABuilder(AccountType.BOT)
