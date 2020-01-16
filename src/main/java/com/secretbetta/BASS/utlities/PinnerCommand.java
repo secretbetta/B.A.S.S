@@ -82,13 +82,16 @@ public class PinnerCommand extends Command {
 			
 		}
 		TextChannel pinned = this.api.getTextChannelById(this.pinnedChannel);
+		
 		if (event.getChannel().getId().equals(this.channelID)) {
 			pinned = this.api.getTextChannelById(this.privatePinnedChannel);
 		} else {
 			pinned = this.api.getTextChannelById(this.pinnedChannel);
 		}
 		
-		MessageChannel hist = event.getChannel();
+		TextChannel original = this.api.getTextChannelById(ids.get(1));
+		
+		MessageChannel hist = original;
 		Message message = hist.retrieveMessageById(ids.get(2)).complete();
 		List<Attachment> images = message.getAttachments();
 		
