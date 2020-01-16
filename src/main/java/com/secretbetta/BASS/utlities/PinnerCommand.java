@@ -67,11 +67,9 @@ public class PinnerCommand extends Command {
 		if (event.getAuthor().isBot()) {
 			return;
 		}
-		System.out.println(event.getMessage().getTimeCreated());
 		
-		String msg = null;
+		String msg = event.getArgs();
 		List<Long> ids = new ArrayList<>();
-		msg = event.getArgs();
 		String regex = "/(\\d*)";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(msg);
@@ -81,36 +79,34 @@ public class PinnerCommand extends Command {
 			}
 			
 		}
+		
 		TextChannel pinned = this.api.getTextChannelById(this.pinnedChannel);
 		
-		if (event.getChannel().getId().equals(this.channelID)) {
+		if (event.getChannel().getId().equals(this.channelID)) { // Private pins
 			pinned = this.api.getTextChannelById(this.privatePinnedChannel);
-		} else {
+		} else { // Public pins
 			pinned = this.api.getTextChannelById(this.pinnedChannel);
 		}
 		
-		TextChannel original = this.api.getTextChannelById(ids.get(1));
+		MessageChannel hist = this.api.getTextChannelById(ids.get(1));
 		
-		MessageChannel hist = original;
 		Message message = hist.retrieveMessageById(ids.get(2)).complete();
 		List<Attachment> images = message.getAttachments();
 		
-		if (images.size() >= 1) {
-			pinned
-				.sendMessage(this
-					.message(images.get(0).getFileName(), event.getArgs(),
-						hist.getTimeCreated(), message.getAuthor().getName(), message.getChannel().getName(),
-						images.get(0).getUrl())
-					.build())
-				.queue();
-		} else {
-			pinned
-				.sendMessage(this
-					.message(message.getContentDisplay(), event.getArgs(),
-						hist.getTimeCreated(), message.getAuthor().getName(), message.getChannel().getName(), "null")
-					.build())
-				.queue();
+		EmbedBuilder pin = new EmbedBuilder();
+		
+		if (images.size() >= 1) { // Image available
+			pin = this
+				.message(images.get(0).getFileName(), event.getArgs(),
+					hist.getTimeCreated(), message.getAuthor().getName(), message.getChannel().getName(),
+					images.get(0).getUrl());
+		} else { // No image
+			pin = this
+				.message(message.getContentDisplay(), event.getArgs(),
+					hist.getTimeCreated(), message.getAuthor().getName(), message.getChannel().getName(), "null");
 		}
+		
+		pinned.sendMessage(pin.build()).queue();
 	}
 	
 }
