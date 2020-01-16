@@ -41,12 +41,17 @@ public class PuppyCommand extends Command {
 		
 		embed.setTitle("Cute Puppy!");
 		embed.setImage(this.img);
+		embed.setFooter("Puppy Crawler by Secretbeta");
 		
 		return embed;
 	}
 	
 	@Override
 	protected void execute(CommandEvent event) {
+		if (event.getAuthor().isBot()) {
+			return;
+		}
+		
 		event.reply(this.puppyShower().build());
 	}
 }

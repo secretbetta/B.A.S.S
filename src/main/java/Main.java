@@ -12,6 +12,7 @@ import com.secretbetta.BASS.debug.FunFactCommand;
 import com.secretbetta.BASS.debug.IDCommand;
 import com.secretbetta.BASS.debug.SuggestionsCommand;
 import com.secretbetta.BASS.debug.TestCommand;
+import com.secretbetta.BASS.utlities.PinnerCommand;
 import com.secretbetta.BASS.xkcd.XKCDCommand;
 
 import net.dv8tion.jda.api.AccountType;
@@ -36,6 +37,10 @@ public class Main {
 			
 			CommandClientBuilder client = new CommandClientBuilder();
 			EventWaiter waiter = new EventWaiter();
+			JDA api = new JDABuilder(AccountType.BOT)
+				.setToken(args[0])
+				.setActivity(Activity.playing("try ~~help"))
+				.build();
 			
 			client.setPrefix("~~");
 			client.setAlternativePrefix("b/");
@@ -56,13 +61,9 @@ public class Main {
 				new AdminTestCommand(),
 				new TestCommand(),
 				new BugReportCommand(),
-				new PuppyCommand());
+				new PuppyCommand(),
+				new PinnerCommand(api));
 			
-			System.out.println("Running B.A.S.S Bot");
-			JDA api = new JDABuilder(AccountType.BOT)
-				.setToken(args[0])
-				.setActivity(Activity.playing("try ~~help"))
-				.build();
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
 			api.addEventListener(new MyEventListener()); // Main Events
 			api.addEventListener(new TicTacToeEvent()); // Tic Tac Toe
@@ -73,7 +74,6 @@ public class Main {
 			api.addEventListener(waiter, client.build());
 			// api.addEventListener(new TestEvent()); // Testing Events
 			// api.addEventListener(new EmotesTestEvent()); // Emotes Testing Event
-			System.out.println("Finished running");
 		} catch (Exception e) {
 			System.err.println(e.getLocalizedMessage());
 			e.printStackTrace();
