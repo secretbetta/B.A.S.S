@@ -16,3 +16,6 @@
  * commands count
  * use github's secret manager for tokens
  * bug report: leaderboard formmating * Purge Command
+ * Implement a voting system for pinned msgs. 3 downvotes = remove
+ * https://discordapp.com/channels/583562618044678165/583562618044678169/669059656303247380
+ * some sort of automated birthday thing...

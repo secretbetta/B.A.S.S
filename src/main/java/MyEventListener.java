@@ -1,6 +1,13 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 
 import com.secretbetta.BASS.utlities.WebCrawler;
@@ -45,6 +52,31 @@ public class MyEventListener extends ListenerAdapter {
 	//
 	// return newContent;
 	// }
+	
+	HashSet<String> lines = new HashSet<>();
+	
+	public MyEventListener() {
+		try {
+			BufferedReader myReader = Files.newBufferedReader(Paths.get("justine.txt"));
+			String line;
+			while ((line = myReader.readLine()) != null) {
+				this.lines.add(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean addVerb(String content) throws IOException {
+		if (this.lines.add(content)) {
+			String path = "justine.txt";
+			BufferedWriter writer = new BufferedWriter(new FileWriter(path, true));
+			writer.append(String.format("%s\n", content));
+			writer.close();
+			return true;
+		}
+		return false;
+	}
 	
 	/**
 	 * Message Handler
@@ -99,6 +131,35 @@ public class MyEventListener extends ListenerAdapter {
 		 */
 		if (content.equals("~~puppies")) {
 			// use webcrawler class for this
+		}
+		
+		if (objMember.getId().equals("169281100856819712")) {
+			// channel.sendMessage("fk you Peter").queue();
+			return;
+		}
+		
+		if (content.startsWith("~~addjustine ") && !content.contains("andrew")) {
+			try {
+				if (this.addVerb(content.replace("~~addjustine ", ""))
+					&& !content.replaceAll("[\\W ]*?", "").equals("")) {
+					channel
+						.sendMessage(String.format("\"*%s*\" has been added to Justine's list of verbs.",
+							content.replace("~~addjustine ", "").replaceAll("[\\W ]*?", "")))
+						.queue();
+					return;
+				} else {
+					channel.sendMessage("Error, did not add.").queue();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (content.contains("justine")) {
+			channel
+				.sendMessage(
+					String.format("Justine %s.", this.lines.toArray()[(int) (Math.random() * this.lines.size())]))
+				.queue();
 		}
 		
 		/**
