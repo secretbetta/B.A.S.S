@@ -83,7 +83,7 @@ public class MyEventListener extends ListenerAdapter {
 	 */
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
-		if (event.getAuthor().isBot()) {
+		if (event.getAuthor().isBot()) { // or if andrew types anything
 			return;
 		}
 		
