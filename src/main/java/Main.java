@@ -35,8 +35,9 @@ public class Main {
 				System.exit(1);
 			}
 			
-			CommandClientBuilder client = new CommandClientBuilder();
 			EventWaiter waiter = new EventWaiter();
+			
+			CommandClientBuilder client = new CommandClientBuilder();
 			JDA api = new JDABuilder(AccountType.BOT)
 				.setToken(args[0])
 				.setActivity(Activity.playing("try ~~help"))

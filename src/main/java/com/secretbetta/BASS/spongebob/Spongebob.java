@@ -23,7 +23,7 @@ public class Spongebob {
 	 */
 	public Spongebob() throws IOException {
 		// this.trollIds.add("268480279746838529"); // Sun's id
-		// trollIds.add("400805008276193290"); // Justine's id
+		this.trollIds.add("400805008276193290"); // Justine's id
 		this.loadUsers();
 	}
 	

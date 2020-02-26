@@ -18,7 +18,7 @@ public class AddPlayerCommand extends Command {
 		Permission[] perms = new Permission[1];
 		perms[0] = Permission.ADMINISTRATOR;
 		
-		this.name = "spongebob";
+		super.name = "spongebob";
 		this.help = "Adds player to list of people to troll on spongebob meme";
 		this.userPermissions = perms;
 		this.hidden = true;
