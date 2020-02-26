@@ -1,25 +1,27 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.Duration;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 
 import com.secretbetta.BASS.utlities.WebCrawler;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
  * EventListener for Discord
+ * Soon to be a test event listener for all things miscellaneous
  * 
  * @author Andrew
  */
@@ -51,18 +53,29 @@ public class MyEventListener extends ListenerAdapter {
 	// return newContent;
 	// }
 	
-	/**
-	 * Adds suggestions to my list of things to do
-	 * 
-	 * @param suggestion
-	 * @return
-	 * @throws IOException
-	 */
-	public static void suggestions(String suggestion) throws IOException {
-		String path = "suggestions.txt";
-		BufferedWriter writer = new BufferedWriter(new FileWriter(path, true));
-		writer.append(String.format(" * %s\n", suggestion));
-		writer.close();
+	HashSet<String> lines = new HashSet<>();
+	
+	public MyEventListener() {
+		try {
+			BufferedReader myReader = Files.newBufferedReader(Paths.get("justine.txt"));
+			String line;
+			while ((line = myReader.readLine()) != null) {
+				this.lines.add(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean addVerb(String content) throws IOException {
+		if (this.lines.add(content)) {
+			String path = "justine.txt";
+			BufferedWriter writer = new BufferedWriter(new FileWriter(path, true));
+			writer.append(String.format("%s\n", content));
+			writer.close();
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -70,7 +83,7 @@ public class MyEventListener extends ListenerAdapter {
 	 */
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
-		if (event.getAuthor().isBot()) {
+		if (event.getAuthor().isBot()) { // or if andrew types anything
 			return;
 		}
 		
@@ -120,6 +133,35 @@ public class MyEventListener extends ListenerAdapter {
 			// use webcrawler class for this
 		}
 		
+		if (objMember.getId().equals("169281100856819712")) {
+			// channel.sendMessage("fk you Peter").queue();
+			return;
+		}
+		
+		if (content.startsWith("~~addjustine ") && !content.contains("andrew")) {
+			try {
+				if (this.addVerb(content.replace("~~addjustine ", ""))
+					&& !content.replaceAll("[\\W ]*?", "").equals("")) {
+					channel
+						.sendMessage(String.format("\"*%s*\" has been added to Justine's list of verbs.",
+							content.replace("~~addjustine ", "").replaceAll("[\\W ]*?", "")))
+						.queue();
+					return;
+				} else {
+					channel.sendMessage("Error, did not add.").queue();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (content.contains("justine")) {
+			channel
+				.sendMessage(
+					String.format("Justine %s.", this.lines.toArray()[(int) (Math.random() * this.lines.size())]))
+				.queue();
+		}
+		
 		/**
 		 * Spongebob command
 		 */
@@ -139,23 +181,6 @@ public class MyEventListener extends ListenerAdapter {
 		// } else if (content.startsWith("~~spongebob") && !objMember.hasPermission(Permission.ADMINISTRATOR)) {
 		// channel.sendMessage("You do not have permission to run this command.").queue();
 		// }
-		
-		if (content.startsWith("~~pm")) {
-			List<Member> members = message.getMentionedMembers();
-			User user = members.get(0).getUser();
-			user.openPrivateChannel().queue((ch) -> {
-				channel.sendMessage("test").queue();
-			});
-		}
-		
-		/**
-		 * Debugger
-		 */
-		if (content.endsWith("-debug") && objMember.hasPermission(Permission.ADMINISTRATOR)) {
-			Duration elapsed = Duration.between(start, Instant.now());
-			double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();
-			channel.sendMessage("Time Elapsed: " + seconds).queue();
-		}
 		
 		if (content.equals("~~probability of people that stand above andrew")) {
 			channel.sendMessage("Calculating...").queue();

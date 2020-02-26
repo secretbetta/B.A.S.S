@@ -1,0 +1,2 @@
+Bugs List
+ * Help cmd not updated

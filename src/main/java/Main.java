@@ -1,14 +1,18 @@
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.PingCommand;
+import com.secretbetta.BASS.Cute.PuppyCommand;
 import com.secretbetta.BASS.GoogleSheets.LeaderboardCommand;
 import com.secretbetta.BASS.Minecraft.ServerInfo;
 import com.secretbetta.BASS.Poker.PokerEvent;
 import com.secretbetta.BASS.blackjack.BlackjackEvent;
 import com.secretbetta.BASS.debug.AdminTestCommand;
+import com.secretbetta.BASS.debug.BugReportCommand;
 import com.secretbetta.BASS.debug.FunFactCommand;
 import com.secretbetta.BASS.debug.IDCommand;
 import com.secretbetta.BASS.debug.SuggestionsCommand;
+import com.secretbetta.BASS.debug.TestCommand;
+import com.secretbetta.BASS.utlities.PinnerCommand;
 import com.secretbetta.BASS.xkcd.XKCDCommand;
 
 import net.dv8tion.jda.api.AccountType;
@@ -31,8 +35,13 @@ public class Main {
 				System.exit(1);
 			}
 			
-			CommandClientBuilder client = new CommandClientBuilder();
 			EventWaiter waiter = new EventWaiter();
+			
+			CommandClientBuilder client = new CommandClientBuilder();
+			JDA api = new JDABuilder(AccountType.BOT)
+				.setToken(args[0])
+				.setActivity(Activity.playing("try ~~help"))
+				.build();
 			
 			client.setPrefix("~~");
 			client.setAlternativePrefix("b/");
@@ -40,6 +49,7 @@ public class Main {
 			client.setEmojis("✔", "⚠", "❌");
 			client.setOwnerId("268511458801745921");
 			client.useDefaultGame();
+			client.useHelpBuilder(false);
 			
 			client.addCommands(
 				new ServerInfo(),
@@ -49,13 +59,12 @@ public class Main {
 				new SuggestionsCommand(),
 				new IDCommand(),
 				new FunFactCommand(),
-				new AdminTestCommand());
+				new AdminTestCommand(),
+				new TestCommand(),
+				new BugReportCommand(),
+				new PuppyCommand(),
+				new PinnerCommand(api));
 			
-			System.out.println("Running B.A.S.S Bot");
-			JDA api = new JDABuilder(AccountType.BOT)
-				.setToken(args[0])
-				.setActivity(Activity.playing("try ~~help"))
-				.build();
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
 			api.addEventListener(new MyEventListener()); // Main Events
 			api.addEventListener(new TicTacToeEvent()); // Tic Tac Toe
@@ -66,7 +75,6 @@ public class Main {
 			api.addEventListener(waiter, client.build());
 			// api.addEventListener(new TestEvent()); // Testing Events
 			// api.addEventListener(new EmotesTestEvent()); // Emotes Testing Event
-			System.out.println("Finished running");
 		} catch (Exception e) {
 			System.err.println(e.getLocalizedMessage());
 			e.printStackTrace();

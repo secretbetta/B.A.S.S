@@ -87,7 +87,7 @@ public class YahtzeeEvent extends ListenerAdapter {
 		if (msg.getEmbeds().size() > 0 && msg.getEmbeds().get(0).getTitle().equals("Scoresheet")) {
 			// String msgId = msg.getId();
 			for (int x = 0; x < 13; x++) {
-				msg.addReaction(String.format("U+1f1%02x", (x + 6 + 16 * 14))).queue();
+				msg.addReaction(String.format("U+1f1%02x", x + 6 + 16 * 14)).queue();
 			}
 			List<MessageReaction> react = msg.getReactions();
 			System.out.println(react.get(0).getReactionEmote().getEmoji());

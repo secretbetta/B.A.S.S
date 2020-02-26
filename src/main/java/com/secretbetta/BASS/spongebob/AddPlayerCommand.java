@@ -6,6 +6,7 @@ import java.util.List;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 
@@ -14,15 +15,18 @@ public class AddPlayerCommand extends Command {
 	Spongebob troller;
 	
 	public AddPlayerCommand() {
-		this.name = "spongebob";
+		Permission[] perms = new Permission[1];
+		perms[0] = Permission.ADMINISTRATOR;
+		
+		super.name = "spongebob";
 		this.help = "Adds player to list of people to troll on spongebob meme";
+		this.userPermissions = perms;
 		this.hidden = true;
 		try {
 			this.troller = new Spongebob();
 		} catch (IOException e) {
 			System.err.println(e.getLocalizedMessage());
 		}
-		// this.userPermissions = ;
 	}
 	
 	@Override

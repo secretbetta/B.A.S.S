@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Spongebob {
@@ -19,11 +18,12 @@ public class Spongebob {
 	
 	/**
 	 * Adds default trolled users
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	public Spongebob() throws IOException {
-//		this.trollIds.add("268480279746838529"); // Sun's id
-//		trollIds.add("400805008276193290"); // Justine's id
+		// this.trollIds.add("268480279746838529"); // Sun's id
+		this.trollIds.add("400805008276193290"); // Justine's id
 		this.loadUsers();
 	}
 	
@@ -32,7 +32,7 @@ public class Spongebob {
 	 * 
 	 * @param id User ID from discord
 	 * @return 1 if added user, 0 if removed user
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public int changeList(String id) throws IOException {
 		if (this.trollIds.contains(id)) {
@@ -65,7 +65,7 @@ public class Spongebob {
 	 * Adds id of User to list of trolled people
 	 * 
 	 * @param id String id from Discord
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void addUser(String id) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(this.path, true));
@@ -77,7 +77,7 @@ public class Spongebob {
 	 * Removes id of User from list of trolled people
 	 * 
 	 * @param id String id from Discord
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void removeUser(String id) throws IOException {
 		File temp = new File("tempfile.txt");
@@ -87,7 +87,9 @@ public class Spongebob {
 		String line = "";
 		while ((line = reader.readLine()) != null) {
 			String trimmedLine = line.trim();
-			if (trimmedLine.equals(id)) continue;
+			if (trimmedLine.equals(id)) {
+				continue;
+			}
 			writer.write(trimmedLine + System.getProperty("line.separator"));
 		}
 		reader.close();

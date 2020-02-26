@@ -72,7 +72,7 @@ public class PokerEvent extends ListenerAdapter {
 		MessageChannel chnl = event.getChannel();
 		String content = msg.getContentRaw().toLowerCase();
 		
-		if (content.startsWith("~~poker") && (msg.getMentionedMembers().size() >= 1)) {
+		if (content.startsWith("~~poker") && msg.getMentionedMembers().size() >= 1) {
 			this.players.addAll(msg.getMentionedMembers());
 			this.players.add(0, author);
 			
@@ -100,7 +100,7 @@ public class PokerEvent extends ListenerAdapter {
 	
 	@Override
 	public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
-		if (event.getUser().isBot()) {
+		if (event.getUser().isBot() || !this.start) {
 			return;
 		}
 		
