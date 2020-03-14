@@ -18,12 +18,14 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.api-client:google-api-client:1.30.4'
-    compile 'com.google.oauth-client:google-oauth-client-jetty:1.30.4'
-    compile 'com.google.apis:google-api-services-sheets:v4-rev581-1.25.0'
-    compile 'com.google.apis:google-api-services-script:v1-rev175-1.23.0'
-    compile 'net.dv8tion:JDA:4.0.0_62'
-    compile 'com.jagrosh:jda-utilities:3.0.2'
+    compile 'com.google.api-client:google-api-client:1.30.4' // Google client API
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.30.4' // Google authorizer
+    compile 'com.google.apis:google-api-services-sheets:v4-rev581-1.25.0' // Google Sheets API
+    compile 'com.google.apis:google-api-services-script:v1-rev175-1.23.0' // Google Scripts API
+    compile 'net.dv8tion:JDA:4.0.0_62' // Java Discord API
+    compile 'com.jagrosh:jda-utilities:3.0.2' // Jagrosh's JDA Utils
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.8.6' // Google's JSON API
+	compile group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.1' // Apache's PDFbox
+    
 }
