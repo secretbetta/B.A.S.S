@@ -96,7 +96,7 @@ public class Card implements Comparable<Card> {
 				card = "A";
 				break;
 			default:
-				card = "" + (this.num);
+				card = "" + this.num;
 		}
 		
 		switch (this.suit) {
