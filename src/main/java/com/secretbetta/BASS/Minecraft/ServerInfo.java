@@ -14,7 +14,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
  * Minecraft Server info command
  * 
  * @author Andrew
- *
  */
 public class ServerInfo extends Command {
 	
@@ -42,7 +41,7 @@ public class ServerInfo extends Command {
 			info.setTitle("A.S.S Minecraft Server");
 			info.setDescription("Dedicated Minecraft Server for A.S.S");
 			info.addField("Name", "A.S.S Server", false);
-			info.addField("MOTD", serverInfo.getDescription().getText().replaceAll("§.|[^\\w ']", "").trim(), false);
+			// info.addField("MOTD", serverInfo.getDescription().getText().replaceAll(".|[^\\w ']", "").trim(), false);
 			info.addField("IP", "73.162.89.39:25565", false);
 			
 			String playerlist = "";
