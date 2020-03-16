@@ -26,6 +26,16 @@ dependencies {
     compile 'com.jagrosh:jda-utilities:3.0.2' // Jagrosh's JDA Utils
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     implementation 'com.google.code.gson:gson:2.8.6' // Google's JSON API
-	compile group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.1' // Apache's PDFbox
-    
+	compile group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.1' // Apache's PDFbox   
+}
+
+jar {
+	manifest {
+    	attributes(
+      		'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+      		'Main-Class': 'com.secretbetta.BASS.Driver.Main'
+    	)
+  	}
+	baseName = 'B.A.S.S'
+	version = '1.0.0'
 }
