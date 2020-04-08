@@ -36,6 +36,4 @@ jar {
       		'Main-Class': 'com.secretbetta.BASS.Driver.Main'
     	)
   	}
-	baseName = 'B.A.S.S'
-	version = '1.0.0'
 }

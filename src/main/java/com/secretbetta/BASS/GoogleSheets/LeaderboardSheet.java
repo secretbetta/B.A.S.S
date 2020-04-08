@@ -29,7 +29,6 @@ import com.google.api.services.sheets.v4.model.ValueRange;
  * Readers LeaderboardSheet from Google Spreadsheets
  * 
  * @author Andrew
- *
  */
 public class LeaderboardSheet {
 	
@@ -57,9 +56,10 @@ public class LeaderboardSheet {
 	public LeaderboardSheet() throws GeneralSecurityException, IOException {
 		this.spreadsheetId = "1-f49unMhxyZ0w_R4RR6i4Rcx_d8QoENDHLSaYmni5Wg";
 		this.HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-		this.service = new Sheets.Builder(this.HTTP_TRANSPORT, JSON_FACTORY, getCredentials(this.HTTP_TRANSPORT))
-			.setApplicationName(APPLICATION_NAME)
-			.build();
+		this.service = new Sheets.Builder(this.HTTP_TRANSPORT, LeaderboardSheet.JSON_FACTORY,
+			LeaderboardSheet.getCredentials(this.HTTP_TRANSPORT))
+				.setApplicationName(LeaderboardSheet.APPLICATION_NAME)
+				.build();
 	}
 	
 	/**
@@ -70,16 +70,17 @@ public class LeaderboardSheet {
 	 * @throws IOException If the credentials.json file cannot be found.
 	 */
 	private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
-		InputStream in = LeaderboardSheet.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+		InputStream in = LeaderboardSheet.class.getResourceAsStream(LeaderboardSheet.CREDENTIALS_FILE_PATH);
 		
 		if (in == null) {
-			throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
+			throw new FileNotFoundException("Resource not found: " + LeaderboardSheet.CREDENTIALS_FILE_PATH);
 		}
 		
-		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(LeaderboardSheet.JSON_FACTORY,
+			new InputStreamReader(in));
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-			HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-				.setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
+			HTTP_TRANSPORT, LeaderboardSheet.JSON_FACTORY, clientSecrets, LeaderboardSheet.SCOPES)
+				.setDataStoreFactory(new FileDataStoreFactory(new java.io.File(LeaderboardSheet.TOKENS_DIRECTORY_PATH)))
 				.setAccessType("offline")
 				.build();
 		LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
@@ -92,7 +93,6 @@ public class LeaderboardSheet {
 	 * 
 	 * @param spreadsheetId  ID of Google spreadsheet
 	 * @param HTTP_TRANSPORT Authorized API client from google
-	 * 
 	 * @return Formatted String of Leaderboard
 	 * @throws IOException
 	 */
@@ -164,7 +164,7 @@ public class LeaderboardSheet {
 						content += String.format("%-25s: %-3s,%3s\n",
 							row.get(0), row.get(column), row.get(column + 1));
 						if (row.get(column).equals("Wins")) {
-							content += "\n--------------------------------------------";
+							content += "\n--------------------------------------------\n";
 						}
 					} catch (IndexOutOfBoundsException e) {
 						System.err.println("Index does not exist\n");
@@ -191,7 +191,7 @@ public class LeaderboardSheet {
 		// GoogleCredential credential = getCredentials(HTTP_TRANSPORT);
 		
 		return new Sheets.Builder(httpTransport, jsonFactory,
-			getCredentials(GoogleNetHttpTransport.newTrustedTransport()))
+			LeaderboardSheet.getCredentials(GoogleNetHttpTransport.newTrustedTransport()))
 				.setApplicationName("Google-SheetsSample/0.1")
 				.build();
 	}
@@ -210,7 +210,7 @@ public class LeaderboardSheet {
 		CopySheetToAnotherSpreadsheetRequest requestBody = new CopySheetToAnotherSpreadsheetRequest();
 		requestBody.setDestinationSpreadsheetId(this.spreadsheetId);
 		
-		Sheets sheetsService = createSheetsService();
+		Sheets sheetsService = LeaderboardSheet.createSheetsService();
 		Sheets.Spreadsheets.SheetsOperations.CopyTo request = sheetsService.spreadsheets().sheets()
 			.copyTo(this.spreadsheetId, 7876048, requestBody);
 		SheetProperties response = request.execute();
