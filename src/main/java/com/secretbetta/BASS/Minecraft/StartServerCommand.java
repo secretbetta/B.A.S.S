@@ -15,16 +15,20 @@ public class StartServerCommand extends Command {
 	
 	private boolean start;
 	private ProcessBuilder file;
+	private String version;
 	
 	public StartServerCommand() {
 		this.start = false;
 		this.file = new ProcessBuilder("cmd.exe","/c","start","cmd");
+		version = "1.15.2 Spigot";
 		this.file = this.file.directory(new File("D:\\Games\\Minecraft\\Minecraft Servers\\1.15.2 Spigot"));
-
+//		this.file = this.file.directory(new File("D:\\Games\\Minecraft\\Minecraft Servers\\notadirectory"));
+		
 		super.name = "run";
-		super.cooldown = 90;
+//		super.cooldown = 90;
 		super.help = "Starts minecraft server";
 		super.userPermissions = new Permission[] {Permission.MANAGE_WEBHOOKS};
+		super.arguments = "[optional: version]";
 	}
 	
 	@Override
@@ -42,12 +46,33 @@ public class StartServerCommand extends Command {
 			}
 		}
 		
+		String jar = "";
+		if (event.getArgs() == null) {
+			event.reply("Starting default server. Version: " + this.version);
+			this.file = this.file.directory(new File("D:\\Games\\Minecraft\\Minecraft Servers\\" + version));
+			if (this.version.toLowerCase().contains("spigot")) {
+				jar = "spigot.jar";
+			} else {
+				jar = "server.jar";
+			}
+		} else {
+			event.reply("Starting server version: " + event.getArgs());
+			this.file = this.file.directory(new File("D:\\Games\\Minecraft\\Minecraft Servers\\" + event.getArgs()));
+			if (event.getArgs().toLowerCase().contains("spigot")) {
+				jar = "spigot.jar";
+			} else {
+				jar = "server.jar";
+			}
+		}
+		
+		System.err.println("Server jar: " + jar);
+		System.err.println("");
 		System.out.println("Running cmd");
-		this.file.command("java", "-Xms8G", "-Xmx12G", "-jar", "spigot.jar");
+		this.file.command("java", "-Xms8G", "-Xmx12G", "-jar", jar);
 		try {
 			this.file.start();
 			start = true;
-			event.reply("Starting Server. Please wait at least 1 minute.");
+			event.reply("Please wait at least 1 minute.");
 		} catch (IOException e) {
 			event.reply("Could not start server.");
 			e.printStackTrace();
