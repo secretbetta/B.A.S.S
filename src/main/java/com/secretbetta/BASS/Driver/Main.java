@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.examples.command.PingCommand;
 import com.secretbetta.BASS.Cute.PuppyCommand;
 import com.secretbetta.BASS.GoogleSheets.LeaderboardCommand;
 import com.secretbetta.BASS.Minecraft.ServerInfo;
+import com.secretbetta.BASS.Minecraft.StartServerCommand;
 import com.secretbetta.BASS.Poker.PokerEvent;
 import com.secretbetta.BASS.blackjack.BlackjackEvent;
 import com.secretbetta.BASS.debug.AdminTestCommand;
@@ -64,7 +65,8 @@ public class Main {
 				new TestCommand(),
 				new BugReportCommand(),
 				new PuppyCommand(),
-				new PinnerCommand(api));
+				new PinnerCommand(api),
+				new StartServerCommand());
 			
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
 			api.addEventListener(new MyEventListener()); // Main Events

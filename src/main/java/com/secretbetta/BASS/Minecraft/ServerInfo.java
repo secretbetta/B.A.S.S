@@ -17,6 +17,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
  */
 public class ServerInfo extends Command {
 	
+	private String ip = "73.231.149.126";
+	
 	public ServerInfo() {
 		this.cooldown = 5;
 		this.help = "Gets Minecraft server info";
@@ -31,7 +33,7 @@ public class ServerInfo extends Command {
 		}
 		
 		// int timeout = 3000;
-		MinecraftServer ass = new MinecraftServer("73.162.89.39", 25565);
+		MinecraftServer ass = new MinecraftServer(ip, 25565);
 		try {
 			StatusResponse serverInfo = ass.fetchData();
 			event.reply("```Server is online```");
@@ -41,16 +43,18 @@ public class ServerInfo extends Command {
 			info.setTitle("A.S.S Minecraft Server");
 			info.setDescription("Dedicated Minecraft Server for A.S.S");
 			info.addField("Name", "A.S.S Server", false);
-			// info.addField("MOTD", serverInfo.getDescription().getText().replaceAll(".|[^\\w ']", "").trim(), false);
-			info.addField("IP", "73.162.89.39:25565", false);
+			info.addField("MOTD", serverInfo.getDescription().getText().replaceAll(".|[^\\w ']", "").trim(), false);
+			info.addField("IP", ip, false);
 			
 			String playerlist = "";
-			for (Player player : serverInfo.getPlayers().getSample()) {
-				playerlist += player.getName() + "\n";
+			if (serverInfo.getPlayers().getOnline() != 0) {
+				for (Player player : serverInfo.getPlayers().getSample()) {
+					playerlist += player.getName() + "\n";
+				}
 			}
 			info.addField(
 				String.format("Online %d/%d", serverInfo.getPlayers().getOnline(), serverInfo.getPlayers().getMax()),
-				"**Player List**\n```" + playerlist + "```", false);
+				"**Player List**\n" + playerlist, false);
 			info.addField("Version", serverInfo.getVersion().getName(), false);
 			event.reply(info.build());
 		} catch (IOException e) {
