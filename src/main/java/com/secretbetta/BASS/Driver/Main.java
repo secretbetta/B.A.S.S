@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.PingCommand;
 import com.secretbetta.BASS.Cute.PuppyCommand;
 import com.secretbetta.BASS.GoogleSheets.LeaderboardCommand;
+import com.secretbetta.BASS.Minecraft.ConsoleEvent;
 import com.secretbetta.BASS.Minecraft.ServerInfo;
 import com.secretbetta.BASS.Minecraft.StartServerCommand;
 import com.secretbetta.BASS.Poker.PokerEvent;
@@ -75,6 +76,7 @@ public class Main {
 			api.addEventListener(new YahtzeeEvent()); // Yahtzee
 			api.addEventListener(new BlackjackEvent());
 			api.addEventListener(new PokerEvent());
+			api.addEventListener(new ConsoleEvent());
 			api.addEventListener(waiter, client.build());
 			// api.addEventListener(new TestEvent()); // Testing Events
 			// api.addEventListener(new EmotesTestEvent()); // Emotes Testing Event
