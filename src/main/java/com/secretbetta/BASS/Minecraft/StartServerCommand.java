@@ -10,7 +10,11 @@ import com.secretbetta.BASS.Minecraft.MinecraftServer.StatusResponse;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
-
+/**
+ * Starts a Minecraft Server Command 
+ * @author Secretbeta
+ *
+ */
 public class StartServerCommand extends Command {
 	
 	private boolean start;
@@ -22,10 +26,9 @@ public class StartServerCommand extends Command {
 		this.file = new ProcessBuilder("cmd.exe","/c","start","cmd");
 		version = "1.15.2 Spigot";
 		this.file = this.file.directory(new File("D:\\Games\\Minecraft\\Minecraft Servers\\1.15.2 Spigot"));
-//		this.file = this.file.directory(new File("D:\\Games\\Minecraft\\Minecraft Servers\\notadirectory"));
 		
 		super.name = "run";
-//		super.cooldown = 90;
+		super.cooldown = 90;
 		super.help = "Starts minecraft server";
 		super.userPermissions = new Permission[] {Permission.MANAGE_WEBHOOKS};
 		super.arguments = "[optional: version]";
@@ -47,7 +50,7 @@ public class StartServerCommand extends Command {
 		}
 		
 		String jar = "";
-		if (event.getArgs() == null) {
+		if (event.getArgs().isEmpty()) {
 			event.reply("Starting default server. Version: " + this.version);
 			this.file = this.file.directory(new File("D:\\Games\\Minecraft\\Minecraft Servers\\" + version));
 			if (this.version.toLowerCase().contains("spigot")) {

@@ -163,6 +163,13 @@ public class MyEventListener extends ListenerAdapter {
 				.queue();
 		}
 		
+//		if (event.getAuthor().getId().equals("400805008276193290")
+//			&& !content.contains("secretbeta")
+//			&& !content.contains("secretbetta")
+//			&& !content.contains("andrew")) {
+//			channel.sendMessage("Wack.").queue();
+//		}
+		
 		/**
 		 * Spongebob command
 		 */
