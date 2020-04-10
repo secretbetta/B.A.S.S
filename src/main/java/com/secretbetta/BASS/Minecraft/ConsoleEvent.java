@@ -10,6 +10,14 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.kronos.rkon.core.Rcon;
 import net.kronos.rkon.core.ex.AuthenticationException;
 
+/**
+ * <h1>Minecraft Console Event.</h1>
+ * <p1>Listens for minecraft commands in the minecraftconsole channel.
+ * Requires webhooks permission to use.</p1>
+ * 
+ * @author Secretbeta
+ *
+ */
 public class ConsoleEvent extends ListenerAdapter {
 	
 	@Override
