@@ -34,6 +34,7 @@ public class ConsoleEvent extends ListenerAdapter {
 			return;
 		} else if (!event.getMember().hasPermission(Permission.MANAGE_WEBHOOKS)) {
 			event.getChannel().sendMessage("You do not have permission to use the console.").queue();
+			return;
 		}
 		
 		Message msg = event.getMessage();
