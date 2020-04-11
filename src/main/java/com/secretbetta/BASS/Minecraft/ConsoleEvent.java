@@ -24,8 +24,8 @@ public class ConsoleEvent extends ListenerAdapter {
 	 * Sends all messages by users in minecraftconsole channel. Sends them to console as commands. 
 	 * Only usable for those with managing webhooks permission.
 	 * 
-	 * @param type
-	 * 		The Guild Message Received Event
+	 * @param 	type
+	 * 			The Guild Message Received Event
 	 * 
 	 */
 	@Override
