@@ -15,11 +15,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
  * 
  * @author Andrew
  */
-public class ServerInfo extends Command {
+public class ServerInfoCommand extends Command {
 	
 	private String ip = "73.231.149.126";
 	
-	public ServerInfo() {
+	public ServerInfoCommand() {
 		this.cooldown = 5;
 		this.help = "Gets Minecraft server info";
 		this.name = "mc";

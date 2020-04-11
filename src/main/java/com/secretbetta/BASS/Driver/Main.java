@@ -5,7 +5,7 @@ import com.jagrosh.jdautilities.examples.command.PingCommand;
 import com.secretbetta.BASS.Cute.PuppyCommand;
 import com.secretbetta.BASS.GoogleSheets.LeaderboardCommand;
 import com.secretbetta.BASS.Minecraft.ConsoleEvent;
-import com.secretbetta.BASS.Minecraft.ServerInfo;
+import com.secretbetta.BASS.Minecraft.ServerInfoCommand;
 import com.secretbetta.BASS.Minecraft.StartServerCommand;
 import com.secretbetta.BASS.Poker.PokerEvent;
 import com.secretbetta.BASS.blackjack.BlackjackEvent;
@@ -55,7 +55,7 @@ public class Main {
 			client.useHelpBuilder(false);
 			
 			client.addCommands(
-				new ServerInfo(),
+				new ServerInfoCommand(),
 				new PingCommand(), // Jagrosh's Ping Command
 				new LeaderboardCommand(),
 				new XKCDCommand(),
