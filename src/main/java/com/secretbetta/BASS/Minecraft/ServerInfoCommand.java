@@ -12,8 +12,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 /**
  * Minecraft Server info command
+ * <p1>Gets info from server and sends to discord. Info includes: Name of server, MOTD, IP, Online
+ * players out of Maximum players, Player list.
  * 
- * @author Andrew
+ * @see MinecraftServer
+ * @author Andrew Nguyen
  */
 public class ServerInfoCommand extends Command {
 	
@@ -43,7 +46,8 @@ public class ServerInfoCommand extends Command {
 			info.setTitle("A.S.S Minecraft Server");
 			info.setDescription("Dedicated Minecraft Server for A.S.S");
 			info.addField("Name", "A.S.S Server", false);
-			info.addField("MOTD", serverInfo.getDescription().getText().replaceAll(".|[^\\w ']", "").trim(), false);
+			info.addField("MOTD",
+				serverInfo.getDescription().getText().replaceAll(".|[^\\w ']", "").trim(), false);
 			info.addField("IP", ip, false);
 			
 			String playerlist = "";
@@ -53,7 +57,8 @@ public class ServerInfoCommand extends Command {
 				}
 			}
 			info.addField(
-				String.format("Online %d/%d", serverInfo.getPlayers().getOnline(), serverInfo.getPlayers().getMax()),
+				String.format("Online %d/%d", serverInfo.getPlayers().getOnline(),
+					serverInfo.getPlayers().getMax()),
 				"**Player List**\n" + playerlist, false);
 			info.addField("Version", serverInfo.getVersion().getName(), false);
 			event.reply(info.build());

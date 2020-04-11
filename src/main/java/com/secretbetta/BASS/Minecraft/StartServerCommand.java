@@ -11,26 +11,28 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
 /**
- * Starts a Minecraft Server Command 
+ * Starts a Minecraft Server Command
+ * 
  * @author Secretbeta
- *
  */
 public class StartServerCommand extends Command {
 	
 	private boolean start;
 	private ProcessBuilder file;
 	private String version;
+	private final String mainDir = "D:\\Games\\Minecraft\\Minecraft Servers\\1.15.2 Spigot\\";
 	
 	public StartServerCommand() {
 		this.start = false;
-		this.file = new ProcessBuilder("cmd.exe","/c","start","cmd");
+		this.file = new ProcessBuilder("cmd.exe", "/c", "start", "cmd");
 		version = "1.15.2 Spigot";
-		this.file = this.file.directory(new File("D:\\Games\\Minecraft\\Minecraft Servers\\1.15.2 Spigot"));
+		this.file = this.file
+			.directory(new File(this.mainDir));
 		
 		super.name = "run";
 		super.cooldown = 90;
 		super.help = "Starts minecraft server";
-		super.userPermissions = new Permission[] {Permission.MANAGE_WEBHOOKS};
+		super.userPermissions = new Permission[] { Permission.MANAGE_WEBHOOKS };
 		super.arguments = "[optional: version]";
 	}
 	
@@ -52,7 +54,8 @@ public class StartServerCommand extends Command {
 		String jar = "";
 		if (event.getArgs().isEmpty()) {
 			event.reply("Starting default server. Version: " + this.version);
-			this.file = this.file.directory(new File("D:\\Games\\Minecraft\\Minecraft Servers\\" + version));
+			this.file = this.file
+				.directory(new File(this.mainDir + version));
 			if (this.version.toLowerCase().contains("spigot")) {
 				jar = "spigot.jar";
 			} else {
@@ -60,7 +63,8 @@ public class StartServerCommand extends Command {
 			}
 		} else {
 			event.reply("Starting server version: " + event.getArgs());
-			this.file = this.file.directory(new File("D:\\Games\\Minecraft\\Minecraft Servers\\" + event.getArgs()));
+			this.file = this.file
+				.directory(new File(this.mainDir + event.getArgs()));
 			if (event.getArgs().toLowerCase().contains("spigot")) {
 				jar = "spigot.jar";
 			} else {
@@ -103,7 +107,7 @@ public class StartServerCommand extends Command {
 			} catch (IOException e) {
 				String msg = "Loading";
 				int i = 0;
-				curr%=3;
+				curr %= 3;
 				while (i <= curr) {
 					msg += ".";
 					i++;

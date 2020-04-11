@@ -1,4 +1,5 @@
 package com.secretbetta.BASS.Driver;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -109,7 +110,8 @@ public class MyEventListener extends ListenerAdapter {
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("Image");
 			try {
-				List<String> imgs = WebCrawler.cleanImgs(WebCrawler.getImgs(new URL("https://www.reddit.com/")));
+				List<String> imgs = WebCrawler
+					.cleanImgs(WebCrawler.getImgs(new URL("https://www.reddit.com/")));
 				eb.setImage(imgs.get(0));
 				System.err.println(imgs.size());
 			} catch (MalformedURLException e) {
@@ -144,8 +146,9 @@ public class MyEventListener extends ListenerAdapter {
 				if (this.addVerb(content.replace("~~addjustine ", ""))
 					&& !content.replaceAll("[\\W ]*?", "").equals("")) {
 					channel
-						.sendMessage(String.format("\"*%s*\" has been added to Justine's list of verbs.",
-							content.replace("~~addjustine ", "").replaceAll("[\\W ]*?", "")))
+						.sendMessage(
+							String.format("\"*%s*\" has been added to Justine's list of verbs.",
+								content.replace("~~addjustine ", "").replaceAll("[\\W ]*?", "")))
 						.queue();
 					return;
 				} else {
@@ -159,21 +162,23 @@ public class MyEventListener extends ListenerAdapter {
 		if (content.contains("justine")) {
 			channel
 				.sendMessage(
-					String.format("Justine %s.", this.lines.toArray()[(int) (Math.random() * this.lines.size())]))
+					String.format("Justine %s.",
+						this.lines.toArray()[(int) (Math.random() * this.lines.size())]))
 				.queue();
 		}
 		
-//		if (event.getAuthor().getId().equals("400805008276193290")
-//			&& !content.contains("secretbeta")
-//			&& !content.contains("secretbetta")
-//			&& !content.contains("andrew")) {
-//			channel.sendMessage("Wack.").queue();
-//		}
+		// if (event.getAuthor().getId().equals("400805008276193290")
+		// && !content.contains("secretbeta")
+		// && !content.contains("secretbetta")
+		// && !content.contains("andrew")) {
+		// channel.sendMessage("Wack.").queue();
+		// }
 		
 		/**
 		 * Spongebob command
 		 */
-		// if (content.startsWith("~~spongebob") && objMember.hasPermission(Permission.ADMINISTRATOR)) {
+		// if (content.startsWith("~~spongebob") &&
+		// objMember.hasPermission(Permission.ADMINISTRATOR)) {
 		// List<Member> members = message.getMentionedMembers();
 		// for (Member member : members) {
 		// if (!this.trollIds.contains(member.getId())) {
@@ -186,7 +191,8 @@ public class MyEventListener extends ListenerAdapter {
 		// member.getEffectiveName())).queue();
 		// }
 		// }
-		// } else if (content.startsWith("~~spongebob") && !objMember.hasPermission(Permission.ADMINISTRATOR)) {
+		// } else if (content.startsWith("~~spongebob") &&
+		// !objMember.hasPermission(Permission.ADMINISTRATOR)) {
 		// channel.sendMessage("You do not have permission to run this command.").queue();
 		// }
 		
@@ -217,7 +223,9 @@ public class MyEventListener extends ListenerAdapter {
 		 * If user @<mentions> people, gets told to shut up
 		 */
 		if (message.mentionsEveryone()) {
-			channel.sendMessage(String.format("Shut up, %s I'm sleeping.", objMember.getAsMention())).queue();
+			channel
+				.sendMessage(String.format("Shut up, %s I'm sleeping.", objMember.getAsMention()))
+				.queue();
 		}
 	}
 }
