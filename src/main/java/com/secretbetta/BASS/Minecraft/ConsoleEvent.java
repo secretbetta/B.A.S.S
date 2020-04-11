@@ -20,6 +20,14 @@ import net.kronos.rkon.core.ex.AuthenticationException;
  */
 public class ConsoleEvent extends ListenerAdapter {
 	
+	/**
+	 * Sends all messages by users in minecraftconsole channel. Sends them to console as commands. 
+	 * Only usable for those with managing webhooks permission.
+	 * 
+	 * @param type
+	 * 		The Guild Message Received Event
+	 * 
+	 */
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		if (event.getAuthor().isBot() || !event.getChannel().getId().equals("698254541774389368")) {
@@ -30,7 +38,7 @@ public class ConsoleEvent extends ListenerAdapter {
 		
 		Message msg = event.getMessage();
 		MessageChannel chnl = event.getChannel();
-		String content = msg.getContentRaw().toLowerCase();
+		String content = msg.getContentRaw();
 		
 		Rcon rcon;
 		try {
