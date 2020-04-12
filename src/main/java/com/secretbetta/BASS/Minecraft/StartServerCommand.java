@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.entities.Message;
  */
 public class StartServerCommand extends Command {
 	
+	/* Directory of Servers and default version */
 	private final String mainDir = "D:\\Games\\Minecraft\\Minecraft Servers\\";
 	private final String version = "1.15.2 Spigot";
 	
