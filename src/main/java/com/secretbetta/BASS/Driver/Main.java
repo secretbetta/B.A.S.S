@@ -1,10 +1,12 @@
 package com.secretbetta.BASS.Driver;
+
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.PingCommand;
 import com.secretbetta.BASS.Cute.PuppyCommand;
 import com.secretbetta.BASS.GoogleSheets.LeaderboardCommand;
 import com.secretbetta.BASS.Minecraft.ConsoleEvent;
+import com.secretbetta.BASS.Minecraft.ListVersionsCommand;
 import com.secretbetta.BASS.Minecraft.ServerInfoCommand;
 import com.secretbetta.BASS.Minecraft.StartServerCommand;
 import com.secretbetta.BASS.Poker.PokerEvent;
@@ -67,7 +69,8 @@ public class Main {
 				new BugReportCommand(),
 				new PuppyCommand(),
 				new PinnerCommand(api),
-				new StartServerCommand());
+				new StartServerCommand(),
+				new ListVersionsCommand());
 			
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
 			api.addEventListener(new MyEventListener()); // Main Events
