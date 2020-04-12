@@ -35,7 +35,6 @@ public class ServerInfoCommand extends Command {
 			return;
 		}
 		
-		// int timeout = 3000;
 		MinecraftServer ass = new MinecraftServer(ip, 25565);
 		try {
 			StatusResponse serverInfo = ass.fetchData();
