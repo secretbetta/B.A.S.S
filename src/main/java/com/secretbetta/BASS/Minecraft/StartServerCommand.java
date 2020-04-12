@@ -65,7 +65,8 @@ public class StartServerCommand extends Command {
 			start = true;
 			event.reply("Please wait about 1 minute.");
 		} catch (IOException e) {
-			event.reply("Could not start server.");
+			event.reply(
+				"Could not start server. Maybe invalid version? Try *~~mcversions* to see all versions available");
 			e.printStackTrace();
 			return;
 		}
