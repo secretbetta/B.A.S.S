@@ -11,27 +11,35 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
 /**
- * Starts a Minecraft Server Command
+ * A command class to start my personal Minecraft Server. Uses {@link ProcessBuilder} to run the jar
+ * file in my Minecraft Server directory.
  * 
  * @author Secretbeta
  */
 public class StartServerCommand extends Command {
 	
-	private boolean start;
-	private ProcessBuilder file;
-	private String version;
-	private final String mainDir = "D:\\Games\\Minecraft\\Minecraft Servers\\1.15.2 Spigot\\";
+	private final String mainDir = "D:\\Games\\Minecraft\\Minecraft Servers\\";
+	private final String version = "1.15.2 Spigot";
 	
+	private boolean start;
+	private ProcessBuilder process;
+	
+	/**
+	 * Initializes necessary variables to start a server.
+	 * <p1>Creates command prompt for Process Builder and initializes Command variables</p1>
+	 * 
+	 * @see Command
+	 */
 	public StartServerCommand() {
 		this.start = false;
-		this.file = new ProcessBuilder("cmd.exe", "/c", "start", "cmd");
-		version = "1.15.2 Spigot";
-		this.file = this.file
+		this.process = new ProcessBuilder("cmd.exe", "/c", "start", "cmd");
+		this.process = this.process
 			.directory(new File(this.mainDir));
 		
 		super.name = "run";
 		super.cooldown = 90;
-		super.help = "Starts minecraft server";
+		super.help = "Starts minecraft server. Defaults to " + this.version
+			+ " if no argument is given.";
 		super.userPermissions = new Permission[] { Permission.MANAGE_WEBHOOKS };
 		super.arguments = "[optional: version]";
 	}
@@ -51,10 +59,49 @@ public class StartServerCommand extends Command {
 			}
 		}
 		
+		this.process.command("java", "-Xms8G", "-Xmx12G", "-jar", this.getJar(event));
+		try {
+			this.process.start();
+			start = true;
+			event.reply("Please wait about 1 minute.");
+		} catch (IOException e) {
+			event.reply("Could not start server.");
+			e.printStackTrace();
+			return;
+		}
+		
+		Message message = event.getChannel().sendMessage("Loading").complete();
+		
+		long t = System.currentTimeMillis();
+		long end = t + 60 * 1000;
+		
+		MinecraftServer ass = new MinecraftServer("73.231.149.126", 25565);
+		while (System.currentTimeMillis() < end) {
+			message.editMessage(message.getContentRaw() + "..").queue();
+			try {
+				StatusResponse serverInfo = ass.fetchData();
+				message.editMessage("```Server is Online```").queue();
+				start = true;
+				return;
+			} catch (IOException e) {
+				System.err.println(e.getLocalizedMessage());
+			}
+		}
+		
+		event.reply("Server couldn't start. Timeout");
+	}
+	
+	/**
+	 * Figures out which jar file to return. Returns either spigot.jar or server.jar
+	 * 
+	 * @param event The command event received by the user.
+	 * @return "spigot.jar" or "server.jar"
+	 */
+	private String getJar(CommandEvent event) {
 		String jar = "";
 		if (event.getArgs().isEmpty()) {
 			event.reply("Starting default server. Version: " + this.version);
-			this.file = this.file
+			this.process = this.process
 				.directory(new File(this.mainDir + version));
 			if (this.version.toLowerCase().contains("spigot")) {
 				jar = "spigot.jar";
@@ -63,7 +110,7 @@ public class StartServerCommand extends Command {
 			}
 		} else {
 			event.reply("Starting server version: " + event.getArgs());
-			this.file = this.file
+			this.process = this.process
 				.directory(new File(this.mainDir + event.getArgs()));
 			if (event.getArgs().toLowerCase().contains("spigot")) {
 				jar = "spigot.jar";
@@ -71,53 +118,7 @@ public class StartServerCommand extends Command {
 				jar = "server.jar";
 			}
 		}
-		
-		System.err.println("Server jar: " + jar);
-		System.err.println("");
-		System.out.println("Running cmd");
-		this.file.command("java", "-Xms8G", "-Xmx12G", "-jar", jar);
-		try {
-			this.file.start();
-			start = true;
-			event.reply("Please wait at least 1 minute.");
-		} catch (IOException e) {
-			event.reply("Could not start server.");
-			e.printStackTrace();
-			return;
-		}
-		Message message = event.getChannel().sendMessage("Loading").complete();
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-		
-		int curr = 0;
-		MinecraftServer ass = new MinecraftServer("73.231.149.126", 25565);
-		
-		long t = System.currentTimeMillis();
-		long end = t + 60 * 1000;
-		
-		while (System.currentTimeMillis() < end) {
-			try {
-				StatusResponse serverInfo = ass.fetchData();
-				message.editMessage("```Server is Online```").queue();
-				start = true;
-				return;
-			} catch (IOException e) {
-				String msg = "Loading";
-				int i = 0;
-				curr %= 3;
-				while (i <= curr) {
-					msg += ".";
-					i++;
-				}
-				curr++;
-				message.editMessage(msg).queue();
-				System.err.println(e.getLocalizedMessage());
-			}
-		}
-		
-		event.reply("Server couldn't start. Timeout");
+		System.err.println(jar);
+		return jar;
 	}
 }
