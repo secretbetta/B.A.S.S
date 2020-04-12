@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.secretbetta.BASS.Minecraft.MinecraftServer.StatusResponse;
 
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
@@ -51,7 +50,7 @@ public class StartServerCommand extends Command {
 		} else if (start) {
 			MinecraftServer ass = new MinecraftServer("73.231.149.126", 25565);
 			try {
-				StatusResponse serverInfo = ass.fetchData();
+				ass.fetchData();
 				event.reply("Server is already running!");
 				return;
 			} catch (IOException e) {
@@ -80,7 +79,7 @@ public class StartServerCommand extends Command {
 		while (System.currentTimeMillis() < end) {
 			message.editMessage(message.getContentRaw() + "..").queue();
 			try {
-				StatusResponse serverInfo = ass.fetchData();
+				ass.fetchData();
 				message.editMessage("```Server is Online```").queue();
 				start = true;
 				return;
