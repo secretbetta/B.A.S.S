@@ -23,8 +23,7 @@ public class ConsoleEvent extends ListenerAdapter {
 	 * Sends all messages by users in minecraftconsole channel. Sends them to console as commands.
 	 * Only usable for those with managing webhooks permission.
 	 * 
-	 * @param type
-	 *             The Guild Message Received Event
+	 * @param event The Guild Message Received Event
 	 */
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
@@ -46,9 +45,8 @@ public class ConsoleEvent extends ListenerAdapter {
 			return;
 		}
 		
-		Rcon rcon;
 		try {
-			rcon = new Rcon("127.0.0.1", 25575, "phucnguyen12".getBytes());
+			Rcon rcon = new Rcon("127.0.0.1", 25575, "phucnguyen12".getBytes());
 			String result = rcon.command(content);
 			result = result.replaceAll("[§]+.", "");
 			chnl.sendMessage("```" + result + "```").queue();
