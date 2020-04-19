@@ -24,6 +24,8 @@ public class StartServerCommand extends Command {
 	private boolean start;
 	private ProcessBuilder process;
 	
+	private Message message;
+	
 	/**
 	 * Initializes necessary variables to start a server.
 	 * <p1>Creates command prompt for Process Builder and initializes Command variables</p1>
@@ -71,25 +73,9 @@ public class StartServerCommand extends Command {
 			return;
 		}
 		
-		Message message = event.getChannel().sendMessage("Loading").complete();
-		
-		long t = System.currentTimeMillis();
-		long end = t + 60 * 1000;
-		
-		MinecraftServer ass = new MinecraftServer("73.231.149.126", 25565);
-		while (System.currentTimeMillis() < end) {
-			message.editMessage(message.getContentRaw() + "..").queue();
-			try {
-				ass.fetchData();
-				message.editMessage("```Server is Online```").queue();
-				start = true;
-				return;
-			} catch (IOException e) {
-				System.err.println(e.getLocalizedMessage());
-			}
-		}
-		
-		event.reply("Server couldn't start. Timeout");
+		this.message = event.getChannel().sendMessage("Loading").complete();
+		CheckServer check = new CheckServer();
+		check.start();
 	}
 	
 	/**
@@ -121,5 +107,34 @@ public class StartServerCommand extends Command {
 		}
 		System.err.println(jar);
 		return jar;
+	}
+	
+	/**
+	 * Checks Minecraft server's status.
+	 * 
+	 * @author Secretbeta
+	 */
+	private class CheckServer extends Thread {
+		
+		@Override
+		public void run() {
+			long t = System.currentTimeMillis();
+			long end = t + 60 * 1000;
+			
+			MinecraftServer ass = new MinecraftServer("73.231.149.126", 25565);
+			while (System.currentTimeMillis() < end) {
+				message.editMessage(message.getContentRaw() + "..").queue();
+				try {
+					ass.fetchData();
+					message.editMessage("```Server is Online```").queue();
+					start = true;
+					return;
+				} catch (IOException e) {
+					System.err.println(e.getLocalizedMessage());
+				}
+			}
+			
+			message.getChannel().sendMessage("Server couldn't start. Timeout").queue();
+		}
 	}
 }
