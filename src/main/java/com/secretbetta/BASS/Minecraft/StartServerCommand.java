@@ -111,6 +111,8 @@ public class StartServerCommand extends Command {
 	
 	/**
 	 * Checks Minecraft server's status.
+	 * <p1>Runs a thread that loops for 60 seconds to check the status of the server. If server is
+	 * online, it stops, else, it sends a timout message</p1>
 	 * 
 	 * @author Secretbeta
 	 */
