@@ -16,34 +16,37 @@ import net.kronos.rkon.core.ex.AuthenticationException;
  * Requires webhooks permission to use.</p1>
  * 
  * @author Secretbeta
- *
  */
 public class ConsoleEvent extends ListenerAdapter {
 	
 	/**
-	 * Sends all messages by users in minecraftconsole channel. Sends them to console as commands. 
+	 * Sends all messages by users in minecraftconsole channel. Sends them to console as commands.
 	 * Only usable for those with managing webhooks permission.
 	 * 
-	 * @param 	type
-	 * 			The Guild Message Received Event
-	 * 
+	 * @param event The Guild Message Received Event
 	 */
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-		if (event.getAuthor().isBot() || !event.getChannel().getId().equals("698254541774389368")) {
-			return;
-		} else if (!event.getMember().hasPermission(Permission.MANAGE_WEBHOOKS)) {
-			event.getChannel().sendMessage("You do not have permission to use the console.").queue();
-			return;
-		}
-		
 		Message msg = event.getMessage();
 		MessageChannel chnl = event.getChannel();
 		String content = msg.getContentRaw();
 		
-		Rcon rcon;
+		if (!content.startsWith("/")) {
+			return;
+		} else {
+			content = content.substring(1);
+		}
+		
+		if (event.getAuthor().isBot() || !event.getChannel().getId().equals("698254541774389368")) {
+			return;
+		} else if (!event.getMember().hasPermission(Permission.MANAGE_WEBHOOKS)) {
+			event.getChannel().sendMessage("You do not have permission to use the console.")
+				.queue();
+			return;
+		}
+		
 		try {
-			rcon = new Rcon("127.0.0.1", 25575, "phucnguyen12".getBytes());
+			Rcon rcon = new Rcon("127.0.0.1", 25575, "phucnguyen12".getBytes());
 			String result = rcon.command(content);
 			result = result.replaceAll("[§]+.", "");
 			chnl.sendMessage("```" + result + "```").queue();
