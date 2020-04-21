@@ -107,9 +107,9 @@ public class xkcdCrawler {
 	public String getXKCDimg() throws MalformedURLException {
 		List<String> imgs = this.cleanImgs();
 		try {
-			this.img = "https:" + imgs.get(2);
+			this.img = "https:" + imgs.get(1);
 		} catch (IndexOutOfBoundsException e) {
-			System.err.printf("Index out of bounds. Index = %d, Size = %d\n", 2, imgs.size());
+			System.err.printf("Index out of bounds. Index = %d, Size = %d\n", 1, imgs.size());
 			System.err.println("Imgs: " + imgs + "\nLinks: " + this.links);
 		}
 		return this.img;
@@ -125,7 +125,6 @@ public class xkcdCrawler {
 		Pattern pattern = Pattern.compile(regex);
 		
 		List<String> imgs = new ArrayList<>();
-		System.err.println(this.links);
 		Matcher matcher;
 		for (String link : this.links) {
 			matcher = pattern.matcher(link);
