@@ -1,4 +1,5 @@
 package com.secretbetta.BASS.Driver;
+
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -6,6 +7,8 @@ import javax.annotation.Nonnull;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -14,7 +17,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  * TicTacToe event listener
  * 
  * @author Andrew
- *
  */
 public class TicTacToeEvent extends ListenerAdapter {
 	
@@ -55,7 +57,8 @@ public class TicTacToeEvent extends ListenerAdapter {
 	public String winCheck() {
 		if (this.tttGame.winner().length() == 1) {
 			String line = String.format("Winner is %s!",
-				this.tttGame.winner().equals("x") ? this.player1.getEffectiveName() : this.player2.getEffectiveName());
+				this.tttGame.winner().equals("x") ? this.player1.getEffectiveName()
+					: this.player2.getEffectiveName());
 			this.reset();
 			return line;
 		} else if (this.tttGame.winner().equals("draw")) {
@@ -63,7 +66,8 @@ public class TicTacToeEvent extends ListenerAdapter {
 			return "It's a tie!";
 		} else {
 			return (String.format("%s's turn.",
-				(this.player == 1 ? this.player1.getEffectiveName() : this.player2.getEffectiveName())));
+				(this.player == 1 ? this.player1.getEffectiveName()
+					: this.player2.getEffectiveName())));
 		}
 	}
 	
@@ -80,7 +84,8 @@ public class TicTacToeEvent extends ListenerAdapter {
 				@Override
 				public void run() {
 					channel.sendMessage(String.format("Game Over. %s took too long to play.",
-						TicTacToeEvent.this.player == 0 ? TicTacToeEvent.this.player1.getEffectiveName()
+						TicTacToeEvent.this.player == 0
+							? TicTacToeEvent.this.player1.getEffectiveName()
 							: TicTacToeEvent.this.player2.getEffectiveName()))
 						.queue();
 					TicTacToeEvent.this.reset();
@@ -99,14 +104,8 @@ public class TicTacToeEvent extends ListenerAdapter {
 		String content = message.getContentRaw().toLowerCase();
 		MessageChannel channel = event.getChannel();
 		
-		/**
-		 * Gets the game
-		 */
-		if (content.startsWith("```\ntic tac toe") && event.getAuthor().isBot()) {
-			this.msg = message;
-			for (int x = 1; x <= 9; x++) {
-				this.msg.addReaction(String.format("U+3%dU+fe0fU+20e3", x)).queue();
-			}
+		if (event.getAuthor().isBot()) {
+			return;
 		}
 		
 		/**
@@ -130,7 +129,11 @@ public class TicTacToeEvent extends ListenerAdapter {
 			channel.sendMessage("Game will end in 5 minutes").queue();
 			channel.sendMessage(String.format("Player 1: %s\nPlayer 2: %s",
 				event.getAuthor().getAsMention(), players.get(0))).queue();
-			channel.sendMessage(this.tttGame.toString()).queue();
+			
+			this.msg = channel.sendMessage(this.tttGame.toString()).complete();
+			for (int x = 1; x <= 9; x++) {
+				this.msg.addReaction(String.format("U+3%dU+fe0fU+20e3", x)).queue();
+			}
 			
 			this.player1 = objMember;
 			this.player2 = players.get(0);
@@ -147,7 +150,10 @@ public class TicTacToeEvent extends ListenerAdapter {
 		if (content.equals("~~tttquit") && this.gameStart &&
 			(this.player1.getId().equals(objMember.getId()) ||
 				this.player2.getId().equals(objMember.getId()))) {
-			channel.sendMessage(String.format("Player %s has forfeited.", objMember.getEffectiveName())).queue();
+			channel
+				.sendMessage(
+					String.format("Player %s has forfeited.", objMember.getEffectiveName()))
+				.queue();
 			this.reset();
 		} else if (content.equals("~~quit") && !this.gameStart) {
 			channel.sendMessage("No game playing!").queue();
@@ -156,15 +162,38 @@ public class TicTacToeEvent extends ListenerAdapter {
 	
 	@Override
 	public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
-		if (this.gameStart && !event.getUser().isBot() && event.getChannel().equals(this.msg.getChannel())) {
-			if ((this.player == 0 ? this.player1.getId() : this.player2.getId()).equals(event.getUser().getId())) {
+		User usr = event.getUser();
+		MessageChannel chnl = event.getChannel();
+		MessageReaction react = event.getReaction();
+		
+		if (usr.isBot()) {
+			return;
+		}
+		
+		if (this.gameStart && chnl.equals(this.msg.getChannel())) {
+			if (this.isPlayer(usr)) {
+				this.tttGame.move(
+					Integer
+						.parseInt(react.getReactionEmote().getName().substring(0, 1))
+						- 1,
+					this.player == 0 ? 'X' : 'O');
 				this.msg.editMessage(this.tttGame.toString() + "\n" + this.winCheck()).queue();
 				this.player = (this.player + 1) % 2;
-				event.getReaction().removeReaction().queue();
-				event.getReaction().removeReaction(event.getUser()).queue();
+				react.removeReaction().queue();
+				react.removeReaction(usr).queue();
 			} else {
-				event.getReaction().removeReaction(event.getUser()).queue();
+				react.removeReaction(usr).queue();
 			}
 		}
+	}
+	
+	/**
+	 * Checks if User is a player in the game
+	 * 
+	 * @param u User that is passed through
+	 * @return true if User is in the game
+	 */
+	private boolean isPlayer(User u) {
+		return (this.player == 0 ? this.player1.getId() : this.player2.getId()).equals(u.getId());
 	}
 }

@@ -1,6 +1,7 @@
 package com.secretbetta.BASS.Driver;
+
 /**
- * TicTacToe Game Class
+ * <h1>TicTacToe Game</h1>
  * 
  * @author Andrew
  */
@@ -17,7 +18,7 @@ public class TicTacToe {
 	}
 	
 	/**
-	 * The move maker method
+	 * Makes a Move in Tic Tac Toe Board
 	 * 
 	 * @param x      coord x
 	 * @param y      coord y
@@ -98,7 +99,8 @@ public class TicTacToe {
 		String content = "```\nTic Tac Toe Game\n";
 		for (int x = 0; x < 3; x++) {
 			for (int y = 0; y < 3; y++) {
-				content += String.format("[%c]", (this.board[x * 3 + y] != '\0') ? this.board[x * 3 + y] : ' ');
+				content += String.format("[%c]",
+					(this.board[x * 3 + y] != '\0') ? this.board[x * 3 + y] : ' ');
 			}
 			content += "\n";
 		}
