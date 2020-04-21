@@ -14,16 +14,14 @@ import net.dv8tion.jda.api.EmbedBuilder;
  * Command that gets a random or specific XKCD comic from <a href="xkcd.com">XKCD</a>
  * 
  * @author Andrew
- *
  */
 public class XKCDCommand extends Command {
 	
 	public XKCDCommand() {
-		this.name = "xkcd";
-		this.help = "xkcd comic getter";
-		this.arguments = "[Optional link/number to specific comic]";
-		this.hidden = true;
-		this.cooldown = 10;
+		super.name = "xkcd";
+		super.help = "xkcd comic getter";
+		super.arguments = "[Optional link/number to specific comic]";
+		super.cooldown = 10;
 	}
 	
 	@Override
@@ -69,7 +67,8 @@ public class XKCDCommand extends Command {
 			eb.setTitle(String.format("%s", xkcd.getXKCDtitle()));
 			eb.setImage(xkcd.getXKCDimg());
 			eb.setDescription(xkcd.getXKCDdesc());
-			eb.addField("", String.format("[Permanent link to comic](%s)", xkcd.getXKCDpermLink()), true);
+			eb.addField("", String.format("[Permanent link to comic](%s)", xkcd.getXKCDpermLink()),
+				true);
 		} catch (IndexOutOfBoundsException e) {
 			event.reply("No comic found");
 			return;
