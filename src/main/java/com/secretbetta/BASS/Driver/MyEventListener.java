@@ -97,15 +97,6 @@ public class MyEventListener extends ListenerAdapter {
 		
 		/** Commands **/
 		
-		/**
-		 * Outputs list of possible commands
-		 */
-		if (content.startsWith("~~help")) {
-			for (EmbedBuilder eb : HelpCmds.helpCmds()) {
-				channel.sendMessage(eb.build()).queue();
-			}
-		}
-		
 		if (content.equals("~~img")) {
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("Image");
@@ -166,13 +157,6 @@ public class MyEventListener extends ListenerAdapter {
 						this.lines.toArray()[(int) (Math.random() * this.lines.size())]))
 				.queue();
 		}
-		
-		// if (event.getAuthor().getId().equals("400805008276193290")
-		// && !content.contains("secretbeta")
-		// && !content.contains("secretbetta")
-		// && !content.contains("andrew")) {
-		// channel.sendMessage("Wack.").queue();
-		// }
 		
 		/**
 		 * Spongebob command
