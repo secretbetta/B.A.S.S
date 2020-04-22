@@ -2,6 +2,7 @@ package com.secretbetta.BASS.Minecraft;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.HashMap;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -20,12 +21,14 @@ import net.dv8tion.jda.api.EmbedBuilder;
  */
 public class ServerInfoCommand extends Command {
 	
-	private String ip = "73.231.149.126";
+	private String defAddress = "73.231.149.126";
+	private int defport = 25565;
 	
 	public ServerInfoCommand() {
 		this.cooldown = 5;
 		this.help = "Gets Minecraft server info";
 		this.name = "mc";
+		this.arguments = "[-a address] [-p port]";
 		this.hidden = true;
 	}
 	
@@ -35,7 +38,22 @@ public class ServerInfoCommand extends Command {
 			return;
 		}
 		
-		MinecraftServer ass = new MinecraftServer(ip, 25565);
+		HashMap<String, String> parsedArgs = new HashMap<>();
+		String[] args = event.getArgs().trim().toLowerCase().split(" ");
+		for (int i = 0; i < args.length - 1 && i < 3; i++) {
+			if (args[i].startsWith("-")) {
+				if (args[i].substring(1, 2).equals("a")) {
+					parsedArgs.put(args[i], args[i + 1]);
+				}
+			}
+		}
+		
+		String ip = parsedArgs.containsKey("-a") ? parsedArgs.get("-a")
+			: this.defAddress;
+		int port = parsedArgs.containsKey("-p") ? Integer.parseInt(parsedArgs.get("-p"))
+			: this.defport;
+		
+		MinecraftServer ass = new MinecraftServer(ip, port);
 		try {
 			StatusResponse serverInfo = ass.fetchData();
 			event.reply("```Server is online```");
@@ -47,7 +65,7 @@ public class ServerInfoCommand extends Command {
 			info.addField("Name", "A.S.S Server", false);
 			info.addField("MOTD",
 				serverInfo.getDescription().getText().replaceAll(".|[^\\w ']", "").trim(), false);
-			info.addField("IP", ip, false);
+			info.addField("IP", ip + ((port == 25575) ? "" : port), false);
 			
 			String playerlist = "";
 			if (serverInfo.getPlayers().getOnline() != 0) {
@@ -62,7 +80,7 @@ public class ServerInfoCommand extends Command {
 			info.addField("Version", serverInfo.getVersion().getName(), false);
 			event.reply(info.build());
 		} catch (IOException e) {
-			event.reply("Server is offline");
+			event.reply("Server " + ip + ":" + port + " is offline");
 			System.err.println(e.getLocalizedMessage());
 		}
 	}
