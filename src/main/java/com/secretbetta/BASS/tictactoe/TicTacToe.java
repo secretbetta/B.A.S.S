@@ -1,4 +1,4 @@
-package com.secretbetta.BASS.Driver;
+package com.secretbetta.BASS.tictactoe;
 
 /**
  * <h1>TicTacToe Game</h1>
