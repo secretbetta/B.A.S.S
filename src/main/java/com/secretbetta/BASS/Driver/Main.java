@@ -10,6 +10,7 @@ import com.secretbetta.BASS.Minecraft.ListVersionsCommand;
 import com.secretbetta.BASS.Minecraft.ServerInfoCommand;
 import com.secretbetta.BASS.Minecraft.StartServerCommand;
 import com.secretbetta.BASS.Poker.PokerEvent;
+import com.secretbetta.BASS.Tetris.TetrisShowcase;
 import com.secretbetta.BASS.blackjack.BlackjackEvent;
 import com.secretbetta.BASS.debug.AdminTestCommand;
 import com.secretbetta.BASS.debug.BugReportCommand;
@@ -17,6 +18,7 @@ import com.secretbetta.BASS.debug.FunFactCommand;
 import com.secretbetta.BASS.debug.IDCommand;
 import com.secretbetta.BASS.debug.SuggestionsCommand;
 import com.secretbetta.BASS.debug.TestCommand;
+import com.secretbetta.BASS.tictactoe.TicTacToeEvent;
 import com.secretbetta.BASS.utlities.HelpCommand;
 import com.secretbetta.BASS.utlities.PinnerCommand;
 import com.secretbetta.BASS.xkcd.XKCDCommand;
@@ -72,7 +74,8 @@ public class Main {
 				new PinnerCommand(api),
 				new StartServerCommand(),
 				new ListVersionsCommand(),
-				new HelpCommand());
+				new HelpCommand(),
+				new TetrisShowcase());
 			
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
 			api.addEventListener(new MyEventListener()); // Main Events
@@ -84,7 +87,7 @@ public class Main {
 			api.addEventListener(new ConsoleEvent());
 			api.addEventListener(waiter, client.build());
 			// api.addEventListener(new TestEvent()); // Testing Events
-			// api.addEventListener(new EmotesTestEvent()); // Emotes Testing Event
+			api.addEventListener(new EmotesEvent()); // Emotes Testing Event
 		} catch (Exception e) {
 			System.err.println(e.getLocalizedMessage());
 			e.printStackTrace();
