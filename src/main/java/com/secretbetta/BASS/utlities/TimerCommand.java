@@ -5,14 +5,23 @@ import java.util.ArrayList;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import net.dv8tion.jda.api.entities.MessageChannel;
+
+/**
+ * Timer command. Reminds user in hours, minutes, and seconds with their own message. Pings them
+ * once timer is completed.
+ * 
+ * @author Secretbeta
+ */
 public class TimerCommand extends Command {
 	
-	ArrayList<String> userIDs = new ArrayList<String>();
+	/* User IDs */
+	ArrayList<String> users = new ArrayList<String>();
 	
 	public TimerCommand() {
 		super.name = "timer";
-		super.help = "Makes a timer in seconds, minutes, or hours";
-		super.arguments = "-h <hours> -m <minutes> -s <seconds>";
+		super.help = "Makes a timer in seconds, minutes, or hours. Message must be surrounded by Quotes";
+		super.arguments = "-h <hours> -m <minutes> -s <seconds> -msg \"<Message>\"";
 		super.cooldown = 30;
 	}
 	
@@ -22,44 +31,46 @@ public class TimerCommand extends Command {
 			return;
 		}
 		
-		// Parse -h, -m, -s
-		// Record UserIDS
+		if (this.users.contains(event.getAuthor().getAsMention())) {
+			event.reply("You have already made a reminder.");
+			return;
+		}
+		
+		ArgumentMap args = new ArgumentMap(event.getArgs().toLowerCase().split(" "));
+		
+		int seconds = args.getInt("-s", 0);
+		int minutes = args.getInt("-m", 0);
+		int hours = args.getInt("-h", 0);
+		String msg = args.getString("-msg", "");
+		this.users.add(event.getAuthor().getAsMention());
+		
+		event.reply("You will be reminded of \"" + msg + "\" in " + hours + " hours, " + minutes
+			+ " minutes, and " + seconds + " seconds.");
+		
+		this.timer(event.getChannel(), event.getAuthor().getAsMention(), msg, hours, minutes,
+			seconds);
 	}
 	
-	public void timer(String mention, int hours, int minutes, int seconds) {
+	/**
+	 * Creates a timer in hours, minutes, and seconds
+	 * 
+	 * @param mention The user to ping
+	 * @param msg     Message to tell user
+	 * @param hours   Number of hours
+	 * @param minutes Number of minutes
+	 * @param seconds Number of seconds
+	 */
+	public void timer(MessageChannel chnl, String mention, String msg, int hours, int minutes,
+		int seconds) {
 		new java.util.Timer().schedule(
 			new java.util.TimerTask() {
 				
 				@Override
 				public void run() {
-					
+					chnl.sendMessage(mention + ": " + msg).queue();
+					users.remove(mention);
 				}
 			},
-			hours * 3600 + minutes * 60 + seconds);
+			hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000);
 	}
-	
-	private class Reminder extends Thread {
-		
-		@Override
-		public void run() {
-			// long t = System.currentTimeMillis();
-			// long end = t + 60 * 1000;
-			//
-			// MinecraftServer ass = new MinecraftServer("73.231.149.126", 25565);
-			// while (System.currentTimeMillis() < end) {
-			// message.editMessage(message.getContentRaw() + "..").queue();
-			// try {
-			// ass.fetchData();
-			// message.editMessage("```Server is Online```").queue();
-			// start = true;
-			// return;
-			// } catch (IOException e) {
-			// System.err.println(e.getLocalizedMessage());
-			// }
-			// }
-			//
-			// message.getChannel().sendMessage("Server couldn't start. Timeout").queue();
-		}
-	}
-	
 }

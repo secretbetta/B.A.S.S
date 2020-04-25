@@ -21,6 +21,7 @@ import com.secretbetta.BASS.debug.TestCommand;
 import com.secretbetta.BASS.tictactoe.TicTacToeEvent;
 import com.secretbetta.BASS.utlities.HelpCommand;
 import com.secretbetta.BASS.utlities.PinnerCommand;
+import com.secretbetta.BASS.utlities.TimerCommand;
 import com.secretbetta.BASS.xkcd.XKCDCommand;
 
 import net.dv8tion.jda.api.AccountType;
@@ -75,7 +76,8 @@ public class Main {
 				new StartServerCommand(),
 				new ListVersionsCommand(),
 				new HelpCommand(),
-				new TetrisShowcase());
+				new TetrisShowcase(),
+				new TimerCommand());
 			
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
 			api.addEventListener(new MyEventListener()); // Main Events
