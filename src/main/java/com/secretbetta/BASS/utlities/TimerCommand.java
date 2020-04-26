@@ -22,7 +22,7 @@ public class TimerCommand extends Command {
 		super.name = "timer";
 		super.help = "Makes a timer in seconds, minutes, or hours. Message must be surrounded by Quotes";
 		super.arguments = "-h <hours> -m <minutes> -s <seconds> -msg \"<Message>\"";
-		super.cooldown = 30;
+		// super.cooldown = 30;
 	}
 	
 	@Override
@@ -36,7 +36,14 @@ public class TimerCommand extends Command {
 			return;
 		}
 		
-		ArgumentMap args = new ArgumentMap(event.getArgs().toLowerCase().split(" "));
+		if (event.getArgs().isEmpty()) {
+			event.reply("No args given.");
+			event.reply("Usage: ~~timer " + super.arguments);
+			return;
+		}
+		
+		ArgumentMap args = new ArgumentMap(event.getArgs().toLowerCase()
+			.split("\\s(?=(?:[^'\"`]*(['\"`])[^'\"`]*\\1)*[^'\"`]*$)"));
 		
 		int seconds = args.getInt("-s", 0);
 		int minutes = args.getInt("-m", 0);
