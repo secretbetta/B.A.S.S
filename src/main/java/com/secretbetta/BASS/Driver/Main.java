@@ -23,6 +23,7 @@ import com.secretbetta.BASS.utilities.HelpCommand;
 import com.secretbetta.BASS.utilities.PinnerCommand;
 import com.secretbetta.BASS.utilities.TimerCommand;
 import com.secretbetta.BASS.xkcd.XKCDCommand;
+import com.secretbetta.BASS.yahtzeeGame.YahtzeeEvent;
 
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
