@@ -1,7 +1,6 @@
-package com.secretbetta.BASS.Driver;
+package com.secretbetta.BASS.utilities;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -18,7 +17,7 @@ public class MsgEvent extends ListenerAdapter {
 	public void onMessageReceived(MessageReceivedEvent event) {
 		// TODO Auto-generated method stub
 		super.onMessageReceived(event);
-		PrivateChannel chnl = event.getAuthor().openPrivateChannel().complete();
+		// PrivateChannel chnl = event.getAuthor().openPrivateChannel().complete();
 		
 	}
 }

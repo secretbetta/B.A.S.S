@@ -1,4 +1,4 @@
-package com.secretbetta.BASS.utlities;
+package com.secretbetta.BASS.utilities;
 
 import java.util.ArrayList;
 
@@ -22,7 +22,7 @@ public class TimerCommand extends Command {
 		super.name = "timer";
 		super.help = "Makes a timer in seconds, minutes, or hours. Message must be surrounded by Quotes";
 		super.arguments = "-h <hours> -m <minutes> -s <seconds> -msg \"<Message>\"";
-		// super.cooldown = 30;
+		super.cooldown = 5;
 	}
 	
 	@Override

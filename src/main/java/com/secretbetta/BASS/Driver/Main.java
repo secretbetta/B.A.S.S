@@ -19,9 +19,9 @@ import com.secretbetta.BASS.debug.IDCommand;
 import com.secretbetta.BASS.debug.SuggestionsCommand;
 import com.secretbetta.BASS.debug.TestCommand;
 import com.secretbetta.BASS.tictactoe.TicTacToeEvent;
-import com.secretbetta.BASS.utlities.HelpCommand;
-import com.secretbetta.BASS.utlities.PinnerCommand;
-import com.secretbetta.BASS.utlities.TimerCommand;
+import com.secretbetta.BASS.utilities.HelpCommand;
+import com.secretbetta.BASS.utilities.PinnerCommand;
+import com.secretbetta.BASS.utilities.TimerCommand;
 import com.secretbetta.BASS.xkcd.XKCDCommand;
 
 import net.dv8tion.jda.api.AccountType;

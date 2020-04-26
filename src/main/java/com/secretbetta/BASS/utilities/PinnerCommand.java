@@ -1,4 +1,4 @@
-package com.secretbetta.BASS.utlities;
+package com.secretbetta.BASS.utilities;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;

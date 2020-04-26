@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.secretbetta.BASS.utlities.WebCrawler;
+import com.secretbetta.BASS.utilities.WebCrawler;
 
 /**
  * XKCD comic crawler

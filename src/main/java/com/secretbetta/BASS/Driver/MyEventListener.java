@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 
-import com.secretbetta.BASS.utlities.WebCrawler;
+import com.secretbetta.BASS.utilities.WebCrawler;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
