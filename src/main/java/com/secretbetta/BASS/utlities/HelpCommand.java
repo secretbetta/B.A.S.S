@@ -60,6 +60,9 @@ public class HelpCommand extends Command {
 			.addField("~~suggestion [Command]", "Command suggestion for Andrew to make", false)
 			.addField("~~bug", "Reports a bug to Andrew", false)
 			.addField("~~ping", "Pong!", false)
+			.addField("~~timer",
+				new TimerCommand().getHelp() + "\nUsage:" + new TimerCommand().getArguments(),
+				false)
 			.addField("~~xkcd", "Gets a random comic from XKCD", false)
 			.addField("~~run [Minecraft Version]", "Starts Minecraft Server", true)
 			.addField("~~mcversions", "Gets all possible minecraft versions", true)
