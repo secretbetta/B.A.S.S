@@ -21,6 +21,9 @@ public class StartServerCommand extends Command {
 	private final String mainDir = "D:\\Games\\Minecraft\\Minecraft Servers\\";
 	private final String version = "1.15.2 Spigot";
 	
+	/* Time to check server status. At least 1 minute recommended */
+	private final double minutes = 1.5;
+	
 	private boolean start;
 	private ProcessBuilder process;
 	
@@ -121,7 +124,7 @@ public class StartServerCommand extends Command {
 		@Override
 		public void run() {
 			long t = System.currentTimeMillis();
-			long end = t + 60 * 1000;
+			double end = t + minutes * 60 * 1000;
 			
 			MinecraftServer ass = new MinecraftServer("73.231.149.126", 25565);
 			while (System.currentTimeMillis() < end) {
