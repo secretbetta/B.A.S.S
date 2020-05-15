@@ -14,7 +14,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 public class EpicGamesCommand extends Command {
 	
 	public EpicGamesCommand() {
-		super.name = "epgames";
+		super.name = "eg";
 		super.help = "Lists the current free game provided by Epic Games";
 	}
 	
