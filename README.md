@@ -1,16 +1,17 @@
 # B.A.S.S (Bot of Anti Secret Squad)
-@author Secretbetta
+Author: Secretbetta (Andrew Nguyen)
 
-## Summary
+## About this Project
+This is a personal Discord bot for my Discord Server with friends. This is not for public use but just a 
 
+### What is a Discord Bot
+Discord is a messaging service for games. And a Discord Bot is basically just a messaging bot that exists only in Discord Servers. Its uses can range from anything to being useful to the members of the server or a joke bot for the users.
 
-Command Line Args:
-javac Main.java
-java Main <Discord bot Token>
-
-Dependencies: 
+### Libraries 
 Gradle v.5.6.2
-JDA 4.0.0_39
+JDA 4.0.0_62
+JDA-Utils 3.0.2
+Google API 1.30.4
 
 Command List:
 "~~help", "All possible commands"
