@@ -18,6 +18,7 @@ import com.secretbetta.BASS.debug.FunFactCommand;
 import com.secretbetta.BASS.debug.IDCommand;
 import com.secretbetta.BASS.debug.SuggestionsCommand;
 import com.secretbetta.BASS.debug.TestCommand;
+import com.secretbetta.BASS.epicgames.EpicGamesCommand;
 import com.secretbetta.BASS.tictactoe.TicTacToeEvent;
 import com.secretbetta.BASS.utilities.HelpCommand;
 import com.secretbetta.BASS.utilities.PinnerCommand;
@@ -79,7 +80,8 @@ public class Main {
 				new HelpCommand(),
 				new TetrisShowcase(),
 				new TimerCommand(),
-				new trollJustine());
+				new trollJustine(),
+				new EpicGamesCommand());
 			
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
 			api.addEventListener(new MyEventListener()); // Main Events
