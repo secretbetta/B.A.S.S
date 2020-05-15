@@ -2,7 +2,7 @@
 Author: Secretbetta (Andrew Nguyen)
 
 ## About this Project
-This is a personal Discord bot for my Discord Server with friends. This is not for public use but just a 
+This is a personal Discord bot for my Discord Server with friends. This is not for public use but just a thing to put on my resume and have fun with friends :)
 
 ### What is a Discord Bot
 Discord is a messaging service for games. And a Discord Bot is basically just a messaging bot that exists only in Discord Servers. Its uses can range from anything to being useful to the members of the server or a joke bot for the users.
@@ -15,7 +15,7 @@ Google API 1.30.4
 
 Command List:
 "~~help", "All possible commands"
-"~~leaderboard.show <Player 1> <Player 2>", "Shows leaderboard. Player flags are optional to print scores between two people"
+"~~leaderboard.show [<Player 1> <Player 2>]", "Shows leaderboard. Player flags are optional to print scores between two people"
 "~~id", "Gets unique user ID"
 "~~hello", "world"
 "~~test", "Gets bot's ping"
