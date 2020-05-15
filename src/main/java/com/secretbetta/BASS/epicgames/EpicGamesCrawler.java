@@ -7,6 +7,13 @@ import java.util.regex.Pattern;
 
 import com.secretbetta.BASS.utilities.WebCrawler;
 
+/**
+ * <h1>HTML crawler to find latest game</h1>
+ * Crawls html at <a href="https://www.pcgamer.com/epic-games-store-free-games-list/">PCGamer</a>
+ * site and fetches latest game from the list.
+ * 
+ * @author Secretbeta
+ */
 public class EpicGamesCrawler {
 	
 	private String html;
@@ -22,14 +29,11 @@ public class EpicGamesCrawler {
 	}
 	
 	/**
-	 * Fetches
+	 * Gets the latest game using a specific regex. Might break;
 	 * 
-	 * @param url URL of Website
+	 * @return null if could not find any matching regex, returns the latest game and date if it
+	 *         exists
 	 */
-	public EpicGamesCrawler(URL url) {
-		this.html = WebCrawler.fetchHTML(url);
-	}
-	
 	public String latestGame() {
 		String regex = "(?is)<strong>(.*?)</strong>(.*?)</a>";
 		Pattern pattern = Pattern.compile(regex);

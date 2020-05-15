@@ -5,6 +5,12 @@ import java.net.MalformedURLException;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+/**
+ * <h1>Epic Games latest free game command</h1>
+ * Command to get the latest free game that Epic Games is currenttly offering
+ * 
+ * @author Secretbeta
+ */
 public class EpicGamesCommand extends Command {
 	
 	public EpicGamesCommand() {
