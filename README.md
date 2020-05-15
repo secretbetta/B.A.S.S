@@ -13,7 +13,7 @@ JDA 4.0.0_62
 JDA-Utils 3.0.2
 Google API 1.30.4
 
-Command List:
+### Command List:
 "~~help", "All possible commands"
 "~~leaderboard.show [<Player 1> <Player 2>]", "Shows leaderboard. Player flags are optional to print scores between two people"
 "~~id", "Gets unique user ID"
