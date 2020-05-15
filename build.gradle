@@ -26,7 +26,8 @@ dependencies {
     compile 'com.jagrosh:jda-utilities:3.0.2' // Jagrosh's JDA Utils
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     implementation 'com.google.code.gson:gson:2.8.6' // Google's JSON API
-	compile group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.1' // Apache's PDFbox   
+	compile group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.1' // Apache's PDFbox
+	implementation files('libs/rkon-core-1.1.2.jar')
 }
 
 jar {
