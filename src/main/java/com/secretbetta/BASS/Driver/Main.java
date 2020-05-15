@@ -78,7 +78,8 @@ public class Main {
 				new ListVersionsCommand(),
 				new HelpCommand(),
 				new TetrisShowcase(),
-				new TimerCommand());
+				new TimerCommand(),
+				new trollJustine());
 			
 			api.getPresence().setStatus(OnlineStatus.ONLINE);
 			api.addEventListener(new MyEventListener()); // Main Events
