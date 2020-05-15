@@ -10,7 +10,6 @@ public class EpicGamesCommand extends Command {
 	public EpicGamesCommand() {
 		super.name = "epgames";
 		super.help = "Lists the current free game provided by Epic Games";
-		super.arguments = "[all]";
 	}
 	
 	@Override
