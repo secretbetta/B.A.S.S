@@ -57,7 +57,7 @@ public class HelpCommand extends Command {
 			.addField("~~hello", "world", false)
 			.addField("~~mquote", "Sends random movie quote", false)
 			.addField("~~test", "Test command, differs from time to time", false)
-			.addField("~~suggestion [Command]", "Command suggestion for Andrew to make", false)
+			.addField("~~suggestion <feature>", "Feature suggestion for Andrew to make", false)
 			.addField("~~bug", "Reports a bug to Andrew", false)
 			.addField("~~ping", "Pong!", false)
 			.addField("~~timer",
