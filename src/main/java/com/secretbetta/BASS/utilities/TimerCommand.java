@@ -1,5 +1,6 @@
 package com.secretbetta.BASS.utilities;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 import com.jagrosh.jdautilities.command.Command;
@@ -45,9 +46,9 @@ public class TimerCommand extends Command {
 		ArgumentMap args = new ArgumentMap(event.getArgs().toLowerCase()
 			.split("\\s(?=(?:[^'\"`]*(['\"`])[^'\"`]*\\1)*[^'\"`]*$)"));
 		
-		int seconds = args.getInt("-s", 0);
-		int minutes = args.getInt("-m", 0);
-		int hours = args.getInt("-h", 0);
+		BigInteger seconds = args.getBigInt("-s", new BigInteger("0"));
+		BigInteger minutes = args.getBigInt("-m", new BigInteger("0"));
+		BigInteger hours = args.getBigInt("-h", new BigInteger("0"));
 		String msg = args.getString("-msg", "");
 		this.users.add(event.getAuthor().getAsMention());
 		
@@ -67,8 +68,9 @@ public class TimerCommand extends Command {
 	 * @param minutes Number of minutes
 	 * @param seconds Number of seconds
 	 */
-	public void timer(MessageChannel chnl, String mention, String msg, int hours, int minutes,
-		int seconds) {
+	public void timer(MessageChannel chnl, String mention, String msg, BigInteger hours,
+		BigInteger minutes,
+		BigInteger seconds) {
 		new java.util.Timer().schedule(
 			new java.util.TimerTask() {
 				
@@ -78,6 +80,7 @@ public class TimerCommand extends Command {
 					users.remove(mention);
 				}
 			},
-			hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000);
+			hours.longValue() * 60 * 60 * 1000 + minutes.longValue() * 60 * 1000
+				+ seconds.longValue() * 1000);
 	}
 }
