@@ -1,5 +1,6 @@
 package com.secretbetta.BASS.utilities;
 
+import java.math.BigInteger;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -205,6 +206,58 @@ public class ArgumentMap {
 	 */
 	public int getInt(String flag, int defaultValue) throws NumberFormatException {
 		return (map.get(flag) != null) ? Integer.parseInt(map.get(flag).toString()) : defaultValue;
+	}
+	
+	/**
+	 * Returns the value to which the specified flag is mapped as a
+	 * {@link long}, or -1 if there is no mapping for the flag.
+	 *
+	 * @param flag the flag whose associated value is to be returned
+	 * @return the value to which the specified flag is mapped, -1 if there is no mapping for the
+	 *         flag
+	 */
+	public long getLong(String flag) throws NumberFormatException {
+		return this.getLong(flag, -1);
+	}
+	
+	/**
+	 * Returns the value to which the specified flag is mapped as a
+	 * {@link long}, or the default value if there is no mapping for the flag.
+	 *
+	 * @param flag         the flag whose associated value is to be returned
+	 * @param defaultValue the default value to return if there is no mapping for
+	 *                     the flag
+	 * @return the value to which the specified flag is mapped, or the default
+	 *         value if there is no mapping for the flag
+	 */
+	public long getLong(String flag, long defaultValue) throws NumberFormatException {
+		return (map.get(flag) != null) ? Long.parseLong(map.get(flag).toString()) : defaultValue;
+	}
+	
+	/**
+	 * Returns the value to which the specified flag is mapped as a
+	 * {@link BigInteger}, or -1 if there is no mapping for the flag.
+	 *
+	 * @param flag the flag whose associated value is to be returned
+	 * @return the value to which the specified flag is mapped, -1 if there is no mapping for the
+	 *         flag
+	 */
+	public BigInteger getBigInt(String flag) throws NumberFormatException {
+		return this.getBigInt(flag, new BigInteger("-1"));
+	}
+	
+	/**
+	 * Returns the value to which the specified flag is mapped as a
+	 * {@link BigInteger}, or the default value if there is no mapping for the flag.
+	 *
+	 * @param flag         the flag whose associated value is to be returned
+	 * @param defaultValue the default value to return if there is no mapping for
+	 *                     the flag
+	 * @return the value to which the specified flag is mapped, or the default
+	 *         value if there is no mapping for the flag
+	 */
+	public BigInteger getBigInt(String flag, BigInteger defaultValue) throws NumberFormatException {
+		return (map.get(flag) != null) ? new BigInteger(map.get(flag).toString()) : defaultValue;
 	}
 	
 	@Override
