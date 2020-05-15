@@ -1,5 +1,7 @@
 # Ignore Gradle project-specific cache directory
 .gradle
-
+suggestions.txt
+bugs.txt
+tempfile.txt
 # Ignore Gradle build output directory
 build
