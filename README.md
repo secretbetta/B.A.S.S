@@ -1,7 +1,7 @@
 # B.A.S.S (Bot of Anti Secret Squad)
 Author: Secretbetta (Andrew Nguyen)
 
-## About this Project
+### About this Project
 This is a personal Discord bot for my Discord Server with friends. This is not for public use but just a thing to put on my resume and have fun with friends :)
 
 ### What is a Discord Bot
