@@ -17,6 +17,7 @@ public class EpicGamesCommand extends Command {
 		super.name = "eg";
 		super.aliases = new String[] { "epgames", "egames", "epicgames" };
 		super.help = "Lists the current free game provided by Epic Games";
+		super.cooldown = 60;
 	}
 	
 	@Override
