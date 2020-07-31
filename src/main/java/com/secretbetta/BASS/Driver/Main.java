@@ -22,15 +22,14 @@ import com.secretbetta.BASS.epicgames.EpicGamesCommand;
 import com.secretbetta.BASS.tictactoe.TicTacToeEvent;
 import com.secretbetta.BASS.utilities.HelpCommand;
 import com.secretbetta.BASS.utilities.PinnerCommand;
+import com.secretbetta.BASS.utilities.ProfanityFilterEvent;
 import com.secretbetta.BASS.utilities.TimerCommand;
 import com.secretbetta.BASS.xkcd.XKCDCommand;
 import com.secretbetta.BASS.yahtzeeGame.YahtzeeEvent;
 
-import net.dv8tion.jda.api.AccountType;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
 
 /**
  * Discord Bot Driver
@@ -49,10 +48,16 @@ public class Main {
 			EventWaiter waiter = new EventWaiter();
 			
 			CommandClientBuilder client = new CommandClientBuilder();
-			JDA api = new JDABuilder(AccountType.BOT)
+			// new DefaultShardManager(token)
+			ShardManager api2 = new DefaultShardManagerBuilder()
 				.setToken(args[0])
 				.setActivity(Activity.playing("try ~~help"))
+				.setShardsTotal(2)
 				.build();
+			// JDA api = new JDABuilder(AccountType.BOT)
+			// .setToken(args[0])
+			// .setActivity(Activity.playing("try ~~help"))
+			// .build();
 			
 			client.setPrefix("~~");
 			client.setAlternativePrefix("b/");
@@ -74,7 +79,7 @@ public class Main {
 				new TestCommand(),
 				new BugReportCommand(),
 				new PuppyCommand(),
-				new PinnerCommand(api),
+				new PinnerCommand(api2.getShards()),
 				new StartServerCommand(),
 				new ListVersionsCommand(),
 				new HelpCommand(),
@@ -83,17 +88,20 @@ public class Main {
 				new trollJustine(),
 				new EpicGamesCommand());
 			
-			api.getPresence().setStatus(OnlineStatus.ONLINE);
-			api.addEventListener(new MyEventListener()); // Main Events
-			api.addEventListener(new TicTacToeEvent()); // Tic Tac Toe
-			api.addEventListener(new RockPaperScissorsEvent()); // Rock Paper Scissors
-			api.addEventListener(new YahtzeeEvent()); // Yahtzee
-			api.addEventListener(new BlackjackEvent());
-			api.addEventListener(new PokerEvent());
-			api.addEventListener(new ConsoleEvent());
-			api.addEventListener(waiter, client.build());
-			// api.addEventListener(new TestEvent()); // Testing Events
-			api.addEventListener(new EmotesEvent()); // Emotes Testing Event
+			// api2.getPresence().setStatus(OnlineStatus.ONLINE);
+			// api2.get
+			api2.addEventListener(new MyEventListener(), // Main Events TODO Remove and deprecate
+				new TicTacToeEvent(), // Tic Tac Toe Event
+				new RockPaperScissorsEvent(), // Rock Paper Scissors Event
+				new YahtzeeEvent(), // Yahtzee Event
+				new BlackjackEvent(), // Blackjack Event
+				new PokerEvent(), // Poker Event
+				new ConsoleEvent(), // Minecraft Console
+				new TestEvent(),
+				new ProfanityFilterEvent(), // Profanity filter
+				waiter, client.build()); // Other Commands
+			// api2.addEventListener(new TestEvent()); // Testing Events
+			api2.addEventListener(new EmotesEvent()); // Emotes Testing Event
 		} catch (Exception e) {
 			System.err.println(e.getLocalizedMessage());
 			e.printStackTrace();

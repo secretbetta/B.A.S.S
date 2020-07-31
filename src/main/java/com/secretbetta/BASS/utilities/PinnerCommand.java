@@ -31,12 +31,18 @@ public class PinnerCommand extends Command {
 	private String channelID = "655686387995246623"; // the-only-kids-weve-ever-wanted
 	private JDA api;
 	
-	public PinnerCommand(JDA api) {
+	public PinnerCommand(List<JDA> list) {
 		this.name = "pin";
 		this.help = "Pins messages to pinned channel";
 		this.cooldown = 10;
 		this.hidden = true;
-		this.api = api;
+		for (JDA server : list) {
+			if (server.getGuildById("583562618044678165") != null) {
+				this.api = server;
+				break;
+			}
+		}
+		// this.api = list.get(0).;
 	}
 	
 	/**
@@ -50,7 +56,8 @@ public class PinnerCommand extends Command {
 	 * @param image   URL of image if there is an image
 	 * @return Embedded Message builder
 	 */
-	public EmbedBuilder message(String content, String url, OffsetDateTime time, String author, String channel,
+	public EmbedBuilder message(String content, String url, OffsetDateTime time, String author,
+		String channel,
 		String image) {
 		EmbedBuilder msg = new EmbedBuilder();
 		msg.setTitle(content, url);
@@ -98,12 +105,14 @@ public class PinnerCommand extends Command {
 		if (images.size() >= 1) { // Image available
 			pin = this
 				.message(images.get(0).getFileName(), event.getArgs(),
-					hist.getTimeCreated(), message.getAuthor().getName(), message.getChannel().getName(),
+					hist.getTimeCreated(), message.getAuthor().getName(),
+					message.getChannel().getName(),
 					images.get(0).getUrl());
 		} else { // No image
 			pin = this
 				.message(message.getContentDisplay(), event.getArgs(),
-					hist.getTimeCreated(), message.getAuthor().getName(), message.getChannel().getName(), "null");
+					hist.getTimeCreated(), message.getAuthor().getName(),
+					message.getChannel().getName(), "null");
 		}
 		
 		pinned.sendMessage(pin.build()).queue();

@@ -41,7 +41,8 @@ public class EpicGamesCrawler {
 		if (this.html != null) {
 			Matcher matcher = pattern.matcher(this.html);
 			if (matcher.find()) {
-				return matcher.group(0).replaceAll("<.*?>", "");
+				System.out.println(matcher.group(1).replace("<.*?>", ""));
+				return matcher.group(1).replaceAll("<.*?>", "");
 			}
 		}
 		return null;

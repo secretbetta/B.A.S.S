@@ -10,7 +10,8 @@ public class EmotesEvent extends ListenerAdapter {
 		// TODO Auto-generated method stub
 		// super.onGuildMessageReactionAdd(event);
 		System.out.println(event.getReactionEmote().getName());
-		System.out.println(event.getReactionEmote().getEmoji());
+		System.out.println(event.getReactionEmote().getId());
+		// System.out.println(event.getReactionEmote().getEmoji());
 		System.out.println(event.getReactionEmote().getAsCodepoints());
 	}
 }
