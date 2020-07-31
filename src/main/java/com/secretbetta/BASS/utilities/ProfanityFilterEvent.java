@@ -13,6 +13,9 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
+ * Profanity filter. Filters all profanity listed in PronfanityList.txt. Uses a hashmap to replace
+ * key (curse) with value (replacement)
+ * 
  * @author Secretbeta
  */
 public class ProfanityFilterEvent extends ListenerAdapter {
