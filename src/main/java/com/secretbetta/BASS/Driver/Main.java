@@ -11,6 +11,8 @@ import com.secretbetta.BASS.Minecraft.ServerInfoCommand;
 import com.secretbetta.BASS.Minecraft.StartServerCommand;
 import com.secretbetta.BASS.Poker.PokerEvent;
 import com.secretbetta.BASS.Tetris.TetrisShowcase;
+import com.secretbetta.BASS.Translation.LanguageListCommand;
+import com.secretbetta.BASS.Translation.TranslationEvent;
 import com.secretbetta.BASS.blackjack.BlackjackEvent;
 import com.secretbetta.BASS.debug.AdminTestCommand;
 import com.secretbetta.BASS.debug.BugReportCommand;
@@ -22,14 +24,13 @@ import com.secretbetta.BASS.epicgames.EpicGamesCommand;
 import com.secretbetta.BASS.tictactoe.TicTacToeEvent;
 import com.secretbetta.BASS.utilities.HelpCommand;
 import com.secretbetta.BASS.utilities.PinnerCommand;
-import com.secretbetta.BASS.utilities.ProfanityFilterEvent;
 import com.secretbetta.BASS.utilities.TimerCommand;
 import com.secretbetta.BASS.xkcd.XKCDCommand;
 import com.secretbetta.BASS.yahtzeeGame.YahtzeeEvent;
 
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
-import net.dv8tion.jda.api.sharding.ShardManager;
 
 /**
  * Discord Bot Driver
@@ -48,19 +49,11 @@ public class Main {
 			EventWaiter waiter = new EventWaiter();
 			
 			CommandClientBuilder client = new CommandClientBuilder();
-			// new DefaultShardManager(token)
-			ShardManager api2 = new DefaultShardManagerBuilder()
-				.setToken(args[0])
-				.setActivity(Activity.playing("try ~~help"))
-				.setShardsTotal(2)
-				.build();
-			// JDA api = new JDABuilder(AccountType.BOT)
-			// .setToken(args[0])
-			// .setActivity(Activity.playing("try ~~help"))
-			// .build();
+			JDA api = JDABuilder.createDefault(args[0]).build();
 			
 			client.setPrefix("~~");
 			client.setAlternativePrefix("b/");
+			client.setActivity(Activity.playing("I'm secretbetta's bot :woke:"));
 			
 			client.setEmojis("✔", "⚠", "❌");
 			client.setOwnerId("268511458801745921");
@@ -79,18 +72,19 @@ public class Main {
 				new TestCommand(),
 				new BugReportCommand(),
 				new PuppyCommand(),
-				new PinnerCommand(api2.getShards()),
+				new PinnerCommand(),
 				new StartServerCommand(),
 				new ListVersionsCommand(),
 				new HelpCommand(),
 				new TetrisShowcase(),
 				new TimerCommand(),
 				new trollJustine(),
-				new EpicGamesCommand());
+				new EpicGamesCommand(),
+				new LanguageListCommand());
 			
 			// api2.getPresence().setStatus(OnlineStatus.ONLINE);
 			// api2.get
-			api2.addEventListener(new MyEventListener(), // Main Events TODO Remove and deprecate
+			api.addEventListener(new MyEventListener(), // Main Events TODO Remove and deprecate
 				new TicTacToeEvent(), // Tic Tac Toe Event
 				new RockPaperScissorsEvent(), // Rock Paper Scissors Event
 				new YahtzeeEvent(), // Yahtzee Event
@@ -98,10 +92,11 @@ public class Main {
 				new PokerEvent(), // Poker Event
 				new ConsoleEvent(), // Minecraft Console
 				new TestEvent(),
-				new ProfanityFilterEvent(), // Profanity filter
+				new TranslationEvent(),
+				// new ProfanityFilterEvent(), // Profanity filter
 				waiter, client.build()); // Other Commands
 			// api2.addEventListener(new TestEvent()); // Testing Events
-			api2.addEventListener(new EmotesEvent()); // Emotes Testing Event
+			api.addEventListener(new EmotesEvent()); // Emotes Testing Event
 		} catch (Exception e) {
 			System.err.println(e.getLocalizedMessage());
 			e.printStackTrace();
