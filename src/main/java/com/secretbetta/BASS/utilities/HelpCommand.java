@@ -56,6 +56,7 @@ public class HelpCommand extends Command {
 			.addField("~~id", "Gets unique user ID", false)
 			.addField("~~hello", "world", false)
 			.addField("~~eg", "Gets the most recent free game from Epic Games", false)
+			.addField("~~lang", "Gets all languages available for translation", false)
 			.addField("~~mquote", "Sends random movie quote", false)
 			.addField("~~test", "Test command, differs from time to time", false)
 			.addField("~~suggestion <feature>", "Feature suggestion for Andrew to make", false)
