@@ -31,18 +31,11 @@ public class PinnerCommand extends Command {
 	private String channelID = "655686387995246623"; // the-only-kids-weve-ever-wanted
 	private JDA api;
 	
-	public PinnerCommand(List<JDA> list) {
+	public PinnerCommand() {
 		this.name = "pin";
 		this.help = "Pins messages to pinned channel";
 		this.cooldown = 10;
 		this.hidden = true;
-		for (JDA server : list) {
-			if (server.getGuildById("583562618044678165") != null) {
-				this.api = server;
-				break;
-			}
-		}
-		// this.api = list.get(0).;
 	}
 	
 	/**
