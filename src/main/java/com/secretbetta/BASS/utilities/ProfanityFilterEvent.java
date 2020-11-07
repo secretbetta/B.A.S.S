@@ -58,7 +58,7 @@ public class ProfanityFilterEvent extends ListenerAdapter {
 			for (String profword : wordlist.keySet()) {
 				if (word.toLowerCase().contains(profword)) {
 					prof = true;
-					newmsg = newmsg.replaceAll(profword,
+					newmsg = newmsg.replaceAll("(?i)" + profword,
 						wordlist.get(profword));
 				}
 			}
