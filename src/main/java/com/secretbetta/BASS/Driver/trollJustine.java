@@ -3,6 +3,14 @@ package com.secretbetta.BASS.Driver;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+/**
+ * This is so broken, but its format works:
+ * ~~troll <num> "<string>"
+ * Output:
+ * Prints <string> <num> times
+ * 
+ * @author Secretbeta
+ */
 public class trollJustine extends Command {
 	
 	public trollJustine() {
