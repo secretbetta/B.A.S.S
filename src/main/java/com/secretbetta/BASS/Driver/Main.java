@@ -27,6 +27,7 @@ import com.secretbetta.BASS.utilities.PinnerCommand;
 import com.secretbetta.BASS.utilities.TimerCommand;
 import com.secretbetta.BASS.xkcd.XKCDCommand;
 import com.secretbetta.BASS.yahtzeeGame.YahtzeeEvent;
+import com.secretbetta.PrivateVC.PrivateVCEvent;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -75,12 +76,15 @@ public class Main {
 				new PinnerCommand(),
 				new StartServerCommand(),
 				new ListVersionsCommand(),
+				new repeatCommand(),
 				new HelpCommand(),
 				new TetrisShowcase(),
 				new TimerCommand(),
 				new trollJustine(),
 				new EpicGamesCommand(),
-				new LanguageListCommand());
+				new LanguageListCommand(),
+				new PrivateVCEvent().new PrivateVCAdd(),
+				new PrivateVCEvent().new PrivateVCChangeHost());
 			
 			// api2.getPresence().setStatus(OnlineStatus.ONLINE);
 			// api2.get
@@ -93,10 +97,11 @@ public class Main {
 				new ConsoleEvent(), // Minecraft Console
 				new TestEvent(),
 				new TranslationEvent(),
+				new PrivateVCEvent(),
 				// new ProfanityFilterEvent(), // Profanity filter
 				waiter, client.build()); // Other Commands
 			// api2.addEventListener(new TestEvent()); // Testing Events
-			api.addEventListener(new EmotesEvent()); // Emotes Testing Event
+			// api.addEventListener(new EmotesEvent()); // Emotes Testing Event
 		} catch (Exception e) {
 			System.err.println(e.getLocalizedMessage());
 			e.printStackTrace();
