@@ -103,13 +103,15 @@ public class BlackjackEvent extends ListenerAdapter {
 		if (content.startsWith("~~blackjack") && !this.game) {
 			this.chnl = channel;
 			// Checks if multiplayer
-			if (message.getMentionedMembers().size() > 0 && message.getMentionedMembers().size() <= 8) {
+			if (message.getMentionedMembers().size() > 0
+				&& message.getMentionedMembers().size() <= 8) {
 				List<User> players = new ArrayList<>();
 				players.add(message.getAuthor());
 				players.addAll(message.getMentionedUsers());
 				this.newGame(players.size(), players);
-				this.chnl.sendMessage("Welcome to BlackJack! You have 5 minutes to finish the game.\n"
-					+ "The players are:\n")
+				this.chnl
+					.sendMessage("Welcome to BlackJack! You have 5 minutes to finish the game.\n"
+						+ "The players are:\n")
 					.queue();
 				int p = 0;
 				
@@ -167,7 +169,10 @@ public class BlackjackEvent extends ListenerAdapter {
 			 */
 			for (int p = 0; p < this.players.size(); p++) {
 				if (this.sums[p] != -1) {
-					this.chnl.sendMessage(String.format("%s's Hand: ", this.players.get(p).getAsMention())).queue();
+					this.chnl
+						.sendMessage(
+							String.format("%s's Hand: ", this.players.get(p).getAsMention()))
+						.queue();
 					String cards = "";
 					for (String card : this.blackjack.getHand(p)) {
 						cards += card + " ";
@@ -181,6 +186,9 @@ public class BlackjackEvent extends ListenerAdapter {
 	
 	@Override
 	public void onPrivateMessageReceived(@Nonnull PrivateMessageReceivedEvent event) {
+		if (event.getAuthor().isBot()) {
+			return;
+		}
 		this.privatemsg.add(event.getMessage());
 		if (event.getAuthor().isBot()) {
 			if (event.getMessage().getEmbeds().size() > 0) {
@@ -205,7 +213,8 @@ public class BlackjackEvent extends ListenerAdapter {
 			 */
 			if (choice.getAsCodepoints().equals("U+31U+20e3")) { // Deal more
 				for (int x = 0; x < this.players.size(); x++) {
-					if (!this.stays[x] && this.players.get(x).getId().equals(event.getUser().getId())) {
+					if (!this.stays[x]
+						&& this.players.get(x).getId().equals(event.getUser().getId())) {
 						this.blackjack.deal(1, x);
 						this.sums[x] = this.blackjack.addCards(x);
 						
@@ -227,7 +236,9 @@ public class BlackjackEvent extends ListenerAdapter {
 						}
 						this.privatemsg.get(x).editMessage(emb.build()).queue();
 						this.stays[x] = true;
-						this.chnl.sendMessage(String.format("%s is ready.", event.getUser().getAsMention()))
+						this.chnl
+							.sendMessage(
+								String.format("%s is ready.", event.getUser().getAsMention()))
 							.queue();
 						return;
 					}
@@ -235,7 +246,9 @@ public class BlackjackEvent extends ListenerAdapter {
 			} else if (choice.getAsCodepoints().equals("U+32U+20e3")) { // Stay
 				if (this.players.contains(event.getUser())) {
 					this.stays[this.players.indexOf(event.getUser())] = true;
-					this.chnl.sendMessage(String.format("%s is ready.", event.getUser().getAsMention())).queue();
+					this.chnl
+						.sendMessage(String.format("%s is ready.", event.getUser().getAsMention()))
+						.queue();
 				}
 			}
 			
