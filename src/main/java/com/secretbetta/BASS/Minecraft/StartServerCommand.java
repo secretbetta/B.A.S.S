@@ -19,7 +19,7 @@ public class StartServerCommand extends Command {
 	
 	/* Directory of Servers and default version */
 	private final String mainDir = "D:\\Games\\Minecraft\\Minecraft Servers\\";
-	private final String version = "1.15.2 Spigot";
+	private final String version = "Latest Version";
 	
 	/* Time to check server status. At least 1 minute recommended */
 	private final double minutes = 1.5;
@@ -54,7 +54,7 @@ public class StartServerCommand extends Command {
 		if (event.getAuthor().isBot()) {
 			return;
 		} else if (start) {
-			MinecraftServer ass = new MinecraftServer("73.231.149.126", 25565);
+			MinecraftServer ass = new MinecraftServer("107.3.129.6", 25565);
 			try {
 				ass.fetchData();
 				event.reply("Server is already running!");
@@ -126,7 +126,7 @@ public class StartServerCommand extends Command {
 			long t = System.currentTimeMillis();
 			double end = t + minutes * 60 * 1000;
 			
-			MinecraftServer ass = new MinecraftServer("73.231.149.126", 25565);
+			MinecraftServer ass = new MinecraftServer("107.3.129.6", 25565);
 			while (System.currentTimeMillis() < end) {
 				message.editMessage(message.getContentRaw() + "..").queue();
 				try {

@@ -21,7 +21,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
  */
 public class ServerInfoCommand extends Command {
 	
-	private String defAddress = "73.231.149.126";
+	private String defAddress = "107.3.129.6";
 	private int defport = 25565;
 	
 	public ServerInfoCommand() {
@@ -60,9 +60,9 @@ public class ServerInfoCommand extends Command {
 			
 			EmbedBuilder info = new EmbedBuilder();
 			info.setColor(Color.BLUE);
-			info.setTitle("A.S.S Minecraft Server");
-			info.setDescription("Dedicated Minecraft Server for A.S.S");
-			info.addField("Name", "A.S.S Server", false);
+			info.setTitle("Secretbetta's Minecraft Server");
+			info.setDescription("Hosted by Secretbetta's PC");
+			info.addField("Name", "MC Server", false);
 			info.addField("MOTD",
 				serverInfo.getDescription().getText().replaceAll(".|[^\\w ']", "").trim(), false);
 			info.addField("IP", ip + ((port == 25575) ? "" : port), false);

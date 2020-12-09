@@ -84,7 +84,7 @@ public class TestEvent extends ListenerAdapter {
 		// channel.sendMessage(game.getScoresheet().build()).queue();
 		// }
 		
-		if (message.getEmbeds().size() > 0
+		if (message.getEmbeds().size() > 0 && message.getEmbeds().get(0).getTitle() != null
 			&& message.getEmbeds().get(0).getTitle().toString().equals("Scoresheet")) {
 			String msgId = message.getId();
 			for (int x = 0; x < 13; x++) {
