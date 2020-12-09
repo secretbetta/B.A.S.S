@@ -53,7 +53,8 @@ public class PokerEvent extends ListenerAdapter {
 		embed.appendDescription("\n1: Check/Call. 2: Raise. 3: Fold");
 		String playerHands = "";
 		for (int x = 0; x < this.players.size(); x++) {
-			playerHands += String.format("```css\n%s's Info: %s```\n", this.players.get(x).getNickname(),
+			playerHands += String.format("```css\n%s's Info: %s```\n",
+				this.players.get(x).getNickname(),
 				this.game.getPlayerInfo(x));
 		}
 		embed.addField("Players", playerHands, false);
@@ -88,8 +89,11 @@ public class PokerEvent extends ListenerAdapter {
 	@Override
 	public void onGuildMessageEmbed(@Nonnull GuildMessageEmbedEvent event) {
 		MessageEmbed gui = event.getMessageEmbeds().get(0);
+		if (gui == null) {
+			return;
+		}
 		
-		if (gui.getTitle().equals("Poker Game")) {
+		if (gui.getTitle() != null && gui.getTitle().equals("Poker Game")) {
 			Long id = event.getMessageIdLong();
 			for (int x = 1; x <= 3; x++) {
 				event.getChannel().addReactionById(id, String.format("U+3%dU+20e3", x)).queue();
@@ -112,7 +116,8 @@ public class PokerEvent extends ListenerAdapter {
 			event.getReaction().removeReaction(event.getUser()).queue();
 		}
 		
-		if (player.equals(this.players.get(this.player)) && this.start) { // Checks if its player turn && a game
+		if (player.equals(this.players.get(this.player)) && this.start) { // Checks if its player
+																			// turn && a game
 																			// has started
 			switch (event.getReactionEmote().getEmoji()) {
 				case "U+31U+20e3": // Call/Check
