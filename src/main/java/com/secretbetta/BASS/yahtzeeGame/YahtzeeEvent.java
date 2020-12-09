@@ -1,4 +1,5 @@
 package com.secretbetta.BASS.yahtzeeGame;
+
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -56,7 +57,8 @@ public class YahtzeeEvent extends ListenerAdapter {
 				
 				this.game = true;
 			} else {
-				channel.sendMessage("No player mentioned.\nCommand usage: ~~yahtzee <@mention>").queue();
+				channel.sendMessage("No player mentioned.\nCommand usage: ~~yahtzee <@mention>")
+					.queue();
 			}
 		}
 		
@@ -85,7 +87,8 @@ public class YahtzeeEvent extends ListenerAdapter {
 		// }
 		// }
 		
-		if (msg.getEmbeds().size() > 0 && msg.getEmbeds().get(0).getTitle().equals("Scoresheet")) {
+		if (msg.getEmbeds().size() > 0 && msg.getEmbeds().get(0).getTitle() != null
+			&& msg.getEmbeds().get(0).getTitle().equals("Scoresheet")) {
 			// String msgId = msg.getId();
 			for (int x = 0; x < 13; x++) {
 				msg.addReaction(String.format("U+1f1%02x", x + 6 + 16 * 14)).queue();
