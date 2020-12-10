@@ -3,6 +3,7 @@ package com.secretbetta.PrivateVC;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
@@ -35,6 +37,24 @@ public class PrivateVCEvent extends ListenerAdapter {
 	}
 	
 	/**
+	 * Deletes a message after n minutes.
+	 * 
+	 * @param message The Message to be removed
+	 * @param minutes Time in minutes to be removed
+	 */
+	public static void deleteMessageTime(Message message, int minutes) {
+		new java.util.Timer().schedule(
+			new java.util.TimerTask() {
+				
+				@Override
+				public void run() {
+					message.delete().queue();
+				}
+			},
+			1000 * minutes * 60);
+	}
+	
+	/**
 	 * Creates a new VC based on user who joins and moves them there
 	 */
 	@Override
@@ -48,8 +68,9 @@ public class PrivateVCEvent extends ListenerAdapter {
 			Guild guild = event.getGuild();
 			User user = member.getUser();
 			
-			user.openPrivateChannel().complete()
-				.sendMessage("Use ~~vcadd <@user> to allow users to join the private VC!").queue();
+			deleteMessageTime(user.openPrivateChannel().complete()
+				.sendMessage("Use ~~vcadd <@user> to allow users to join the private VC!")
+				.complete(), 1);
 			
 			Category cat = guild.getCategoryById("583562618044678171");
 			String vcname = "🔒" + (member.getNickname() == null
@@ -133,7 +154,9 @@ public class PrivateVCEvent extends ListenerAdapter {
 		protected void execute(CommandEvent event) {
 			List<Member> members = event.getMessage().getMentionedMembers();
 			if (members.size() < 1) {
-				event.reply("No member mentioned. Usage:\\n~~vcadd <@user>");
+				Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
+				event.reply("No member mentioned. Usage:\\n~~vcadd <@user>", msgdelete);
+				return;
 			}
 			
 			if (users.containsKey(event.getAuthor().getId())) {
@@ -210,14 +233,22 @@ public class PrivateVCEvent extends ListenerAdapter {
 	 */
 	public class PrivateVCChangeName extends Command {
 		
+		public PrivateVCChangeName() {
+			super.name = "vcname";
+			super.help = "change the name of the VC room";
+			super.arguments = "<name>";
+		}
+		
 		@Override
 		protected void execute(CommandEvent event) {
 			if (users.containsKey(event.getMember().getId())) {
 				Guild guild = event.getGuild();
 				User user = event.getAuthor();
+				String name = event.getArgs();
 				
 				VoiceChannel vc = guild
 					.getVoiceChannelById(users.get(user.getId()));
+				vc.getManager().setName(name);
 			} else {
 				event.reply("You need to be the host of the room to change its name");
 				return;
