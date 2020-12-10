@@ -277,7 +277,7 @@ public class PrivateVCEvent extends ListenerAdapter {
 				
 				VoiceChannel vc = guild
 					.getVoiceChannelById(users.get(user.getId()));
-				vc.getManager().setName(name);
+				vc.getManager().setName(name).queue();
 			} else {
 				event.reply("You need to be the host of the room to change its name", msgdelete);
 				return;
