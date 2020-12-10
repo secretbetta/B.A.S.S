@@ -153,8 +153,8 @@ public class PrivateVCEvent extends ListenerAdapter {
 		@Override
 		protected void execute(CommandEvent event) {
 			List<Member> members = event.getMessage().getMentionedMembers();
+			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (members.size() < 1) {
-				Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 				event.reply("No member mentioned. Usage:\\n~~vcadd <@user>", msgdelete);
 				return;
 			}
@@ -168,9 +168,9 @@ public class PrivateVCEvent extends ListenerAdapter {
 				vc.putPermissionOverride(members.get(0))
 					.grant(allow).queue();
 				
-				event.reply("User has been added");
+				event.reply("User has been added", msgdelete);
 			} else {
-				event.reply("You need to host a room to use this command");
+				event.reply("You need to host a room to use this command", msgdelete);
 			}
 		}
 	}
@@ -191,6 +191,7 @@ public class PrivateVCEvent extends ListenerAdapter {
 		@Override
 		protected void execute(CommandEvent event) {
 			List<Member> members = event.getMessage().getMentionedMembers();
+			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (members.size() >= 1) {
 				// user needs to be a host to call this command
 				if (!users.containsKey(event.getMember().getId())) {
@@ -207,7 +208,7 @@ public class PrivateVCEvent extends ListenerAdapter {
 				// If member is not in the vc, don't give them host
 				List<Member> vcmembers = vc.getMembers();
 				if (!vcmembers.contains(members.get(0))) {
-					event.reply("Member must join the VC to become a host");
+					event.reply("Member must join the VC to become a host", msgdelete);
 					return;
 				}
 				
@@ -219,9 +220,9 @@ public class PrivateVCEvent extends ListenerAdapter {
 				users.remove(event.getMember().getId());
 				users.put(members.get(0).getId(), vcID);
 				
-				event.reply("Host has been changed to " + members.get(0).getAsMention());
+				event.reply("Host has been changed to " + members.get(0).getAsMention(), msgdelete);
 			} else {
-				event.reply("No member mentioned. Usage:\n~~host <@user>");
+				event.reply("No member mentioned. Usage:\n~~host <@user>", msgdelete);
 			}
 		}
 	}
@@ -241,6 +242,7 @@ public class PrivateVCEvent extends ListenerAdapter {
 		
 		@Override
 		protected void execute(CommandEvent event) {
+			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (users.containsKey(event.getMember().getId())) {
 				Guild guild = event.getGuild();
 				User user = event.getAuthor();
@@ -250,7 +252,7 @@ public class PrivateVCEvent extends ListenerAdapter {
 					.getVoiceChannelById(users.get(user.getId()));
 				vc.getManager().setName(name);
 			} else {
-				event.reply("You need to be the host of the room to change its name");
+				event.reply("You need to be the host of the room to change its name", msgdelete);
 				return;
 			}
 			
