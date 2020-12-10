@@ -261,6 +261,8 @@ public class PrivateVCEvent extends ListenerAdapter {
 	 */
 	public class PrivateVCChangeName extends Command {
 		
+		int changes = 0;
+		
 		public PrivateVCChangeName() {
 			super.name = "vcname";
 			super.help = "change the name of the VC room";
@@ -271,6 +273,12 @@ public class PrivateVCEvent extends ListenerAdapter {
 		protected void execute(CommandEvent event) {
 			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (users.containsKey(event.getMember().getId())) {
+				if (changes == 2) {
+					super.cooldown = 10 * 60; // 10 mins
+					changes = 0;
+				} else if (changes == 0) {
+					super.cooldown = 0;
+				}
 				Guild guild = event.getGuild();
 				User user = event.getAuthor();
 				String name = event.getArgs();
@@ -279,11 +287,36 @@ public class PrivateVCEvent extends ListenerAdapter {
 					.getVoiceChannelById(users.get(user.getId()));
 				System.err.println(name);
 				vc.getManager().setName(name).queue();
+				
+				changes++;
 			} else {
 				event.reply("You need to be the host of the room to change its name", msgdelete);
 				return;
 			}
 		}
+	}
+	
+	/**
+	 * Allows host to ban user from VC
+	 * 
+	 * @author Secretbeta
+	 */
+	public class PrivateVCRemove extends Command {
+		
+		public PrivateVCRemove() {
+			super.name = "vcremove";
+		}
+		
+		@Override
+		protected void execute(CommandEvent event) {
+			List<Member> members = event.getMessage().getMentionedMembers();
+			Guild guild = event.getGuild();
+			VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
+			for (Member member : members) {
+				vc.putPermissionOverride(member).reset().queue();
+			}
+		}
+		
 	}
 	
 	/**
