@@ -1,5 +1,6 @@
 package com.secretbetta.PrivateVC;
 
+import java.awt.Color;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.function.Consumer;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Guild;
@@ -22,7 +24,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
  * Controls all Private VC events and commands. Commands include:
- * <p1> vcadd, vchost, vcname </p1>
+ * <p>
+ * vcadd, vchost, vcname
+ * </p>
  * 
  * @author Secretbeta
  */
@@ -31,6 +35,7 @@ public class PrivateVCEvent extends ListenerAdapter {
 	/* User ID : Voice channel ID */
 	public static HashMap<String, String> users = new HashMap<>();
 	
+	/* Default VC permissions for allowed users */
 	public static EnumSet<Permission> allow = EnumSet.of(Permission.VOICE_CONNECT);
 	
 	public PrivateVCEvent() {
@@ -45,7 +50,7 @@ public class PrivateVCEvent extends ListenerAdapter {
 	 * @param message The Message to be removed
 	 * @param minutes Time in minutes to be removed
 	 */
-	public static void deleteMessageTime(Message message, int minutes) {
+	private static void deleteMessageTime(Message message, int minutes) {
 		new java.util.Timer().schedule(
 			new java.util.TimerTask() {
 				
@@ -55,6 +60,21 @@ public class PrivateVCEvent extends ListenerAdapter {
 				}
 			},
 			1000 * minutes * 60);
+	}
+	
+	/**
+	 * The help embed message for VC
+	 * 
+	 * @return Formatted embedded help message
+	 */
+	private static EmbedBuilder HelpEmbed() {
+		EmbedBuilder embed = new EmbedBuilder();
+		embed.setTitle("VC commands")
+			.setColor(Color.BLUE)
+			.addField("vcadd <@user...>", "Used to give mentioned users access to VC", false)
+			.addField("vchost", "Gives VC host to someone else", false)
+			.addField("vcname", "Change the name of the VC channel", false);
+		return embed;
 	}
 	
 	/**
@@ -72,7 +92,7 @@ public class PrivateVCEvent extends ListenerAdapter {
 			User user = member.getUser();
 			
 			deleteMessageTime(user.openPrivateChannel().complete()
-				.sendMessage("Use ~~vcadd <@user> to allow users to join the private VC!")
+				.sendMessage(HelpEmbed().build())
 				.complete(), 1);
 			
 			Category cat = guild.getCategoryById("583562618044678171");
@@ -224,6 +244,8 @@ public class PrivateVCEvent extends ListenerAdapter {
 				users.put(members.get(0).getId(), vcID);
 				
 				event.reply("Host has been changed to " + members.get(0).getAsMention(), msgdelete);
+				members.get(0).getUser().openPrivateChannel().complete()
+					.sendMessage(HelpEmbed().build()).queue();
 			} else {
 				event.reply("No member mentioned. Usage:\n~~host <@user>", msgdelete);
 			}
@@ -259,5 +281,23 @@ public class PrivateVCEvent extends ListenerAdapter {
 				return;
 			}
 		}
+	}
+	
+	/**
+	 * Help Command for Private VC
+	 * 
+	 * @author Secretbeta
+	 */
+	public class PrivateVCHelp extends Command {
+		
+		public PrivateVCHelp() {
+			super.name = "vchelp";
+		}
+		
+		@Override
+		protected void execute(CommandEvent event) {
+			event.reply(HelpEmbed().build());
+		}
+		
 	}
 }
