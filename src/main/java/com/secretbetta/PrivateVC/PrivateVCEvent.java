@@ -71,8 +71,8 @@ public class PrivateVCEvent extends ListenerAdapter {
 		EmbedBuilder embed = new EmbedBuilder();
 		embed.setTitle("VC commands")
 			.setColor(Color.BLUE)
-			.addField("vcadd <@user...>", "Used to give mentioned users access to VC", false)
-			.addField("vchost", "Gives VC host to someone else", false)
+			.addField("vcadd <@user...>", "Used to give mentioned user(s) access to VC", false)
+			.addField("vchost <@user>", "Gives VC host to someone else", false)
 			.addField("vcname", "Change the name of the VC channel", false);
 		return embed;
 	}
@@ -188,8 +188,10 @@ public class PrivateVCEvent extends ListenerAdapter {
 				VoiceChannel vc = guild
 					.getVoiceChannelById(users.get(user.getId()));
 				
-				vc.putPermissionOverride(members.get(0))
-					.grant(allow).queue();
+				for (Member member : members) {
+					vc.putPermissionOverride(member)
+						.grant(allow).queue();
+				}
 				
 				event.reply("User has been added", msgdelete);
 			} else {
@@ -296,7 +298,8 @@ public class PrivateVCEvent extends ListenerAdapter {
 		
 		@Override
 		protected void execute(CommandEvent event) {
-			event.reply(HelpEmbed().build());
+			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
+			event.reply(HelpEmbed().build(), msgdelete);
 		}
 		
 	}

@@ -84,7 +84,9 @@ public class Main {
 				new EpicGamesCommand(),
 				new LanguageListCommand(),
 				new PrivateVCEvent().new PrivateVCAdd(),
-				new PrivateVCEvent().new PrivateVCChangeHost());
+				new PrivateVCEvent().new PrivateVCChangeHost(),
+				new PrivateVCEvent().new PrivateVCChangeName(),
+				new PrivateVCEvent().new PrivateVCHelp());
 			
 			// api2.getPresence().setStatus(OnlineStatus.ONLINE);
 			// api2.get
