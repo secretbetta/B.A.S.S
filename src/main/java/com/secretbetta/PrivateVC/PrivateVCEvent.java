@@ -21,6 +21,9 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
+ * Controls all Private VC events and commands. Commands include:
+ * <p1> vcadd, vchost, vcname </p1>
+ * 
  * @author Secretbeta
  */
 public class PrivateVCEvent extends ListenerAdapter {
@@ -255,8 +258,6 @@ public class PrivateVCEvent extends ListenerAdapter {
 				event.reply("You need to be the host of the room to change its name", msgdelete);
 				return;
 			}
-			
 		}
-		
 	}
 }
