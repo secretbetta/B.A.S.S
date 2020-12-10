@@ -88,7 +88,9 @@ public class PokerEvent extends ListenerAdapter {
 	
 	@Override
 	public void onGuildMessageEmbed(@Nonnull GuildMessageEmbedEvent event) {
-		MessageEmbed gui = event.getMessageEmbeds().get(0);
+		
+		MessageEmbed gui = event.getMessageEmbeds() == null ? null
+			: event.getMessageEmbeds().get(0);
 		if (gui == null) {
 			return;
 		}
