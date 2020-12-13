@@ -309,11 +309,18 @@ public class PrivateVCEvent extends ListenerAdapter {
 		
 		@Override
 		protected void execute(CommandEvent event) {
-			List<Member> members = event.getMessage().getMentionedMembers();
-			Guild guild = event.getGuild();
-			VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
-			for (Member member : members) {
-				vc.putPermissionOverride(member).reset().queue();
+			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
+			if (users.containsKey(event.getMember().getId())) {
+				List<Member> members = event.getMessage().getMentionedMembers();
+				Guild guild = event.getGuild();
+				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
+				for (Member member : members) {
+					vc.putPermissionOverride(member).reset().queue();
+				}
+				event.reply("User(s) have been removed", msgdelete);
+			} else {
+				event.reply("You need to be the host of the room to remove a user", msgdelete);
+				return;
 			}
 		}
 		
