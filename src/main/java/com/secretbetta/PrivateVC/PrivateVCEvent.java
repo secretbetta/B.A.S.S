@@ -323,7 +323,6 @@ public class PrivateVCEvent extends ListenerAdapter {
 				return;
 			}
 		}
-		
 	}
 	
 	/**
