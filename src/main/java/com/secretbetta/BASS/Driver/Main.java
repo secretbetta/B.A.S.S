@@ -13,6 +13,8 @@ import com.secretbetta.BASS.Poker.PokerEvent;
 import com.secretbetta.BASS.Tetris.TetrisShowcase;
 import com.secretbetta.BASS.Translation.LanguageListCommand;
 import com.secretbetta.BASS.Translation.TranslationEvent;
+import com.secretbetta.BASS.VC.PrivateVCEvent;
+import com.secretbetta.BASS.VC.VCNotificationEvent;
 import com.secretbetta.BASS.blackjack.BlackjackEvent;
 import com.secretbetta.BASS.debug.AdminTestCommand;
 import com.secretbetta.BASS.debug.BugReportCommand;
@@ -27,8 +29,6 @@ import com.secretbetta.BASS.utilities.PinnerCommand;
 import com.secretbetta.BASS.utilities.TimerCommand;
 import com.secretbetta.BASS.xkcd.XKCDCommand;
 import com.secretbetta.BASS.yahtzeeGame.YahtzeeEvent;
-import com.secretbetta.VC.PrivateVCEvent;
-import com.secretbetta.VC.VCNotificationEvent;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;

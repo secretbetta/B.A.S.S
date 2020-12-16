@@ -1,4 +1,4 @@
-package com.secretbetta.VC;
+package com.secretbetta.BASS.VC;
 
 import java.awt.Color;
 import java.util.EnumSet;
