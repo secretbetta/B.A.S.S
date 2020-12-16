@@ -27,7 +27,8 @@ import com.secretbetta.BASS.utilities.PinnerCommand;
 import com.secretbetta.BASS.utilities.TimerCommand;
 import com.secretbetta.BASS.xkcd.XKCDCommand;
 import com.secretbetta.BASS.yahtzeeGame.YahtzeeEvent;
-import com.secretbetta.PrivateVC.PrivateVCEvent;
+import com.secretbetta.VC.PrivateVCEvent;
+import com.secretbetta.VC.VCNotificationEvent;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -100,6 +101,7 @@ public class Main {
 				new TestEvent(),
 				new TranslationEvent(),
 				new PrivateVCEvent(),
+				new VCNotificationEvent(),
 				// new ProfanityFilterEvent(), // Profanity filter
 				waiter, client.build()); // Other Commands
 			// api2.addEventListener(new TestEvent()); // Testing Events

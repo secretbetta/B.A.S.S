@@ -4,4 +4,4 @@
 /**
  * @author Secretbeta
  */
-package com.secretbetta.PrivateVC;
+package com.secretbetta.VC;

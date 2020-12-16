@@ -1,4 +1,4 @@
-package com.secretbetta.PrivateVC;
+package com.secretbetta.VC;
 
 import java.awt.Color;
 import java.util.EnumSet;
@@ -323,6 +323,33 @@ public class PrivateVCEvent extends ListenerAdapter {
 				return;
 			}
 		}
+	}
+	
+	/**
+	 * A command to hide the VC
+	 * 
+	 * @author Secretbeta
+	 */
+	public class PrivateVCHidden extends Command {
+		
+		public PrivateVCHidden() {
+			super.name = "vchide";
+		}
+		
+		@Override
+		protected void execute(CommandEvent event) {
+			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
+			if (users.containsKey(event.getMember().getId())) {
+				Guild guild = event.getGuild();
+				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
+				vc.putPermissionOverride(guild.getMemberById("583562618044678165"))
+					.deny(Permission.ALL_VOICE_PERMISSIONS).queue();
+			} else {
+				event.reply("You must be the host of a room to use this command", msgdelete);
+				return;
+			}
+		}
+		
 	}
 	
 	/**
