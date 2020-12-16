@@ -3,7 +3,6 @@ package com.secretbetta.BASS.Driver;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.PingCommand;
-import com.secretbetta.BASS.Cute.PuppyCommand;
 import com.secretbetta.BASS.GoogleSheets.LeaderboardCommand;
 import com.secretbetta.BASS.Minecraft.ConsoleEvent;
 import com.secretbetta.BASS.Minecraft.ListVersionsCommand;
@@ -73,7 +72,6 @@ public class Main {
 				new AdminTestCommand(),
 				new TestCommand(),
 				new BugReportCommand(),
-				new PuppyCommand(),
 				new PinnerCommand(),
 				new StartServerCommand(),
 				new ListVersionsCommand(),
