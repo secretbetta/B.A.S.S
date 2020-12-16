@@ -87,7 +87,9 @@ public class Main {
 				new PrivateVCEvent().new PrivateVCAdd(),
 				new PrivateVCEvent().new PrivateVCChangeHost(),
 				new PrivateVCEvent().new PrivateVCChangeName(),
-				new PrivateVCEvent().new PrivateVCHelp());
+				new PrivateVCEvent().new PrivateVCHelp(),
+				new PrivateVCEvent().new PrivateVCHide(),
+				new PrivateVCEvent().new PrivateVCShow());
 			
 			// api2.getPresence().setStatus(OnlineStatus.ONLINE);
 			// api2.get

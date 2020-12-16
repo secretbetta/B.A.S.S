@@ -73,7 +73,9 @@ public class PrivateVCEvent extends ListenerAdapter {
 			.setColor(Color.BLUE)
 			.addField("vcadd <@user...>", "Used to give mentioned user(s) access to VC", false)
 			.addField("vchost <@user>", "Gives VC host to someone else", false)
-			.addField("vcname", "Change the name of the VC channel", false);
+			.addField("vcname", "Change the name of the VC channel", false)
+			.addField("vchide", "Hides the VC from everyone exceept staff", false)
+			.addField("vcshow", "Shows vc for everyone in the server", false);
 		return embed;
 	}
 	
@@ -273,11 +275,13 @@ public class PrivateVCEvent extends ListenerAdapter {
 		protected void execute(CommandEvent event) {
 			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (users.containsKey(event.getMember().getId())) {
+				if (changes == 0) {
+					super.cooldown = 0;
+				}
+				changes++;
 				if (changes == 2) {
 					super.cooldown = 10 * 60; // 10 mins
 					changes = 0;
-				} else if (changes == 0) {
-					super.cooldown = 0;
 				}
 				Guild guild = event.getGuild();
 				User user = event.getAuthor();
@@ -287,8 +291,6 @@ public class PrivateVCEvent extends ListenerAdapter {
 					.getVoiceChannelById(users.get(user.getId()));
 				System.err.println(name);
 				vc.getManager().setName(name).queue();
-				
-				changes++;
 			} else {
 				event.reply("You need to be the host of the room to change its name", msgdelete);
 				return;
@@ -326,13 +328,13 @@ public class PrivateVCEvent extends ListenerAdapter {
 	}
 	
 	/**
-	 * A command to hide the VC
+	 * A command to hide the VC Channel
 	 * 
 	 * @author Secretbeta
 	 */
-	public class PrivateVCHidden extends Command {
+	public class PrivateVCHide extends Command {
 		
-		public PrivateVCHidden() {
+		public PrivateVCHide() {
 			super.name = "vchide";
 		}
 		
@@ -342,8 +344,37 @@ public class PrivateVCEvent extends ListenerAdapter {
 			if (users.containsKey(event.getMember().getId())) {
 				Guild guild = event.getGuild();
 				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
-				vc.putPermissionOverride(guild.getMemberById("583562618044678165"))
-					.deny(Permission.ALL_VOICE_PERMISSIONS).queue();
+				vc.putPermissionOverride(guild.getPublicRole())
+					.deny(Permission.ALL_CHANNEL_PERMISSIONS).queue();
+				event.getMessage().delete().queue();
+			} else {
+				event.reply("You must be the host of a room to use this command", msgdelete);
+				return;
+			}
+		}
+		
+	}
+	
+	/**
+	 * A command to show the VC Channel
+	 * 
+	 * @author Secretbeta
+	 */
+	public class PrivateVCShow extends Command {
+		
+		public PrivateVCShow() {
+			super.name = "vcshow";
+		}
+		
+		@Override
+		protected void execute(CommandEvent event) {
+			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
+			if (users.containsKey(event.getMember().getId())) {
+				Guild guild = event.getGuild();
+				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
+				vc.putPermissionOverride(guild.getPublicRole())
+					.grant(Permission.VIEW_CHANNEL).queue();
+				event.getMessage().delete().queue();
 			} else {
 				event.reply("You must be the host of a room to use this command", msgdelete);
 				return;
