@@ -8,7 +8,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 
@@ -93,7 +92,7 @@ public class MyEventListener extends ListenerAdapter {
 		Member objMember = event.getMember();
 		String content = message.getContentRaw().toLowerCase();
 		MessageChannel channel = event.getChannel();
-		Instant start = Instant.now();
+		// Instant start = Instant.now();
 		
 		/** Commands **/
 		

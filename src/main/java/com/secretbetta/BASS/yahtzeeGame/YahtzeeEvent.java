@@ -16,10 +16,10 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class YahtzeeEvent extends ListenerAdapter {
 	
 	private Yahtzee game1;
-	private Yahtzee game2;
+	public Yahtzee game2;
 	
-	private User player1;
-	private User player2;
+	public User player1;
+	public User player2;
 	
 	private int player;
 	

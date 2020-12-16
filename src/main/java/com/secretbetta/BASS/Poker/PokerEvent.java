@@ -111,7 +111,7 @@ public class PokerEvent extends ListenerAdapter {
 		}
 		
 		Member player = event.getMember();
-		MessageChannel chnl = event.getChannel();
+		// MessageChannel chnl = event.getChannel();
 		
 		System.err.println(event.getMessageId());
 		if (event.getReaction().getMessageId().equals(this.main.getId())) {
