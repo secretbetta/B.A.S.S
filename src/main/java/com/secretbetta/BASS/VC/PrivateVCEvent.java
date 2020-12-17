@@ -403,7 +403,8 @@ public class PrivateVCEvent extends ListenerAdapter {
 			if (users.containsKey(event.getMember().getId())) {
 				Guild guild = event.getGuild();
 				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
-				vc.putPermissionOverride(guild.getPublicRole()).setPermissions(allow, null).queue();
+				vc.putPermissionOverride(guild.getPublicRole())
+					.setPermissions(allow, EnumSet.of(Permission.VOICE_MOVE_OTHERS)).queue();
 				event.reply("Changed VC to public", msgdelete);
 			} else {
 				event.reply("You must be the host of a room to use this command", msgdelete);
@@ -455,8 +456,13 @@ public class PrivateVCEvent extends ListenerAdapter {
 			if (users.containsKey(event.getMember().getId())) {
 				Guild guild = event.getGuild();
 				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
-				vc.getManager().setUserLimit(Integer.parseInt(event.getArgs())).queue();
-				event.reply("Voice Channel limit changed to " + Integer.parseInt(event.getArgs()),
+				
+				int lim = Integer.parseInt(event.getArgs());
+				if (lim < 1 || lim > 99) {
+					event.reply("Limit must be 1-99 inclusive", msgdelete);
+				}
+				vc.getManager().setUserLimit(lim).queue();
+				event.reply("Voice Channel limit changed to " + lim,
 					msgdelete);
 			} else {
 				event.reply("You must be the host of a room to use this command", msgdelete);
@@ -478,8 +484,7 @@ public class PrivateVCEvent extends ListenerAdapter {
 		
 		@Override
 		protected void execute(CommandEvent event) {
-			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
-			event.reply(HelpEmbed().build(), msgdelete);
+			event.reply(HelpEmbed().build());
 		}
 		
 	}
