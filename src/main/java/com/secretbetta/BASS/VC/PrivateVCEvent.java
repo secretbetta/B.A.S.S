@@ -413,6 +413,32 @@ public class PrivateVCEvent extends ListenerAdapter {
 	}
 	
 	/**
+	 * Changes VC permissions to private
+	 * 
+	 * @author Secretbeta
+	 */
+	public class PrivateVCPrivate extends Command {
+		
+		public PrivateVCPrivate() {
+			super.name = "vcprivate";
+		}
+		
+		@Override
+		protected void execute(CommandEvent event) {
+			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
+			if (users.containsKey(event.getMember().getId())) {
+				Guild guild = event.getGuild();
+				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
+				vc.putPermissionOverride(guild.getPublicRole()).setPermissions(null, allow).queue();
+				event.reply("Changed VC to private", msgdelete);
+			} else {
+				event.reply("You must be the host of a room to use this command", msgdelete);
+				return;
+			}
+		}
+	}
+	
+	/**
 	 * Changes how many users can join the VC channel
 	 * 
 	 * @author Secretbeta
