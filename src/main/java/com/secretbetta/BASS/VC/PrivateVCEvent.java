@@ -75,7 +75,10 @@ public class PrivateVCEvent extends ListenerAdapter {
 			.addField("vchost <@user>", "Gives VC host to someone else", false)
 			.addField("vcname", "Change the name of the VC channel", false)
 			.addField("vchide", "Hides the VC from everyone exceept staff", false)
-			.addField("vcshow", "Shows vc for everyone in the server", false);
+			.addField("vcshow", "Shows vc for everyone in the server", false)
+			.addField("vcpublic", "Allows any user to join VC", false)
+			.addField("vcprivate", "Denies all users (except staff) from joining VC channel", false)
+			.addField("vclimit <number>", "Changes the limit of the VC channel", false);
 		return embed;
 	}
 	
@@ -381,6 +384,33 @@ public class PrivateVCEvent extends ListenerAdapter {
 			}
 		}
 		
+	}
+	
+	/**
+	 * Changes how many users can join the VC channel
+	 * 
+	 * @author Secretbeta
+	 */
+	public class PrivateVCLimit extends Command {
+		
+		public PrivateVCLimit() {
+			super.name = "vclimit";
+		}
+		
+		@Override
+		protected void execute(CommandEvent event) {
+			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
+			if (users.containsKey(event.getMember().getId())) {
+				Guild guild = event.getGuild();
+				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
+				vc.getManager().setUserLimit(Integer.parseInt(event.getArgs())).queue();
+				event.reply("Voice Channel limit changed to " + Integer.parseInt(event.getArgs()),
+					msgdelete);
+			} else {
+				event.reply("You must be the host of a room to use this command", msgdelete);
+				return;
+			}
+		}
 	}
 	
 	/**
