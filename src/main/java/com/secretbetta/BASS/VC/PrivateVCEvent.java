@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
@@ -71,7 +72,10 @@ public class PrivateVCEvent extends ListenerAdapter {
 		EmbedBuilder embed = new EmbedBuilder();
 		embed.setTitle("VC commands")
 			.setColor(Color.BLUE)
-			.addField("vcadd <@user...>", "Used to give mentioned user(s) access to VC", false)
+			.addField("vcadd <@user..> <@role...>", "Used to give mentioned user(s) access to VC",
+				false)
+			.addField("vcremove <@user...> <@role...>", "Used to remove mentioned user(s) from VC",
+				false)
 			.addField("vchost <@user>", "Gives VC host to someone else", false)
 			.addField("vcname", "Change the name of the VC channel", false)
 			.addField("vchide", "Hides the VC from everyone exceept staff", false)
@@ -181,9 +185,11 @@ public class PrivateVCEvent extends ListenerAdapter {
 		@Override
 		protected void execute(CommandEvent event) {
 			List<Member> members = event.getMessage().getMentionedMembers();
+			List<Role> roles = event.getMessage().getMentionedRoles();
 			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
-			if (members.size() < 1) {
-				event.reply("No member mentioned. Usage:\\n~~vcadd <@user>", msgdelete);
+			if (members.size() < 1 && roles.size() < 1) {
+				event.reply("No member(s)/role(s) mentioned. Usage:\\n~~vcadd <@user..> <@role...>",
+					msgdelete);
 				return;
 			}
 			
@@ -195,6 +201,11 @@ public class PrivateVCEvent extends ListenerAdapter {
 				
 				for (Member member : members) {
 					vc.putPermissionOverride(member)
+						.grant(allow).queue();
+				}
+				
+				for (Role role : roles) {
+					vc.putPermissionOverride(role)
 						.grant(allow).queue();
 				}
 				
@@ -302,32 +313,21 @@ public class PrivateVCEvent extends ListenerAdapter {
 	}
 	
 	/**
-	 * Allows host to ban user from VC
+	 * Help Command for Private VC
 	 * 
 	 * @author Secretbeta
 	 */
-	public class PrivateVCRemove extends Command {
+	public class PrivateVCHelp extends Command {
 		
-		public PrivateVCRemove() {
-			super.name = "vcremove";
+		public PrivateVCHelp() {
+			super.name = "vchelp";
 		}
 		
 		@Override
 		protected void execute(CommandEvent event) {
-			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
-			if (users.containsKey(event.getMember().getId())) {
-				List<Member> members = event.getMessage().getMentionedMembers();
-				Guild guild = event.getGuild();
-				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
-				for (Member member : members) {
-					vc.putPermissionOverride(member).reset().queue();
-				}
-				event.reply("User(s) have been removed", msgdelete);
-			} else {
-				event.reply("You need to be the host of the room to remove a user", msgdelete);
-				return;
-			}
+			event.reply(HelpEmbed().build());
 		}
+		
 	}
 	
 	/**
@@ -359,14 +359,14 @@ public class PrivateVCEvent extends ListenerAdapter {
 	}
 	
 	/**
-	 * A command to show the VC Channel
+	 * Changes how many users can join the VC channel
 	 * 
 	 * @author Secretbeta
 	 */
-	public class PrivateVCShow extends Command {
+	public class PrivateVCLimit extends Command {
 		
-		public PrivateVCShow() {
-			super.name = "vcshow";
+		public PrivateVCLimit() {
+			super.name = "vclimit";
 		}
 		
 		@Override
@@ -375,15 +375,19 @@ public class PrivateVCEvent extends ListenerAdapter {
 			if (users.containsKey(event.getMember().getId())) {
 				Guild guild = event.getGuild();
 				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
-				vc.putPermissionOverride(guild.getPublicRole())
-					.grant(Permission.VIEW_CHANNEL).queue();
-				event.getMessage().delete().queue();
+				
+				int lim = Integer.parseInt(event.getArgs());
+				if (lim < 1 || lim > 99) {
+					event.reply("Limit must be 1-99 inclusive", msgdelete);
+				}
+				vc.getManager().setUserLimit(lim).queue();
+				event.reply("Voice Channel limit changed to " + lim,
+					msgdelete);
 			} else {
 				event.reply("You must be the host of a room to use this command", msgdelete);
 				return;
 			}
 		}
-		
 	}
 	
 	/**
@@ -440,14 +444,56 @@ public class PrivateVCEvent extends ListenerAdapter {
 	}
 	
 	/**
-	 * Changes how many users can join the VC channel
+	 * Allows host to ban user from VC
 	 * 
 	 * @author Secretbeta
 	 */
-	public class PrivateVCLimit extends Command {
+	public class PrivateVCRemove extends Command {
 		
-		public PrivateVCLimit() {
-			super.name = "vclimit";
+		public PrivateVCRemove() {
+			super.name = "vcremove";
+		}
+		
+		@Override
+		protected void execute(CommandEvent event) {
+			List<Member> members = event.getMessage().getMentionedMembers();
+			List<Role> roles = event.getMessage().getMentionedRoles();
+			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
+			if (members.size() < 1 && roles.size() < 1) {
+				event.reply(
+					"No member(s)/role(s) mentioned. Usage:\\n~~vcremove <@user..> <@role...>",
+					msgdelete);
+				return;
+			}
+			
+			if (users.containsKey(event.getMember().getId())) {
+				Guild guild = event.getGuild();
+				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
+				
+				for (Member member : members) {
+					vc.putPermissionOverride(member).reset().queue();
+				}
+				
+				for (Role role : roles) {
+					vc.putPermissionOverride(role).reset().queue();
+				}
+				event.reply("User(s) have been removed", msgdelete);
+			} else {
+				event.reply("You need to be the host of the room to remove a user", msgdelete);
+				return;
+			}
+		}
+	}
+	
+	/**
+	 * A command to show the VC Channel
+	 * 
+	 * @author Secretbeta
+	 */
+	public class PrivateVCShow extends Command {
+		
+		public PrivateVCShow() {
+			super.name = "vcshow";
 		}
 		
 		@Override
@@ -456,35 +502,13 @@ public class PrivateVCEvent extends ListenerAdapter {
 			if (users.containsKey(event.getMember().getId())) {
 				Guild guild = event.getGuild();
 				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
-				
-				int lim = Integer.parseInt(event.getArgs());
-				if (lim < 1 || lim > 99) {
-					event.reply("Limit must be 1-99 inclusive", msgdelete);
-				}
-				vc.getManager().setUserLimit(lim).queue();
-				event.reply("Voice Channel limit changed to " + lim,
-					msgdelete);
+				vc.putPermissionOverride(guild.getPublicRole())
+					.grant(Permission.VIEW_CHANNEL).queue();
+				event.getMessage().delete().queue();
 			} else {
 				event.reply("You must be the host of a room to use this command", msgdelete);
 				return;
 			}
-		}
-	}
-	
-	/**
-	 * Help Command for Private VC
-	 * 
-	 * @author Secretbeta
-	 */
-	public class PrivateVCHelp extends Command {
-		
-		public PrivateVCHelp() {
-			super.name = "vchelp";
-		}
-		
-		@Override
-		protected void execute(CommandEvent event) {
-			event.reply(HelpEmbed().build());
 		}
 		
 	}
