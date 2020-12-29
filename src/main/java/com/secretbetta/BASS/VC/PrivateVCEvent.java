@@ -39,6 +39,9 @@ public class PrivateVCEvent extends ListenerAdapter {
 	/* Default VC permissions for allowed users */
 	public static EnumSet<Permission> allow = EnumSet.of(Permission.VOICE_CONNECT);
 	
+	/* Message Deletion Consumer */
+	public Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
+	
 	public PrivateVCEvent() {
 		allow.add(Permission.VOICE_SPEAK);
 		allow.add(Permission.VOICE_STREAM);
@@ -82,7 +85,8 @@ public class PrivateVCEvent extends ListenerAdapter {
 			.addField("vcshow", "Shows vc for everyone in the server", false)
 			.addField("vcpublic", "Allows any user to join VC", false)
 			.addField("vcprivate", "Denies all users (except staff) from joining VC channel", false)
-			.addField("vclimit <number>", "Changes the limit of the VC channel", false);
+			.addField("vclimit <number>", "Changes the limit of the VC channel", false)
+			.addField("vchelp", "Pulls up Voice Channel commands", false);
 		return embed;
 	}
 	
@@ -186,7 +190,6 @@ public class PrivateVCEvent extends ListenerAdapter {
 		protected void execute(CommandEvent event) {
 			List<Member> members = event.getMessage().getMentionedMembers();
 			List<Role> roles = event.getMessage().getMentionedRoles();
-			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (members.size() < 1 && roles.size() < 1) {
 				event.reply("No member(s)/role(s) mentioned. Usage:\\n~~vcadd <@user..> <@role...>",
 					msgdelete);
@@ -232,7 +235,6 @@ public class PrivateVCEvent extends ListenerAdapter {
 		@Override
 		protected void execute(CommandEvent event) {
 			List<Member> members = event.getMessage().getMentionedMembers();
-			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (members.size() >= 1) {
 				// user needs to be a host to call this command
 				if (!users.containsKey(event.getMember().getId())) {
@@ -287,7 +289,6 @@ public class PrivateVCEvent extends ListenerAdapter {
 		
 		@Override
 		protected void execute(CommandEvent event) {
-			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (users.containsKey(event.getMember().getId())) {
 				if (changes == 0) {
 					super.cooldown = 0;
@@ -343,7 +344,6 @@ public class PrivateVCEvent extends ListenerAdapter {
 		
 		@Override
 		protected void execute(CommandEvent event) {
-			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (users.containsKey(event.getMember().getId())) {
 				Guild guild = event.getGuild();
 				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
@@ -371,7 +371,6 @@ public class PrivateVCEvent extends ListenerAdapter {
 		
 		@Override
 		protected void execute(CommandEvent event) {
-			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (users.containsKey(event.getMember().getId())) {
 				Guild guild = event.getGuild();
 				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
@@ -403,7 +402,6 @@ public class PrivateVCEvent extends ListenerAdapter {
 		
 		@Override
 		protected void execute(CommandEvent event) {
-			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (users.containsKey(event.getMember().getId())) {
 				Guild guild = event.getGuild();
 				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
@@ -430,7 +428,6 @@ public class PrivateVCEvent extends ListenerAdapter {
 		
 		@Override
 		protected void execute(CommandEvent event) {
-			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (users.containsKey(event.getMember().getId())) {
 				Guild guild = event.getGuild();
 				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
@@ -458,7 +455,6 @@ public class PrivateVCEvent extends ListenerAdapter {
 		protected void execute(CommandEvent event) {
 			List<Member> members = event.getMessage().getMentionedMembers();
 			List<Role> roles = event.getMessage().getMentionedRoles();
-			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (members.size() < 1 && roles.size() < 1) {
 				event.reply(
 					"No member(s)/role(s) mentioned. Usage:\\n~~vcremove <@user..> <@role...>",
@@ -498,7 +494,6 @@ public class PrivateVCEvent extends ListenerAdapter {
 		
 		@Override
 		protected void execute(CommandEvent event) {
-			Consumer<Message> msgdelete = msg -> PrivateVCEvent.deleteMessageTime(msg, 1);
 			if (users.containsKey(event.getMember().getId())) {
 				Guild guild = event.getGuild();
 				VoiceChannel vc = guild.getVoiceChannelById(users.get(event.getAuthor().getId()));
