@@ -91,6 +91,42 @@ public class PrivateVCEvent extends ListenerAdapter {
 	}
 	
 	/**
+	 * Creates a new VC
+	 * 
+	 * @param member Member to designate as host
+	 * @param guild  Guild for commands
+	 */
+	public void createNewVC(Member member, Guild guild) {
+		User user = member.getUser();
+		
+		deleteMessageTime(user.openPrivateChannel().complete()
+			.sendMessage(HelpEmbed().build())
+			.complete(), 1);
+		
+		Category cat = guild.getCategoryById("583562618044678171");
+		String vcname = "🔒" + (member.getNickname() == null
+			? member.getEffectiveName()
+			: member.getNickname());
+		vcname += "'s Private VC";
+		
+		// Denies @everyone permission to do anything to voice channel except view it
+		// Gives host all permissions for VC (except server deafen and server mute)
+		EnumSet<Permission> hostallow = allow;
+		hostallow.add(Permission.VOICE_MOVE_OTHERS);
+		
+		VoiceChannel newVC = guild.createVoiceChannel(vcname, cat)
+			.addRolePermissionOverride(Long.parseLong("583562618044678165"),
+				Permission.VIEW_CHANNEL.getRawValue(),
+				Permission.ALL_PERMISSIONS)
+			.addMemberPermissionOverride(member.getIdLong(), hostallow,
+				null)
+			.complete();
+		
+		guild.moveVoiceMember(member, newVC).queue();
+		users.put(member.getId(), newVC.getId());
+	}
+	
+	/**
 	 * Creates a new VC based on user who joins and moves them there
 	 */
 	@Override
@@ -99,36 +135,11 @@ public class PrivateVCEvent extends ListenerAdapter {
 			return;
 		}
 		
+		// If joins creation voice channel, create new private voice channel
 		if (event.getChannelJoined().getId().equals("786119690144710656")) {
 			Member member = event.getMember();
 			Guild guild = event.getGuild();
-			User user = member.getUser();
-			
-			deleteMessageTime(user.openPrivateChannel().complete()
-				.sendMessage(HelpEmbed().build())
-				.complete(), 1);
-			
-			Category cat = guild.getCategoryById("583562618044678171");
-			String vcname = "🔒" + (member.getNickname() == null
-				? member.getEffectiveName()
-				: member.getNickname());
-			vcname += "'s Private VC";
-			
-			// Denies @everyone permission to do anything to voice channel except view it
-			// Gives host all permissions for VC (except server deafen and server mute)
-			EnumSet<Permission> hostallow = allow;
-			hostallow.add(Permission.VOICE_MOVE_OTHERS);
-			
-			VoiceChannel newVC = guild.createVoiceChannel(vcname, cat)
-				.addRolePermissionOverride(Long.parseLong("583562618044678165"),
-					Permission.VIEW_CHANNEL.getRawValue(),
-					Permission.ALL_PERMISSIONS)
-				.addMemberPermissionOverride(member.getIdLong(), hostallow,
-					null)
-				.complete();
-			
-			guild.moveVoiceMember(member, newVC).queue();
-			users.put(member.getId(), newVC.getId());
+			this.createNewVC(member, guild);
 		}
 	}
 	
@@ -153,7 +164,7 @@ public class PrivateVCEvent extends ListenerAdapter {
 	}
 	
 	/**
-	 * Deletes VC if host leaves it
+	 * Deletes VC if host leaves it. Or, if user moves to create VC channel, make new VC
 	 */
 	@Override
 	public void onGuildVoiceMove(GuildVoiceMoveEvent event) {
@@ -165,11 +176,17 @@ public class PrivateVCEvent extends ListenerAdapter {
 		Guild guild = event.getGuild();
 		String memberID = member.getId();
 		
+		// If host leaves
 		if (users.containsKey(memberID)
 			&& !users.get(memberID).equals(event.getChannelJoined().getId())) {
 			VoiceChannel vc = guild.getVoiceChannelById(users.get(memberID));
 			vc.delete().queue();
 			users.remove(memberID);
+		}
+		
+		// If joins creation voice channel, create new private voice channel
+		if (event.getChannelJoined().getId().equals("786119690144710656")) {
+			this.createNewVC(member, guild);
 		}
 	}
 	
